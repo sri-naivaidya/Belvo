@@ -5,6 +5,7 @@ import { ArrowUpRight, Play } from "lucide-react";
 import BookACall from "@/sections/BookACall";
 import Footer from "@/sections/Footer";
 import UnderConstruction from "@/sections/UnderConstruction";
+import ServicesSection from "@/sections/ServicesSection";
 import Works from "@/sections/Works";
 import TeamSection from "@/sections/TeamSection";
 import About from "@/sections/About";
