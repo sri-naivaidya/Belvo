@@ -95,8 +95,8 @@ const SERVICES = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] } }),
+  hidden: { opacity: 0, y: 48 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.15 + i * 0.08, ease: [0.16, 1, 0.3, 1] } }),
 };
 
 export default function ServicesSection({ id }: Props) {
