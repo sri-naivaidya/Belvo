@@ -173,27 +173,19 @@ export default function ServicesSection({ id }: Props) {
           </motion.p>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div initial={{ opacity: 0 }} animate={heroInView ? { opacity: 1 } : {}} transition={{ delay: 1.5, duration: 0.8 }} style={{ position: "absolute", bottom: "28px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-          <div style={{ width: "26px", height: "42px", borderRadius: "100px", border: isIvory ? "1px solid rgba(0,0,0,0.15)" : "1px solid rgba(255,255,255,0.18)", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "8px" }}>
-            <motion.div style={{ width: "4px", height: "8px", borderRadius: "100px", background: "rgba(157,78,221,0.8)" }} animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }} />
-          </div>
-          <span style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: isIvory ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.25)", fontFamily: "'Inter',sans-serif" }}>Scroll</span>
-        </motion.div>
       </div>
 
       {/* ── SERVICES GRID ─────────────────────────────────────────── */}
       <div
         id="services-grid"
         ref={gridRef}
-        style={{ padding: "100px 24px 120px", position: "relative", overflow: "hidden", background: "var(--belvo-bg)" }}
+        style={{ padding: "80px 24px 120px", position: "relative", overflow: "hidden", background: "var(--belvo-bg)" }}
       >
         <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
         <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <motion.div custom={0} variants={fadeUp} initial="hidden" animate={gridInView ? "visible" : "hidden"} style={{ textAlign: "center", marginBottom: "64px" }}>
-            <span style={{ display: "block", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#9D4EDD", fontFamily: "'Inter',sans-serif", marginBottom: "14px" }}>What We Do</span>
+          <motion.div custom={0} variants={fadeUp} initial="hidden" animate={gridInView ? "visible" : "hidden"} style={{ textAlign: "center", marginTop: "32px", marginBottom: "48px" }}>
             <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
               14 Services. <span style={{ color: "#9D4EDD" }}>One Mission.</span>
             </h2>
@@ -262,7 +254,7 @@ export default function ServicesSection({ id }: Props) {
             Let's talk about which services are right for your business. Book a free consultation with our team.
           </p>
           <button
-            style={{ display: "inline-flex", alignItems: "center", gap: "10px", padding: "14px 40px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.82rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 32px rgba(130,40,200,0.35)", transition: "box-shadow 0.3s, transform 0.2s" }}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "10px", padding: "14px 40px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.82rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 32px rgba(130,40,200,0.35)", transition: "box-shadow 0.3s, transform 0.2s", width: "100%", maxWidth: "360px" }}
             onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 52px rgba(157,78,221,0.55)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 32px rgba(130,40,200,0.35)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
