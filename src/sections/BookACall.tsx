@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { saveSubmission } from "@/lib/contact";
 
 type FormData = {
   fullName: string;
@@ -26,7 +27,7 @@ const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 
@@ -121,7 +122,7 @@ export default function BookACall() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset } = useForm<FormData>();
-  const onSubmit = (_data: FormData) => { setTimeout(() => reset(), 3000); };
+  const onSubmit = (data: FormData) => { saveSubmission("free-call", { ...data }); setTimeout(() => reset(), 3000); };
 
   return (
     <section

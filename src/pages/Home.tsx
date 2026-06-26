@@ -85,7 +85,7 @@ const itemUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.75, delay: i * 0.18, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.75, delay: i * 0.18, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 

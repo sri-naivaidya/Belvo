@@ -14,7 +14,7 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 
@@ -178,7 +178,7 @@ export default function UnderConstruction({ id, number, title, glowSide = "cente
             <motion.div
               initial={{ width: "0%" }}
               animate={inView ? { width: "38%" } : { width: "0%" }}
-              transition={{ duration: 1.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+               transition={{ duration: 1.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
               style={{ height: "100%", background: "linear-gradient(90deg, #7B2FBE, #9D4EDD)", borderRadius: "2px" }}
             />
           </div>

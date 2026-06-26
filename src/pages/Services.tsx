@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import Footer from "@/sections/Footer";
 import BookACall from "@/sections/BookACall";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const SERVICES = [
   {
@@ -93,10 +94,12 @@ const SERVICES = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] } }),
+   visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] as const } }),
 };
 
 export default function Services() {
+  const { theme } = useTheme();
+  const isIvory = theme === "ivory";
   const gridRef = useRef(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
   const ctaRef = useRef(null);
@@ -108,7 +111,7 @@ export default function Services() {
       <section
         style={{
           minHeight: "100vh",
-          background: "#04000e",
+          background: "var(--belvo-bg)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -120,19 +123,19 @@ export default function Services() {
         }}
       >
         {/* Ambient glows */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-          <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
-          <div style={{ position: "absolute", bottom: 0, left: "15%", width: "50vw", height: "40vh", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(80px)" }} />
-          <div style={{ position: "absolute", top: 0, right: "10%", width: "40vw", height: "35vh", background: "radial-gradient(ellipse at center, rgba(80,15,150,0.1) 0%, transparent 70%)", filter: "blur(70px)" }} />
-          <div style={{ position: "absolute", inset: "0", background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(4,0,14,0.6) 100%)" }} />
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "120px", background: "linear-gradient(to bottom, rgba(4,0,14,0.9), transparent)" }} />
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "140px", background: "linear-gradient(to top, rgba(4,0,14,0.95), transparent)" }} />
-        </div>
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+            <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
+            <div style={{ position: "absolute", bottom: 0, left: "15%", width: "50vw", height: "40vh", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(80px)" }} />
+            <div style={{ position: "absolute", top: 0, right: "10%", width: "40vw", height: "35vh", background: "radial-gradient(ellipse at center, rgba(80,15,150,0.1) 0%, transparent 70%)", filter: "blur(70px)" }} />
+            <div style={{ position: "absolute", inset: "0", background: isIvory ? "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(248,245,239,0.85) 100%)" : "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(4,0,14,0.6) 100%)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "120px", background: isIvory ? "linear-gradient(to bottom, var(--belvo-bg), transparent)" : "linear-gradient(to bottom, rgba(4,0,14,0.9), transparent)" }} />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "140px", background: isIvory ? "linear-gradient(to top, var(--belvo-bg), transparent)" : "linear-gradient(to top, rgba(4,0,14,0.95), transparent)" }} />
+          </div>
 
         {/* Scattered dots */}
         <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
           {[[120,160],[310,80],[490,220],[680,100],[870,250],[1050,130],[1230,200],[1380,90],[200,700],[450,760],[700,680],[950,750],[1150,700],[1340,760]].map(([cx,cy],i)=>(
-            <circle key={i} cx={cx} cy={cy} r={i%3===0?1.5:1} fill={i%2===0?"rgba(200,140,255,0.6)":"rgba(255,255,255,0.35)"} />
+            <circle key={i} cx={cx} cy={cy} r={i%3===0?1.5:1} fill={i%2===0?"rgba(200,140,255,0.6)": isIvory ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.35)"} />
           ))}
         </svg>
 
@@ -147,8 +150,8 @@ export default function Services() {
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "#ffffff", margin: "0 0 10px", letterSpacing: "-0.01em" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
+            style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "var(--belvo-text-1)", margin: "0 0 10px", letterSpacing: "-0.01em" }}
           >
             Full-Service{" "}
             <span style={{ color: "#9D4EDD" }}>Creative</span>{" "}
@@ -158,8 +161,8 @@ export default function Services() {
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(0.9rem,1.6vw,1.05rem)", lineHeight: 1.75, color: "rgba(255,255,255,0.5)", margin: "0 auto 36px", maxWidth: "560px", letterSpacing: "0.01em" }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
+            style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(0.9rem,1.6vw,1.05rem)", lineHeight: 1.75, color: "var(--belvo-text-2)", margin: "0 auto 36px", maxWidth: "560px", letterSpacing: "0.01em" }}
           >
             From SEO and branding to web development and performance marketing — we offer
             14 specialised services designed to take your brand from zero to dominate.
@@ -180,10 +183,10 @@ export default function Services() {
 
         {/* Scroll indicator */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.8 }} style={{ position: "absolute", bottom: "28px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-          <div style={{ width: "26px", height: "42px", borderRadius: "100px", border: "1px solid rgba(255,255,255,0.18)", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "8px" }}>
+          <div style={{ width: "26px", height: "42px", borderRadius: "100px", border: "1px solid var(--belvo-border-card)", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "8px" }}>
             <motion.div style={{ width: "4px", height: "8px", borderRadius: "100px", background: "rgba(157,78,221,0.8)" }} animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }} />
           </div>
-          <span style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", fontFamily: "'Inter',sans-serif" }}>Scroll</span>
+          <span style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--belvo-text-4)", fontFamily: "'Inter',sans-serif" }}>Scroll</span>
         </motion.div>
       </section>
 
@@ -191,7 +194,7 @@ export default function Services() {
       <section
         id="services-grid"
         ref={gridRef}
-        style={{ background: "#04000e", padding: "100px 24px 120px", position: "relative", overflow: "hidden" }}
+        style={{ background: "var(--belvo-bg)", padding: "100px 24px 120px", position: "relative", overflow: "hidden" }}
       >
         <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
@@ -199,7 +202,7 @@ export default function Services() {
         <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
           <motion.div custom={0} variants={fadeUp} initial="hidden" animate={gridInView ? "visible" : "hidden"} style={{ textAlign: "center", marginBottom: "64px" }}>
             <span style={{ display: "block", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#9D4EDD", fontFamily: "'Inter',sans-serif", marginBottom: "14px" }}>What We Do</span>
-            <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "#ffffff", margin: 0 }}>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
               14 Services. <span style={{ color: "#9D4EDD" }}>One Mission.</span>
             </h2>
           </motion.div>
@@ -213,21 +216,21 @@ export default function Services() {
                 initial="hidden"
                 animate={gridInView ? "visible" : "hidden"}
                 data-testid={`card-service-${svc.id}`}
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(130,40,200,0.18)", borderRadius: "14px", padding: "28px", display: "flex", flexDirection: "column", gap: "14px", transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s", cursor: "default" }}
+                style={{ background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "14px", padding: "28px", display: "flex", flexDirection: "column", gap: "14px", transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s", cursor: "default", boxShadow: isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none" }}
                 whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(100,20,180,0.18)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(130,40,200,0.18)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 8px 32px rgba(100,20,180,0.10)" : "0 8px 40px rgba(100,20,180,0.18)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none"; }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg,rgba(123,47,190,0.22),rgba(157,78,221,0.08))", border: "1px solid rgba(157,78,221,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.85rem", color: "#9D4EDD", flexShrink: 0 }}>
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.97rem", color: "#ffffff", margin: 0, lineHeight: 1.3 }}>
+                  <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.97rem", color: "var(--belvo-text-1)", margin: 0, lineHeight: 1.3 }}>
                     {svc.category}
                   </h3>
                 </div>
 
-                <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.85rem", lineHeight: 1.7, color: "rgba(255,255,255,0.42)", margin: 0, flexGrow: 1 }}>
+                <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.85rem", lineHeight: 1.7, color: "var(--belvo-text-6)", margin: 0, flexGrow: 1 }}>
                   {svc.desc}
                 </p>
 
@@ -250,7 +253,7 @@ export default function Services() {
       {/* ── CTA ───────────────────────────────────────────────────── */}
       <section
         ref={ctaRef}
-        style={{ background: "#04000e", padding: "0 24px 120px", position: "relative", overflow: "hidden" }}
+        style={{ background: "var(--belvo-bg)", padding: "0 24px 120px", position: "relative", overflow: "hidden" }}
       >
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
@@ -259,12 +262,12 @@ export default function Services() {
           variants={fadeUp}
           initial="hidden"
           animate={ctaInView ? "visible" : "hidden"}
-          style={{ maxWidth: "800px", margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(130,40,200,0.2)", borderRadius: "16px", padding: "clamp(36px,5vw,60px)", backdropFilter: "blur(12px)" }}
+          style={{ maxWidth: "800px", margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center", background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "16px", padding: "clamp(36px,5vw,60px)", backdropFilter: "blur(12px)" }}
         >
-          <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.6rem,3.5vw,2.6rem)", lineHeight: 1.1, color: "#ffffff", margin: "0 0 14px" }}>
+          <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.6rem,3.5vw,2.6rem)", lineHeight: 1.1, color: "var(--belvo-text-1)", margin: "0 0 14px" }}>
             Ready to Scale Your <span style={{ color: "#9D4EDD" }}>Brand?</span>
           </h2>
-          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.9rem", lineHeight: 1.75, color: "rgba(255,255,255,0.4)", margin: "0 auto 32px", maxWidth: "480px" }}>
+          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.9rem", lineHeight: 1.75, color: "var(--belvo-text-6)", margin: "0 auto 32px", maxWidth: "480px" }}>
             Let's talk about which services are right for your business. Book a free consultation with our team.
           </p>
           <button

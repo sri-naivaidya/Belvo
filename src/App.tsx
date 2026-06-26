@@ -12,13 +12,14 @@ import Services from "@/pages/Services";
 import About from "@/sections/About";
 import ComingSoon from "@/pages/ComingSoon";
 import Navbar from "@/components/Navbar";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
-  exit:    { opacity: 0, y: -6, transition: { duration: 0.22, ease: "easeIn" } },
+   animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const } },
+   exit:    { opacity: 0, y: -6, transition: { duration: 0.22, ease: "easeIn" as const } },
 };
 
 function AnimatedPage({ children }: { children: React.ReactNode }) {
@@ -74,6 +75,7 @@ function App() {
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <Router />
           </WouterRouter>
+          <ScrollToTop />
           <Toaster />
         </ThemeProvider>
       </TooltipProvider>

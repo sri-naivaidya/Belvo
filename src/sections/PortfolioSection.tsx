@@ -71,7 +71,7 @@ const SERVICES_DELIVERED = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.08 + i * 0.05, ease: [0.16, 1, 0.3, 1] } }),
+   visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.08 + i * 0.05, ease: [0.16, 1, 0.3, 1] as const } }),
 };
 
 const CATEGORY_FOLDERS: Record<string, string> = {
@@ -95,7 +95,7 @@ function getLogoPath(categoryName: string, url: string): string | undefined {
   if (!folder || !url) return undefined;
   const handle = url.replace(/\/+$/, "").split("/").pop();
   if (!handle) return undefined;
-  return `/PortfoilioLogos/${folder}/${handle}.jpg`;
+  return `/PortfolioLogos/${folder}/${handle}.jpg`;
 }
 
 function hexToRgb(hex: string): string {
