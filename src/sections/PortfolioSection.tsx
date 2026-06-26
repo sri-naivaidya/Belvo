@@ -79,6 +79,15 @@ const CATEGORY_FOLDERS: Record<string, string> = {
   "Fashion, Apparel & Lifestyle": "FASHION, APPAREL & LIFESTYLE (20)",
   "Cafés, Restaurants & Hospitality": "CAFÉS, RESTAURANTS & HOSPITALITY (20)",
   "Food, Snacks & FMCG": "FOOD & BEVERAGES (9)",
+  "EdTech": "EDTECH (5)",
+  "FinTech": "FINTECH (3)",
+  "Technology & Startups": "TECHNOLOGY & STARTUPS (2)",
+  "Modeling, Creative & Entertainment": "MODELING, CREATIVE & ENTERTAINMENT (4)",
+  "Jewellery & Luxury Accessories": "JEWELLERY & LUXURY ACCESSORIES (4)",
+  "Interior Design & Architecture": "INTERIOR DESIGN & ARCHITECTURE (2)",
+  "Travel & Tourism": "TRAVEL & TOURISM (4)",
+  "Healthcare, Hospitals & Clinics": "HEALTHCARE, HOSPITALS & CLINICS (3)",
+  "Salon, Spa & Aesthetics": "SALON, SPA & AESTHETICS (3)",
 };
 
 function getLogoPath(categoryName: string, url: string): string | undefined {
@@ -276,15 +285,15 @@ export default function PortfolioSection({ id }: Props) {
             color: "var(--belvo-text-1)",
             margin: "0 0 16px",
           }}>
-            <span style={{ color: "#9D4EDD" }}>96 Brands</span>{" "}
-            <span style={{ color: isIvory ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.15)", fontWeight: 300 }}>×</span>{" "}
-            13 Industries
+            From skincare to startups —{" "}
+            <span style={{ color: "#9D4EDD" }}>96 brands</span>,{" "}
+            13 industries
           </h2>
           <p style={{
             fontFamily: "'Inter',sans-serif", fontSize: "0.88rem", lineHeight: 1.8,
             color: "var(--belvo-text-6)", maxWidth: "540px", margin: "0 auto",
           }}>
-            From skincare to startups — brands we've helped scale across every industry.
+            Real brands, real industries — helping each one scale with strategy that works.
           </p>
         </motion.div>
       </div>
