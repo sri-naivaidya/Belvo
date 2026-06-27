@@ -21,5 +21,9 @@ export default defineConfig({
   server: {
     port: 5173,
     host: "0.0.0.0",
+    watch: {
+      // Ignore binary images that may be locked by external programs on Windows
+      ignored: ["**/src/Images/**"],
+    },
   },
 });

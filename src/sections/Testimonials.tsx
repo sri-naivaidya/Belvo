@@ -2,81 +2,103 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Quote } from "lucide-react";
 
+// Resolve local images in src/Images via import.meta.url so Vite handles them correctly
+const AVATAR_1 = new URL("../Images/testimonial_avatar_1.png", import.meta.url).href;
+const AVATAR_2 = new URL("../Images/testimonial_avatar_2.png", import.meta.url).href;
+const AVATAR_3 = new URL("../Images/testimonial_avatar_3.png", import.meta.url).href;
+const AVATAR_4 = new URL("../Images/testimonial_avatar_4.png", import.meta.url).href;
+const AVATAR_5 = new URL("../Images/WhatsApp Image 2026-06-27 at 6.40.55 PM.jpeg", import.meta.url).href;
+const AVATAR_6 = new URL("../Images/WhatsApp Image 2026-06-27 at 6.42.56 PM.jpeg", import.meta.url).href;
+const AVATAR_7 = new URL("../Images/WhatsApp Image 2026-06-27 at 6.44.30 PM.jpeg", import.meta.url).href;
+const AVATAR_8 = new URL("../Images/WhatsApp Image 2026-06-27 at 6.46.15 PM.jpeg", import.meta.url).href;
+const AVATAR_9 = new URL("../Images/ChatGPT Image Jun 27, 2026, 07_21_16 PM.png", import.meta.url).href;
+const AVATAR_10 = new URL("C:\\Users\\GLOBAL\\Belvo2\\Belvo\\src\\Images\\ChatGPT Image Jun 27, 2026, 07_29_17 PM.png", import.meta.url).href;
+
+const DEFAULT_TESTIMONIAL_IMAGE = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80";
+
 const TESTIMONIALS = [
   {
     id: 1,
-    name: "Riya Nambiar",
-    title: "Co-Founder & CEO",
-    company: "SaaS Startup",
+    image: AVATAR_1,
+    name: "Sunny Jain",
+    title: "Founder / Key Person",
+    company: "Ghar Soaps",
     review:
       "BELVO understood exactly what we needed before we could even articulate it. Their team moved fast, asked the right questions, and delivered a product that genuinely reflected our brand. Couldn't have asked for a better partner.",
   },
   {
     id: 2,
-    name: "Arjun Mehta",
-    title: "Head of Product",
-    company: "D2C Brand",
+    image: AVATAR_2,
+    name: "Niharika Kunal Jhunjhunwala",
+    title: "Founder / Key Person",
+    company: "ClayCo Beauty",
     review:
       "We'd worked with three agencies before BELVO. The difference was immediate — structured thinking, clear timelines, and no fluff. They treated our product like it was their own, and it showed in the final output.",
   },
   {
     id: 3,
-    name: "Priya Subramaniam",
-    title: "Marketing Lead",
-    company: "E-commerce Company",
+    image: AVATAR_3,
+    name: "Prabhkiran Singh",
+    title: "Founder / Key Person",
+    company: "Bewakoof",
     review:
       "Our conversion rates improved within the first month of the redesign. BELVO didn't just make things look good — they made them work. The team was attentive, professional, and genuinely easy to collaborate with.",
   },
   {
     id: 4,
-    name: "Karan Oberoi",
-    title: "Founder",
-    company: "Fintech Startup",
+    image: AVATAR_4,
+    name: "Manas Madhu",
+    title: "Founder / Key Person",
+    company: "Beyond Snacks",
     review:
       "I was skeptical going in, but BELVO changed my mind quickly. They pushed back when our ideas weren't quite right, offered smarter alternatives, and the end result was miles ahead of what we initially planned.",
   },
   {
     id: 5,
-    name: "Sneha Pillai",
-    title: "Growth Manager",
-    company: "Health & Wellness Brand",
+    image: AVATAR_5,
+    name: "Mohammad Raafi Hossain",
+    title: "Founder / Key Person",
+    company: "Fasset",
     review:
       "Working with BELVO felt less like hiring a vendor and more like bringing on a team that actually cared. The attention to detail was impressive, and every touchpoint — from onboarding to delivery — was handled well.",
   },
   {
     id: 6,
-    name: "Dev Malhotra",
-    title: "Business Owner",
-    company: "Hospitality Group",
+    image: AVATAR_10,
+    name: "karan desai",
+    title: "Founder / Key Person",
+    company: "KDAK",
     review:
       "We needed a full rebrand and a digital overhaul, and BELVO delivered both without missing a beat. They understood our audience, respected our timelines, and the final outcome has genuinely elevated how people perceive us.",
   },
   {
     id: 7,
-    name: "Anika Sharma",
-    title: "Product Designer",
-    company: "EdTech Platform",
+    image: AVATAR_9,
+    name: "Prathamesh Choudhari",
+    title: "Founder / Key Person",
+    company: "GatePay",
     review:
       "BELVO brought a level of craft to our UI that we hadn't seen from any other agency. Every screen felt intentional. They didn't just execute the brief — they elevated it. We've received more compliments on our product design since the launch than ever before.",
   },
   {
     id: 8,
-    name: "Rohan Verma",
-    title: "CTO",
-    company: "B2B SaaS Company",
+    image: AVATAR_6,
+    name: "Dr. Aman Dua",
+    title: "Founder / Key Person",
+    company: "AK Clinics",
     review:
       "From architecture to deployment, BELVO's engineering team was thorough and communicative. They flagged issues before they became problems, suggested better approaches, and delivered clean, maintainable code. Exactly what a technical team should be.",
   },
   {
     id: 9,
-    name: "Meera Iyer",
-    title: "Brand Strategist",
-    company: "Consumer Goods Brand",
+    image: AVATAR_7,
+    name: "Dr. Devi Prasad Shetty",
+    title: "Founder / Key Person",
+    company: "Narayana One Health",
     review:
       "We came to BELVO with a fragmented brand identity and left with something cohesive, confident, and compelling. Their strategic thinking goes far beyond aesthetics — they helped us find our voice and actually use it.",
   },
 ];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
   visible: (i: number) => ({
@@ -89,7 +111,6 @@ const fadeUp = {
 function TestimonialCard({ testimonial, index }: { testimonial: typeof TESTIMONIALS[0]; index: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-
   return (
     <motion.div
       ref={ref}
@@ -98,7 +119,6 @@ function TestimonialCard({ testimonial, index }: { testimonial: typeof TESTIMONI
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       style={{
-        background: "var(--belvo-bg-card)",
         border: "1px solid var(--belvo-border-card)",
         borderRadius: "16px",
         padding: "clamp(24px, 3.5vw, 36px)",
@@ -115,26 +135,36 @@ function TestimonialCard({ testimonial, index }: { testimonial: typeof TESTIMONI
         boxShadow: "0 8px 40px rgba(100,20,180,0.14)",
       }}
     >
-      <div style={{ position: "absolute", top: 0, left: "clamp(24px,3.5vw,36px)", right: "clamp(24px,3.5vw,36px)", height: "1px", background: "linear-gradient(90deg, rgba(157,78,221,0.6), transparent)" }} />
-
-      <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "linear-gradient(135deg, rgba(123,47,190,0.18), rgba(157,78,221,0.08))", border: "1px solid rgba(157,78,221,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <Quote size={15} style={{ color: "#9D4EDD" }} />
+      <div style={{ display: "flex", alignItems: "center", gap: "18px", paddingBottom: "18px", minHeight: "120px", flexShrink: 0 }}>
+        <div style={{ width: "88px", height: "88px", borderRadius: "50%", overflow: "hidden", background: "linear-gradient(135deg, rgba(123,47,190,0.30), rgba(157,78,221,0.12))", border: "2px solid rgba(157,78,221,0.28)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          {testimonial.image ? (
+            <img
+              src={testimonial.image}
+              alt={testimonial.name}
+              width={88}
+              height={88}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          ) : (
+            <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "1.08rem", color: "#9D4EDD", letterSpacing: "0.04em" }}>
+              {testimonial.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+            </span>
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", minHeight: "100%" }}>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--belvo-text-1)", margin: 0, letterSpacing: "0.01em" }}>{testimonial.name}</p>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.78rem", color: "var(--belvo-text-3)", margin: "6px 0 0", letterSpacing: "0.04em" }}>{testimonial.title} · {testimonial.company}</p>
+        </div>
       </div>
 
-      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.92rem", lineHeight: 1.8, color: "var(--belvo-text-6)", margin: 0, flex: 1, letterSpacing: "0.01em" }}>
+      <div style={{ height: "1px", background: "var(--belvo-border-bottom)", opacity: 0.5 }} />
+
+      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.96rem", lineHeight: 1.8, color: "var(--belvo-text-6)", margin: 0, flex: 1, letterSpacing: "0.01em" }}>
         {testimonial.review}
       </p>
 
-      <div style={{ height: "1px", background: "var(--belvo-border-bottom)" }} />
-
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "linear-gradient(135deg, rgba(123,47,190,0.30), rgba(157,78,221,0.12))", border: "1px solid rgba(157,78,221,0.28)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "0.72rem", color: "#9D4EDD", letterSpacing: "0.04em", flexShrink: 0 }}>
-          {testimonial.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-        </div>
-        <div>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: "0.85rem", color: "var(--belvo-text-1)", margin: 0, letterSpacing: "0.01em" }}>{testimonial.name}</p>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.72rem", color: "var(--belvo-text-3)", margin: "2px 0 0", letterSpacing: "0.04em" }}>{testimonial.title} · {testimonial.company}</p>
-        </div>
+      <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "linear-gradient(135deg, rgba(123,47,190,0.18), rgba(157,78,221,0.08))", border: "1px solid rgba(157,78,221,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <Quote size={15} style={{ color: "#9D4EDD" }} />
       </div>
     </motion.div>
   );
