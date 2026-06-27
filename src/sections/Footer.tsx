@@ -112,24 +112,30 @@ export default function Footer() {
               businesses scale globally and compete at the highest level.
             </p>
             <motion.div custom={11} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"} style={{ marginTop: "24px" }}>
-              <button
-                disabled
+              <a
+                href="/Portfolio.pdf"
+                download="BELVO-Portfolio.pdf"
                 data-testid="button-download-portfolio"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: "8px",
                   padding: "10px 22px",
-                  background: "var(--belvo-bg-btn-ghost)",
-                  border: "1px solid var(--belvo-border-card)",
+                  background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+                  border: "none",
                   borderRadius: "8px",
-                  color: "var(--belvo-text-4)",
-                  fontFamily: "'Inter', sans-serif", fontWeight: 500,
+                  color: "#ffffff",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 600,
                   fontSize: "0.78rem", letterSpacing: "0.14em",
-                  textTransform: "uppercase", cursor: "not-allowed",
+                  textTransform: "uppercase", cursor: "pointer",
+                  textDecoration: "none",
+                  boxShadow: "0 0 20px rgba(130,40,200,0.3)",
+                  transition: "background 0.3s, box-shadow 0.3s",
                 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(135deg, #9D4EDD, #B06AE8)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 30px rgba(157,78,221,0.5)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(135deg, #7B2FBE, #9D4EDD)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(130,40,200,0.3)"; }}
               >
                 <Download size={13} />
-                Portfolio — Coming Soon
-              </button>
+                Download Portfolio
+              </a>
             </motion.div>
           </motion.div>
 
