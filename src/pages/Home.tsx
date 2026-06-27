@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Play } from "lucide-react";
+import About from "@/sections/About";
 import BookACall from "@/sections/BookACall";
 import Footer from "@/sections/Footer";
 import ServicesSection from "@/sections/ServicesSection";
@@ -202,6 +203,7 @@ export default function Home() {
       </div>
 
       {/* ── SECTIONS ── */}
+      <About />
       <ServicesSection id="services" />
       <PortfolioSection id="portfolio" />
       <TeamSection />
