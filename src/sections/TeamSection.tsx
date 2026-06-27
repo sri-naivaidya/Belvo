@@ -11,21 +11,25 @@ Object.entries(imageModules).forEach(([path, url]) => {
 
 const NAME_OVERRIDES: Record<string, string> = {
   "ramnath": "ram nath",
+  "ram nath g k": "ram nath",
   "saurav": "sourav",
   "sharfudeen": "sharfu",
   "sheth yamani": "yamini",
+  "naveen k d": "naveen kumar",
+  "mohammad anasuddin zaid": "mohammed anasuddin zaid",
 };
 
 function getImageUrl(memberName: string): string | undefined {
   const key = memberName.toLowerCase().trim();
   const override = NAME_OVERRIDES[key];
   if (override && IMAGE_MAP[override]) return IMAGE_MAP[override];
-  if (IMAGE_MAP[key]) return IMAGE_MAP[key];
+  const BLOCKED = new Set(["naveen kumar"]);
+  if (!BLOCKED.has(key) && IMAGE_MAP[key]) return IMAGE_MAP[key];
   const firstName = key.split(/\s+/)[0];
-  if (IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
+  if (!BLOCKED.has(firstName) && IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
   const lastName = key.split(/\s+/).pop()!;
-  if (IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
-  const fuzzy = Object.keys(IMAGE_MAP).find(k => key.includes(k) || k.includes(key));
+  if (!BLOCKED.has(lastName) && IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
+  const fuzzy = Object.keys(IMAGE_MAP).find(k => !BLOCKED.has(k) && (key.includes(k) || k.includes(key)));
   if (fuzzy) return IMAGE_MAP[fuzzy];
   return undefined;
 }
@@ -46,7 +50,7 @@ const TEAMS = [
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
     members: [
-      "Lokesh", "Sri Satya", "Akhil", "Harsh", "Saurav",
+      "Lokesh", "Sri Satya", "Akhil",
       "Mohammad Anasuddin Zaid", "Ishwari",
       "Sandali", "Tamil Selvan", "Ram Nath G K",
       "Guru dutt", "Shailender",
@@ -57,7 +61,14 @@ const TEAMS = [
     name: "App Development",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aditya", "Navin Kumar", "Navin J.D"],
+    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aditya", "Naveen Kumar", "Naveen K D"],
+  },
+  {
+    id: "cyber",
+    name: "Cyber Security",
+    color: "#7B2FBE",
+    lightColor: "#9D4EDD",
+    members: ["Harsh", "Sourav", "Parv"],
   },
   {
     id: "analytics",
