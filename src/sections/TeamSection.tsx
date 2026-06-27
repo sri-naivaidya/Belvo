@@ -17,6 +17,7 @@ const NAME_OVERRIDES: Record<string, string> = {
   "sheth yamani": "yamini",
   "naveen k d": "naveen kumar",
   "mohammad anasuddin zaid": "mohammed anasuddin zaid",
+  "lokesh": "lokesh2",
 };
 
 function getImageUrl(memberName: string): string | undefined {
