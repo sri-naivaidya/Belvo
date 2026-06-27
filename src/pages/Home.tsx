@@ -4,10 +4,11 @@ import BookACall from "@/sections/BookACall";
 import Footer from "@/sections/Footer";
 import ServicesSection from "@/sections/ServicesSection";
 import TeamSection from "@/sections/TeamSection";
-import About from "@/sections/About";
 import Testimonials from "@/sections/Testimonials";
 import PortfolioSection from "@/sections/PortfolioSection";
 import UpcomingEvents from "@/sections/UpcomingEvents";
+import HomeBlogsSection from "@/sections/HomeBlogsSection";
+import FAQ from "@/sections/FAQ";
 
 function AuroraWaves() {
   return (
@@ -90,6 +91,7 @@ const itemUp = {
 export default function Home() {
   return (
     <>
+      {/* ── HERO ── */}
       <div
         className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden text-white"
         style={{ background: "var(--belvo-bg)" }}
@@ -200,13 +202,15 @@ export default function Home() {
         </div>
       </div>
 
-      <About />
+      {/* ── SECTION ORDER ── */}
       <ServicesSection id="services" />
       <PortfolioSection id="portfolio" />
-      <UpcomingEvents />
-      <Testimonials />
       <TeamSection />
+      <Testimonials />
+      <UpcomingEvents />
+      <HomeBlogsSection />
       <BookACall />
+      <FAQ />
       <Footer />
     </>
   );
