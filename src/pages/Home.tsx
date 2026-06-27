@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
-import { Link } from "wouter";
 import { ArrowUpRight, Play } from "lucide-react";
 import BookACall from "@/sections/BookACall";
 import Footer from "@/sections/Footer";
 import UnderConstruction from "@/sections/UnderConstruction";
 import ServicesSection from "@/sections/ServicesSection";
 import PortfolioSection from "@/sections/PortfolioSection";
+import Works from "@/sections/Works";
 import TeamSection from "@/sections/TeamSection";
 import About from "@/sections/About";
-import FAQ from "@/sections/FAQ";
+import Testimonials from "@/sections/Testimonials";
 
 function AuroraWaves() {
   return (
@@ -69,9 +69,9 @@ function AuroraWaves() {
         stroke="rgba(150,50,230,0.5)" strokeWidth="2" fill="none" filter="url(#glow-strong)" />
 
       {[
-        [120, 160], [310, 80], [490, 220], [680, 100], [870, 250], [1050, 130], [1230, 200], [1380, 90],
-        [200, 700], [450, 760], [700, 680], [950, 750], [1150, 700], [1340, 760],
-        [80, 420], [1460, 380], [360, 500], [1100, 480],
+        [120,160],[310,80],[490,220],[680,100],[870,250],[1050,130],[1230,200],[1380,90],
+        [200,700],[450,760],[700,680],[950,750],[1150,700],[1340,760],
+        [80,420],[1460,380],[360,500],[1100,480],
       ].map(([cx, cy], i) => (
         <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.5 : 1}
           fill={i % 2 === 0 ? "rgba(200,140,255,0.7)" : "rgba(255,255,255,0.4)"} />
@@ -203,8 +203,11 @@ export default function Home() {
 
       <About />
       <ServicesSection id="services" />
+      <UnderConstruction id="why-belvo"    number="03" title="Why Choose BELVO"    glowSide="center" />
+      <UnderConstruction id="process"      number="04" title="Our Process"         glowSide="right"  />
       <PortfolioSection id="portfolio" />
-      <UnderConstruction id="testimonials" number="06" title="Client Testimonials" glowSide="center" />
+      <Testimonials />
+      <Works />
       <TeamSection />
       <BookACall />
       <Footer />
