@@ -131,11 +131,10 @@ function getInitials(name: string): string {
 }
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0 },
   visible: (i: number) => ({
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.9, delay: i * 0.15, ease: easeSmooth },
+    transition: { duration: 0.5, delay: i * 0.05, ease: "easeOut" },
   }),
 };
 
@@ -185,34 +184,17 @@ function CeoCard({ inView }: { inView: boolean }) {
 
         {/* avatar */}
         <div style={{ position: "relative", flexShrink: 0 }}>
-          <motion.div
-            style={{
-              position: "absolute", inset: -8, borderRadius: "50%",
-              border: `1.5px solid ${gold}44`,
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div
-            style={{
-              position: "absolute", inset: -16, borderRadius: "50%",
-              border: `0.5px dashed ${gold}44`,
-            }}
-            animate={{ rotate: -360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div
-            style={{
-              position: "absolute", inset: -24, borderRadius: "50%",
-              border: `1px solid ${gold}22`,
-              opacity: 0.5,
-            }}
-            animate={{ rotate: 360, scale: [1, 1.05, 1] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          />
+          <div style={{
+            position: "absolute", inset: -8, borderRadius: "50%",
+            border: `1.5px solid ${gold}44`,
+          }} />
+          <div style={{
+            position: "absolute", inset: -16, borderRadius: "50%",
+            border: `0.5px dashed ${gold}44`,
+          }} />
 
           {/* Avatar Background - Gold gradient */}
-          <motion.div
+          <div
             style={{
               width: 120, height: 120, borderRadius: "50%",
               background: ceoImg ? "none" : "linear-gradient(135deg, #C9A341, #E0B84A)",
@@ -221,16 +203,11 @@ function CeoCard({ inView }: { inView: boolean }) {
               position: "relative", zIndex: 1, overflow: "hidden",
               boxShadow: `0 0 30px ${gold}33`,
             }}
-            animate={{ boxShadow: [`0 0 20px ${gold}22`, `0 0 40px ${gold}44`, `0 0 20px ${gold}22`] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
             {ceoImg ? (
-              <motion.img
+              <img
                 src={ceoImg} alt={CEO.name}
                 style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
-                initial={{ scale: 1.1 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               />
             ) : (
               <>
@@ -245,7 +222,7 @@ function CeoCard({ inView }: { inView: boolean }) {
                 }}>{initials}</span>
               </>
             )}
-          </motion.div>
+          </div>
 
           {/* Gold status dot */}
           <div style={{
@@ -350,7 +327,7 @@ function MemberCard({
       }} />
 
       <div style={{ position: "relative", marginBottom: 16 }}>
-        <motion.div
+        <div
           style={{
             width: 84, height: 84, borderRadius: "50%",
             background: img ? "none" : `linear-gradient(135deg, ${color}cc, ${lightColor}88)`,
@@ -359,8 +336,6 @@ function MemberCard({
             boxShadow: `0 0 28px ${color}22`,
             position: "relative", overflow: "hidden",
           }}
-          animate={{ boxShadow: [`0 0 20px ${color}22`, `0 0 35px ${color}44`, `0 0 20px ${color}22`] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.1 }}
         >
           {img ? (
             <img src={img} alt={name}
@@ -379,8 +354,8 @@ function MemberCard({
               }}>{initials}</span>
             </>
           )}
-        </motion.div>
-        <motion.div
+        </div>
+        <div
           style={{
             position: "absolute", bottom: 4, right: 4,
             width: 14, height: 14, borderRadius: "50%",
@@ -388,8 +363,6 @@ function MemberCard({
             border: "2.5px solid var(--belvo-bg)",
             boxShadow: `0 0 10px ${color}80`,
           }}
-          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.15 }}
         />
       </div>
 
@@ -409,11 +382,8 @@ function MemberCard({
       {responsibilities && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "center", marginTop: 4 }}>
           {responsibilities.map(r => (
-            <motion.span
+            <span
               key={r}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
               style={{
                 fontFamily: "'Inter', sans-serif", fontSize: "0.6rem", fontWeight: 600,
                 letterSpacing: "0.12em", textTransform: "uppercase",
@@ -422,7 +392,7 @@ function MemberCard({
                 border: "1px solid var(--belvo-border-card)",
                 borderRadius: "100px", padding: "3px 10px",
               }}
-            >{r}</motion.span>
+            >{r}</span>
           ))}
         </div>
       )}
@@ -544,11 +514,7 @@ export default function TeamSection() {
 
   return (
     <>
-      {/* CSS keyframes for CEO card orbit rings */}
       <style>{`
-        @keyframes belvoCeoSpin {
-          to { transform: rotate(360deg); }
-        }
         @media (max-width: 600px) {
           .belvo-ceo-inner {
             flex-direction: column !important;

@@ -46,13 +46,11 @@ const TEAMS = [
   },
 ] as const;
 
-const easeSmooth = [0.22, 1, 0.36, 1] as const;
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0 },
   visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.9, delay: i * 0.15, ease: easeSmooth },
+    opacity: 1,
+    transition: { duration: 0.5, delay: i * 0.05, ease: "easeOut" },
   }),
 };
 
@@ -66,17 +64,6 @@ function ProjectCard({ title, tag, gradient, accent, inView, i }: {
         background: "var(--belvo-bg-card)",
         border: "1px solid var(--belvo-border-card)",
         borderRadius: "14px", overflow: "hidden",
-        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = `${accent}55`;
-        el.style.boxShadow = `0 12px 48px rgba(80,10,150,0.22)`;
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--belvo-border-card)";
-        el.style.boxShadow = "none";
       }}
     >
       {/* Thumbnail */}

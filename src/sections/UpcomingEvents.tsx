@@ -4,14 +4,11 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Calendar, Globe, Mail, MapPin, Phone, Wifi } from "lucide-react";
 import { EVENTS } from "@/lib/events";
 
-const easeSmooth = [0.22, 1, 0.36, 1] as const;
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
+  hidden: { opacity: 0 },
   visible: (i: number) => ({
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.9, delay: i * 0.15, ease: easeSmooth },
+    transition: { duration: 0.5, delay: i * 0.05, ease: "easeOut" },
   }),
 };
 
