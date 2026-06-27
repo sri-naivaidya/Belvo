@@ -203,25 +203,10 @@ export default function Home() {
 
       <About />
       <ServicesSection id="services" />
-      <UnderConstruction id="why-belvo" number="03" title="Why Choose BELVO" glowSide="center" />
-      <UnderConstruction id="process" number="04" title="Our Process" glowSide="right" />
       <PortfolioSection id="portfolio" />
       <UnderConstruction id="testimonials" number="06" title="Client Testimonials" glowSide="center" />
-
-
-
-
-      <PortfolioSection id="portfolio" />
-
-      <UnderConstruction id="testimonials" number="06" title="Client Testimonials" glowSide="center" />
-
-
-      <UnderConstruction id="testimonials" number="06" title="Client Testimonials" glowSide="center" />
-
-
       <TeamSection />
       <BookACall />
-      <FAQ />
       <Footer />
     </>
   );
