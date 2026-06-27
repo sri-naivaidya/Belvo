@@ -15,37 +15,61 @@ const FAQ_ITEMS = [
     id: "faq-1",
     question: "What is Belvo?",
     answer:
-      "Belvo is an AI-powered platform that helps businesses streamline operations, automate workflows, and improve productivity through intelligent digital solutions.",
+      "Belvo is a full-service digital growth agency that helps businesses build their brand, scale their marketing, and compete globally. From branding and web development to performance marketing and social media, we handle every aspect of your digital presence.",
   },
   {
     id: "faq-2",
-    question: "How do I get started?",
+    question: "How do I get started with Belvo?",
     answer:
-      "Simply sign up, explore the platform, and book a demo if you'd like personalized guidance from our team.",
+      "Getting started is simple — book a free discovery call through our contact section. We'll learn about your business, goals, and challenges, then put together a tailored proposal within 48 hours. No pressure, no obligation.",
   },
   {
     id: "faq-3",
-    question: "Is my data secure?",
+    question: "Is my data secure when working with Belvo?",
     answer:
-      "Absolutely. We use industry-standard security practices and encryption to protect your data and ensure privacy.",
+      "Absolutely. We follow industry-standard security practices across all projects. All client data, assets, and communications are handled with strict confidentiality, and we're happy to sign NDAs before any project begins.",
   },
   {
     id: "faq-4",
-    question: "Can I use Belvo for my business?",
+    question: "Can Belvo work with businesses of any size?",
     answer:
-      "Yes. Belvo is designed for startups, small businesses, and enterprises looking to improve efficiency using modern technology.",
+      "Yes. We work with early-stage startups, scaling D2C brands, and established enterprises. Our engagement models are flexible — whether you need a one-time project or a long-term growth partner, we can structure something that fits.",
   },
   {
     id: "faq-5",
-    question: "Do you offer customer support?",
+    question: "What industries does Belvo specialise in?",
     answer:
-      "Yes. Our support team is available to assist you whenever you need help.",
+      "We've delivered results across 15+ industries including e-commerce, fashion, skincare, F&B, EdTech, FinTech, healthcare, hospitality, and more. Our portfolio of 100+ brands speaks to the depth and breadth of our industry experience.",
   },
   {
     id: "faq-6",
-    question: "How can I contact Belvo?",
+    question: "How long does a typical project take?",
     answer:
-      "You can reach us through the Contact section or the information provided in the website footer.",
+      "Timelines vary by scope. A brand identity project typically takes 2–4 weeks. A full website design and development engagement runs 4–8 weeks. Performance marketing campaigns are set up within 1–2 weeks. We'll give you a clear timeline in your proposal.",
+  },
+  {
+    id: "faq-7",
+    question: "Do you offer ongoing retainer services?",
+    answer:
+      "Yes — in fact, most of our clients move to monthly retainers after their initial project. Retainers cover ongoing social media management, performance marketing, content creation, SEO, or any combination of services your brand needs to keep growing.",
+  },
+  {
+    id: "faq-8",
+    question: "What does Belvo's performance marketing service include?",
+    answer:
+      "Our performance marketing service covers paid advertising across Google, Meta, Instagram, and other relevant platforms. It includes campaign strategy, audience research, creative briefing, ad setup, continuous optimisation, and detailed monthly reporting with transparent ROAS tracking.",
+  },
+  {
+    id: "faq-9",
+    question: "Can Belvo handle both design and development?",
+    answer:
+      "Yes — we're a full-service agency with in-house designers and developers. We build everything from brand identities and UI/UX designs to websites, mobile apps, and custom software. Having both under one roof means faster delivery and tighter collaboration between creative and technical teams.",
+  },
+  {
+    id: "faq-10",
+    question: "How do I contact Belvo if I have more questions?",
+    answer:
+      "You can reach us through the Book a Free Call section on this page, or drop us a message via the contact details in the footer. Our team typically responds within 24 hours on business days.",
   },
 ];
 
@@ -83,7 +107,6 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
             : "0 2px 12px rgba(0,0,0,0.15)",
         }}
       >
-        {/* Trigger Button */}
         <button
           id={id}
           aria-expanded={isOpen}
@@ -109,8 +132,7 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
             outline: "none",
           }}
           onFocus={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.outline =
-              "2px solid rgba(157,78,221,0.5)";
+            (e.currentTarget as HTMLButtonElement).style.outline = "2px solid rgba(157,78,221,0.5)";
             (e.currentTarget as HTMLButtonElement).style.outlineOffset = "-2px";
           }}
           onBlur={(e) => {
@@ -143,7 +165,6 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
             {question}
           </span>
 
-          {/* Animated Plus / Minus icon */}
           <span
             aria-hidden="true"
             style={{
@@ -162,7 +183,6 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
               position: "relative",
             }}
           >
-            {/* Horizontal bar */}
             <span
               style={{
                 position: "absolute",
@@ -173,7 +193,6 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
                 transition: "background 0.3s ease",
               }}
             />
-            {/* Vertical bar (collapses when open) */}
             <span
               style={{
                 position: "absolute",
@@ -188,7 +207,6 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
           </span>
         </button>
 
-        {/* Collapsible Answer Panel */}
         <AnimatePresence initial={false}>
           {isOpen && (
             <motion.div
@@ -247,7 +265,7 @@ export default function FAQ() {
         background: "var(--belvo-bg)",
         position: "relative",
         overflow: "hidden",
-        padding: "100px 24px 120px",
+        padding: "80px 24px 80px",
       }}
     >
       {/* Top divider line */}
@@ -299,7 +317,7 @@ export default function FAQ() {
           whiteSpace: "nowrap",
         }}
       >
-        07
+        09
       </motion.div>
 
       <div
@@ -316,7 +334,7 @@ export default function FAQ() {
           variants={fadeUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{ textAlign: "center", marginBottom: "64px" }}
+          style={{ textAlign: "center", marginBottom: "52px" }}
         >
           <span
             style={{
