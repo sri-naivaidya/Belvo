@@ -203,6 +203,7 @@ html.ivory {
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    overflow-x: hidden;
   }
   html {
     color-scheme: dark;
@@ -211,4 +212,64 @@ html.ivory {
   html.ivory {
     color-scheme: light;
   }
+}
+
+/* ─── Responsive & Smooth UX ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  h1, h2 {
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  section {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* Smooth scroll reveal for all sections */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--belvo-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(130,40,200,0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(130,40,200,0.5);
+}
+
+/* Glassmorphism utility */
+.glass-card {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--belvo-border-card);
+}
+
+/* Smooth image loading */
+img {
+  transition: opacity 0.3s ease;
+}
+img[loading] {
+  opacity: 0;
+}
+img[loading].loaded,
+img[loading][complete] {
+  opacity: 1;
 }

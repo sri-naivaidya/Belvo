@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Calendar, Globe, Mail, MapPin, Wifi } from "lucide-react";
+import { Calendar, Globe, Mail, MapPin, Phone, Wifi } from "lucide-react";
 
 const EVENTS = [
   {
@@ -163,9 +163,9 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             marginBottom: "16px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "6px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
             <Mail size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
-            
+            <a
               href="mailto:career.belvo@gmail.com"
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -181,6 +181,24 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
               career.belvo@gmail.com
             </a>
           </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
+            <Phone size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
+            <a
+              href="tel:+918928466820"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                color: "#9D4EDD",
+                letterSpacing: "0.02em",
+                textDecoration: "none",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.textDecoration = "underline"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.textDecoration = "none"; }}
+            >
+              +91 89284 66820
+            </a>
+          </div>
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -191,7 +209,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
               letterSpacing: "0.01em",
             }}
           >
-            For registrations, please contact us via email.
+            For registrations, please contact us via email or phone.
           </p>
         </div>
 

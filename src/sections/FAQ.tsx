@@ -71,6 +71,96 @@ const FAQ_ITEMS = [
     answer:
       "You can reach us through the Book a Free Call section on this page, or drop us a message via the contact details in the footer. Our team typically responds within 24 hours on business days.",
   },
+  {
+    id: "faq-11",
+    question: "What is the cost of Belvo's services?",
+    answer:
+      "Our pricing is project-based and varies depending on scope, complexity, and deliverables. We offer custom quotes tailored to each client's needs. During your free discovery call, we'll discuss your requirements and provide a transparent pricing proposal with no hidden fees.",
+  },
+  {
+    id: "faq-12",
+    question: "Does Belvo offer social media management?",
+    answer:
+      "Yes — social media management is one of our core services. We handle content creation, posting schedules, community management, engagement strategies, and growth tactics across Instagram, LinkedIn, Twitter, Facebook, and emerging platforms to ensure your brand stays relevant and top-of-mind.",
+  },
+  {
+    id: "faq-13",
+    question: "What is influencer marketing and how does Belvo execute it?",
+    answer:
+      "Influencer marketing involves partnering with content creators and personalities who have engaged audiences aligned with your brand. Belvo identifies, vets, negotiates, and manages influencer campaigns — from nano to macro influencers — ensuring authentic collaborations that drive awareness, trust, and conversions.",
+  },
+  {
+    id: "faq-14",
+    question: "Can Belvo help with SEO and organic growth?",
+    answer:
+      "Absolutely. Our SEO services include technical SEO audits, on-page optimization, keyword research, content strategy, link building, and performance tracking. We focus on sustainable organic growth that helps your website rank higher, attract quality traffic, and reduce dependency on paid ads.",
+  },
+  {
+    id: "faq-15",
+    question: "Does Belvo provide e-commerce management services?",
+    answer:
+      "Yes — we offer end-to-end e-commerce management including store setup, product listing optimization, inventory management, conversion rate optimization (CRO), and scaling strategies for platforms like Shopify and WooCommerce. We help D2C brands streamline operations and maximize revenue.",
+  },
+  {
+    id: "faq-16",
+    question: "What does a typical brand identity project include?",
+    answer:
+      "A full brand identity project at Belvo includes brand strategy and positioning, logo design (primary and secondary), color palette, typography system, brand guidelines document, stationery design, social media kit, and brand asset library. We ensure every element is cohesive and strategically aligned with your business goals.",
+  },
+  {
+    id: "faq-17",
+    question: "How does Belvo approach web development?",
+    answer:
+      "We follow a structured process: discovery and requirements gathering, wireframing and UI/UX design, frontend and backend development, content integration, testing and QA, and deployment. We use modern tech stacks like React, Next.js, Node.js, and ensure every site is fully responsive, fast, and SEO-optimized.",
+  },
+  {
+    id: "faq-18",
+    question: "Can Belvo develop mobile apps?",
+    answer:
+      "Yes — we design and develop native and cross-platform mobile applications using Flutter and React Native. Our app development services include concept validation, UI/UX design, development, testing, App Store/Play Store deployment, and post-launch support with regular updates.",
+  },
+  {
+    id: "faq-19",
+    question: "What is Belvo's approach to performance marketing?",
+    answer:
+      "Our performance marketing approach is data-first and ROI-driven. We start with audience research and campaign strategy, create compelling ad creatives and copy, set up and optimize campaigns on Google Ads, Meta Ads, and other platforms, and provide transparent monthly reporting with actionable insights and ROAS tracking.",
+  },
+  {
+    id: "faq-20",
+    question: "Does Belvo offer content creation services?",
+    answer:
+      "Yes — content creation is integral to everything we do. Our team produces high-quality written content, graphic designs, video content, motion graphics, and photography tailored to your brand voice and platform requirements. From blog posts and social media captions to video ads and product shoots, we cover it all.",
+  },
+  {
+    id: "faq-21",
+    question: "How does Belvo measure success and report results?",
+    answer:
+      "We believe in transparent, data-backed reporting. Depending on the service, we track KPIs like website traffic, conversion rates, engagement metrics, ROAS, follower growth, brand mentions, and more. Clients receive detailed monthly reports with insights, learnings, and optimization recommendations for continuous improvement.",
+  },
+  {
+    id: "faq-22",
+    question: "What is the Belvo team structure like?",
+    answer:
+      "Each client is assigned a dedicated account manager who serves as your single point of contact. Behind them is a multidisciplinary team of designers, developers, strategists, content creators, and marketers who collaborate to deliver exceptional results. This structure ensures accountability, consistency, and seamless communication.",
+  },
+  {
+    id: "faq-23",
+    question: "Does Belvo work with international clients?",
+    answer:
+      "Yes — we work with clients across India, the US, the UK, UAE, Singapore, Australia, and beyond. Our team is experienced in serving global brands and understands the nuances of different markets, time zones, and cultural contexts. All communication and deliverables are in English.",
+  },
+  {
+    id: "faq-24",
+    question: "How does Belvo handle revisions and feedback?",
+    answer:
+      "We build revision cycles into every project timeline. After each deliverable, we present it for your review and collect structured feedback. Typically, projects include 2-3 rounds of revisions. We use collaborative tools like Figma, Trello, and Slack to ensure feedback is clear, organized, and actionable.",
+  },
+  {
+    id: "faq-25",
+    question: "What makes Belvo different from other agencies?",
+    answer:
+      "Belvo is built on three pillars: strategy, creativity, and execution. Unlike agencies that focus on just one area, we provide end-to-end solutions under one roof. Our team is young, hungry, and constantly pushing boundaries. We treat every client as a true partner, not just a project number. The 100+ brands we've worked with trust us because we consistently deliver results that exceed expectations.",
+  },
 ];
 
 interface FAQItemProps {

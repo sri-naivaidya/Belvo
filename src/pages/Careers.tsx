@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { ArrowUpRight, Briefcase, Upload, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, Briefcase, Mail, Upload, CheckCircle2 } from "lucide-react";
 import Footer from "@/sections/Footer";
 import { saveSubmission } from "@/lib/contact";
 
@@ -10,43 +10,43 @@ const ROLES = [
     id: "social-media",
     title: "Social Media Management",
     desc: "Craft and execute social strategies that grow our clients' brands across every major platform.",
-
+    icon: "📱",
   },
   {
     id: "digital-marketing",
     title: "Digital Marketing",
     desc: "Drive measurable growth through data-driven campaigns and creative performance marketing.",
-
+    icon: "📊",
   },
   {
     id: "business-analyst",
     title: "Business Analyst",
     desc: "Bridge client goals and creative execution by turning market insights into actionable strategies.",
-
+    icon: "📈",
   },
   {
     id: "web-developer",
     title: "Web Developers",
     desc: "Build exceptional web experiences with clean code, pixel-perfect precision, and modern frameworks.",
-
+    icon: "🌐",
   },
   {
     id: "app-developer",
     title: "App Developers",
     desc: "Create seamless mobile experiences across iOS and Android that users love and businesses rely on.",
-
+    icon: "📱",
   },
   {
     id: "hr",
     title: "HR",
     desc: "Build and nurture the BELVO team by attracting, retaining, and developing top creative talent.",
-
+    icon: "🤝",
   },
   {
     id: "software-developer",
     title: "Software Developers",
     desc: "Engineer the tools and systems that power BELVO's growing suite of digital products.",
-
+    icon: "💻",
   },
 ];
 
@@ -378,42 +378,85 @@ export default function Careers() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}
           >
-            <button
-              onClick={() =>
-                formRef.current?.scrollIntoView({ behavior: "smooth" })
-              }
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "14px 36px",
-                background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
-                border: "none",
-                borderRadius: "8px",
-                color: "#ffffff",
+            <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
+              <button
+                onClick={() =>
+                  formRef.current?.scrollIntoView({ behavior: "smooth" })
+                }
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "14px 36px",
+                  background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "#ffffff",
+                  fontFamily: "'Inter',sans-serif",
+                  fontWeight: 600,
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  boxShadow: "0 0 32px rgba(130,40,200,0.38)",
+                  transition: "box-shadow 0.3s, transform 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 52px rgba(157,78,221,0.55)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 32px rgba(130,40,200,0.38)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                View Open Positions <ArrowUpRight size={14} strokeWidth={2.5} />
+              </button>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: "8px",
+                padding: "10px 20px",
+                background: "rgba(123,47,190,0.1)",
+                border: "1px solid rgba(157,78,221,0.2)",
+                borderRadius: "100px",
                 fontFamily: "'Inter',sans-serif",
-                fontWeight: 600,
-                fontSize: "0.82rem",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                boxShadow: "0 0 32px rgba(130,40,200,0.38)",
-                transition: "box-shadow 0.3s, transform 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 0 52px rgba(157,78,221,0.55)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 0 32px rgba(130,40,200,0.38)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              View Open Positions <ArrowUpRight size={14} strokeWidth={2.5} />
-            </button>
+                fontSize: "0.78rem",
+                color: "#9D4EDD",
+                letterSpacing: "0.04em",
+              }}>
+                <Mail size={13} />
+                career.belvo@gmail.com
+              </span>
+            </div>
+
+            <div style={{
+              display: "flex", alignItems: "center", gap: "12px",
+              padding: "12px 24px",
+              background: "linear-gradient(135deg, rgba(255,154,201,0.08), rgba(157,78,221,0.06))",
+              border: "1px solid rgba(255,154,201,0.15)",
+              borderRadius: "100px",
+              backdropFilter: "blur(8px)",
+              marginTop: "8px",
+            }}>
+              <img
+                src="/genz-thumbnail.jpeg"
+                alt="GenZ"
+                style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(157,78,221,0.3)" }}
+              />
+              <span style={{
+                fontFamily: "'Inter',sans-serif",
+                fontSize: "0.7rem",
+                fontWeight: 500,
+                color: "var(--belvo-text-2)",
+                letterSpacing: "0.04em",
+              }}>
+                A heartfelt welcome to the next gen of creators — {" "}
+                <span style={{ color: "#9D4EDD", fontWeight: 700 }}>#GenZatBELVO</span>
+              </span>
+            </div>
           </motion.div>
         </div>
 
@@ -604,11 +647,11 @@ export default function Careers() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "1.2rem",
+                      fontSize: "1.3rem",
                       flexShrink: 0,
                     }}
                   >
-                    {/* {role.icon} */}
+                    {role.icon}
                   </div>
                   <h3
                     style={{

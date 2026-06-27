@@ -97,6 +97,36 @@ export default function Blogs() {
             <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
               Latest <span style={{ color: "#9D4EDD" }}>Posts</span>
             </h2>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                marginTop: "20px",
+                padding: "10px 22px",
+                background: "linear-gradient(135deg, rgba(255,154,201,0.12), rgba(157,78,221,0.08))",
+                border: "1px solid rgba(255,154,201,0.2)",
+                borderRadius: "100px",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <span style={{ fontSize: "1.1rem" }}>✨</span>
+              <span style={{
+                fontFamily: "'Inter',sans-serif",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                color: "var(--belvo-text-1)",
+                letterSpacing: "0.02em",
+              }}>
+                A heartfelt welcome to the GenZ — this one's for you 💜
+              </span>
+              <img
+                src="/genz-thumbnail.jpeg"
+                alt="GenZ"
+                style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(157,78,221,0.3)" }}
+              />
+            </motion.div>
           </motion.div>
 
           {blogPosts.length > 0 ? (
@@ -114,18 +144,46 @@ export default function Blogs() {
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(100,20,180,0.18)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
                 >
-                  <div style={{ aspectRatio: "16 / 10", background: `linear-gradient(135deg, rgba(80,20,160,0.32), rgba(10,2,35,0.92)), url(${post.thumbnail})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-                  <div style={{ padding: "24px" }}>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "14px" }}>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#9D4EDD", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", letterSpacing: "0.13em", textTransform: "uppercase" }}>
-                        <FolderOpen size={12} />
-                        {post.category}
+                  <div style={{
+                    aspectRatio: "16 / 10",
+                    background: `linear-gradient(135deg, rgba(255,154,201,0.15), rgba(157,78,221,0.25), rgba(80,20,160,0.4)), url(${post.thumbnail})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}>
+                    <div style={{
+                      position: "absolute", bottom: "10px", left: "10px",
+                      display: "flex", gap: "4px",
+                    }}>
+                      <span style={{
+                        padding: "3px 8px",
+                        background: "rgba(0,0,0,0.6)",
+                        backdropFilter: "blur(8px)",
+                        borderRadius: "6px",
+                        fontFamily: "'Inter',sans-serif",
+                        fontSize: "0.55rem",
+                        fontWeight: 600,
+                        color: "#fff",
+                        letterSpacing: "0.06em",
+                      }}>
+                        🔥 {post.category}
                       </span>
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--belvo-text-3)", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", letterSpacing: "0.04em" }}>
-                        <CalendarDays size={12} />
-                        {formatDate(post.date)}
+                      <span style={{
+                        padding: "3px 8px",
+                        background: "rgba(0,0,0,0.6)",
+                        backdropFilter: "blur(8px)",
+                        borderRadius: "6px",
+                        fontFamily: "'Inter',sans-serif",
+                        fontSize: "0.55rem",
+                        fontWeight: 600,
+                        color: "#fff",
+                      }}>
+                        📅 {formatDate(post.date)}
                       </span>
                     </div>
+                  </div>
+                  <div style={{ padding: "24px" }}>
                     <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: "1.05rem", color: "var(--belvo-text-1)", margin: "0 0 10px", lineHeight: 1.35 }}>
                       {post.title}
                     </h3>
