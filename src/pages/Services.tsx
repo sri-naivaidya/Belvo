@@ -110,15 +110,14 @@ export default function Services() {
       {/* ── HERO ──────────────────────────────────────────────────── */}
       <section
         style={{
-          minHeight: "100vh",
           background: "var(--belvo-bg)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           position: "relative",
           overflow: "hidden",
-          padding: "100px 24px 80px",
+          padding: "20px 24px 20px",
           textAlign: "center",
         }}
       >
@@ -194,7 +193,7 @@ export default function Services() {
       <section
         id="services-grid"
         ref={gridRef}
-        style={{ background: "var(--belvo-bg)", padding: "100px 24px 120px", position: "relative", overflow: "hidden" }}
+        style={{ background: "var(--belvo-bg)", padding: "20px 24px 120px", position: "relative", overflow: "hidden" }}
       >
         <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />

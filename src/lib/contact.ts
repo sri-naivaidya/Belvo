@@ -46,6 +46,12 @@ export async function saveSubmission(
   type: SubmissionKind,
   payload: Record<string, unknown>
 ) {
+  if (!supabase) {
+    throw new Error(
+      "Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
+    );
+  }
+
   const record = {
     type,
     created_at: new Date().toISOString(),
