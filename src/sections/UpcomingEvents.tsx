@@ -1,45 +1,8 @@
 import { useRef } from "react";
+import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { Calendar, Globe, Mail, MapPin, Phone, Wifi } from "lucide-react";
-
-const EVENTS = [
-  {
-    id: 1,
-    title: "React Free Webinar",
-    category: "Free Webinar",
-    mode: "Online" as const,
-    date: "Tomorrow",
-    description:
-      "Join our free React webinar where we'll cover modern React fundamentals, reusable components, hooks, state management, and best practices for building scalable applications.",
-    accentColor: "#9D4EDD",
-    gradientFrom: "rgba(123,47,190,0.22)",
-    gradientTo: "rgba(157,78,221,0.06)",
-  },
-  {
-    id: 2,
-    title: "Flutter Workshop",
-    category: "Workshop",
-    mode: "Online" as const,
-    date: "Next Sunday",
-    description:
-      "Learn Flutter from scratch and build beautiful cross-platform mobile applications through practical live sessions.",
-    accentColor: "#7B2FBE",
-    gradientFrom: "rgba(90,20,160,0.20)",
-    gradientTo: "rgba(123,47,190,0.05)",
-  },
-  {
-    id: 3,
-    title: "Founders Meet-up",
-    category: "Networking Event",
-    mode: "Offline" as const,
-    date: "15 July",
-    description:
-      "Meet startup founders, entrepreneurs, developers, and innovators to network, exchange ideas, and build meaningful connections.",
-    accentColor: "#B06AE8",
-    gradientFrom: "rgba(160,80,220,0.20)",
-    gradientTo: "rgba(176,106,232,0.05)",
-  },
-];
+import { EVENTS } from "@/lib/events";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
@@ -166,7 +129,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
             <Mail size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
             <a
-              href="mailto:career.belvo@gmail.com"
+              href="mailto:contact.belvo@gmail.com"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "0.8rem",
@@ -178,7 +141,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.textDecoration = "underline"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.textDecoration = "none"; }}
             >
-              career.belvo@gmail.com
+              contact.belvo@gmail.com
             </a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
@@ -212,6 +175,29 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             For registrations, please contact us via email or phone.
           </p>
         </div>
+
+        <Link
+          href={`/event-register/${event.id}`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            padding: "12px 16px",
+            background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+            color: "#fff",
+            textDecoration: "none",
+            borderRadius: "12px",
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 700,
+            letterSpacing: "0.02em",
+            textTransform: "uppercase",
+            marginBottom: "16px",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          }}
+        >
+          Click to Register
+        </Link>
 
         <div style={{ paddingTop: "16px", borderTop: "1px solid var(--belvo-border-bottom)", display: "flex", alignItems: "center", gap: "7px" }}>
           {event.mode === "Online"

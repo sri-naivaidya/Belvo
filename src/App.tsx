@@ -10,6 +10,7 @@ import Careers from "@/pages/Careers";
 import Blogs from "@/pages/Blogs";
 import About from "@/sections/About";
 import ComingSoon from "@/pages/ComingSoon";
+import EventRegistration from "@/pages/EventRegistration";
 import Works from "@/pages/works";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -55,6 +56,7 @@ function Router() {
               <Route path="/careers" component={Careers} />
               <Route path="/blogs" component={Blogs} />
               <Route path="/works" component={Works} />
+              <Route path="/event-register/:id" component={EventRegistration} />
               <Route path="/contact">
                 <ComingSoon title="Contact Us" />
               </Route>
