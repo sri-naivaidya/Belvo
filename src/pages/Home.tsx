@@ -7,7 +7,6 @@ import TeamSection from "@/sections/TeamSection";
 import Testimonials from "@/sections/Testimonials";
 import PortfolioSection from "@/sections/PortfolioSection";
 import UpcomingEvents from "@/sections/UpcomingEvents";
-import HomeBlogsSection from "@/sections/HomeBlogsSection";
 import FAQ from "@/sections/FAQ";
 
 function AuroraWaves() {
@@ -202,13 +201,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ── SECTION ORDER ── */}
+      {/* ── SECTIONS ── */}
       <ServicesSection id="services" />
       <PortfolioSection id="portfolio" />
       <TeamSection />
       <Testimonials />
       <UpcomingEvents />
-      <HomeBlogsSection />
       <BookACall />
       <FAQ />
       <Footer />
