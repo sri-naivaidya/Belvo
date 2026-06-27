@@ -40,10 +40,6 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
 function Router() {
   const [location] = useLocation();
 
-  React.useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-  }, [location]);
-
   return (
     <div
       className="min-h-[100dvh] flex flex-col"
