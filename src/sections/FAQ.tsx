@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useState, useRef, useCallback } from "react";
+import { motion, useInView, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -176,20 +176,24 @@ interface FAQItemProps {
 function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQItemProps) {
   const panelId = `${id}-panel`;
   const itemRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const tiltX = useSpring(rawX, { stiffness: 200, damping: 25 });
+  const tiltY = useSpring(rawY, { stiffness: 200, damping: 25 });
 
-  const handleMove = (e: React.MouseEvent) => {
+  const handleMove = useCallback((e: React.MouseEvent) => {
     if (isOpen) return;
-    const el = itemRef.current;
+    const el = e.currentTarget as HTMLElement;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    setTilt({
-      x: ((e.clientY - rect.top) / rect.height - 0.5) * -3,
-      y: ((e.clientX - rect.left) / rect.width - 0.5) * 3,
-    });
-  };
+    rawX.set(((e.clientY - rect.top) / rect.height - 0.5) * -3);
+    rawY.set(((e.clientX - rect.left) / rect.width - 0.5) * 3);
+  }, [isOpen, rawX, rawY]);
 
-  const handleLeave = () => setTilt({ x: 0, y: 0 });
+  const handleLeave = useCallback(() => {
+    rawX.set(0);
+    rawY.set(0);
+  }, [rawX, rawY]);
 
   return (
     <motion.div
@@ -215,8 +219,8 @@ function FAQItem({ id, question, answer, isOpen, onToggle, index, inView }: FAQI
             : "0 2px 12px rgba(0,0,0,0.15)",
           transformStyle: "preserve-3d",
           perspective: 500,
-          rotateX: tilt.x,
-          rotateY: tilt.y,
+          rotateX: tiltX,
+          rotateY: tiltY,
         }}
       >
         <button

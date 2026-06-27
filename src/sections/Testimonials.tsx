@@ -1,5 +1,5 @@
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useCallback } from "react";
 import { Quote } from "lucide-react";
 
 // Resolve local images in src/Images via import.meta.url so Vite handles them correctly
@@ -112,19 +112,23 @@ function TestimonialCard({ testimonial, index }: { testimonial: typeof TESTIMONI
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const tiltX = useSpring(rawX, { stiffness: 200, damping: 25 });
+  const tiltY = useSpring(rawY, { stiffness: 200, damping: 25 });
 
-  const handleMove = (e: React.MouseEvent) => {
+  const handleMove = useCallback((e: React.MouseEvent) => {
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    setTilt({
-      x: ((e.clientY - rect.top) / rect.height - 0.5) * -5,
-      y: ((e.clientX - rect.left) / rect.width - 0.5) * 5,
-    });
-  };
+    rawX.set(((e.clientY - rect.top) / rect.height - 0.5) * -5);
+    rawY.set(((e.clientX - rect.left) / rect.width - 0.5) * 5);
+  }, [rawX, rawY]);
 
-  const handleLeave = () => setTilt({ x: 0, y: 0 });
+  const handleLeave = useCallback(() => {
+    rawX.set(0);
+    rawY.set(0);
+  }, [rawX, rawY]);
 
   return (
     <motion.div
@@ -151,8 +155,8 @@ function TestimonialCard({ testimonial, index }: { testimonial: typeof TESTIMONI
           transition: "border-color 0.3s ease, box-shadow 0.3s ease",
           transformStyle: "preserve-3d",
           perspective: 600,
-          rotateX: tilt.x,
-          rotateY: tilt.y,
+          rotateX: tiltX,
+          rotateY: tiltY,
         }}
         whileHover={{
           borderColor: "rgba(157,78,221,0.38)",

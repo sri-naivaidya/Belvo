@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -41,8 +41,10 @@ const staggerCard = {
 
 function ServiceCard({ svc, i, isIvory }: { svc: typeof SERVICES[0]; i: number; isIvory: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const rotateX = useSpring(rawX, { stiffness: 200, damping: 25 });
+  const rotateY = useSpring(rawY, { stiffness: 200, damping: 25 });
 
   const handleMove = (e: React.MouseEvent) => {
     const el = ref.current;
@@ -50,13 +52,13 @@ function ServiceCard({ svc, i, isIvory }: { svc: typeof SERVICES[0]; i: number; 
     const rect = el.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setRotateX(-y * 8);
-    setRotateY(x * 8);
+    rawX.set(-y * 8);
+    rawY.set(x * 8);
   };
 
   const handleLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
+    rawX.set(0);
+    rawY.set(0);
   };
 
   return (

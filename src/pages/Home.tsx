@@ -337,7 +337,7 @@ export default function Home() {
           <motion.p
             custom={4} variants={itemUp} initial="hidden" animate="visible"
             className="max-w-lg text-sm md:text-base leading-relaxed mb-10"
-            style={{ color: "var(--belvo-text-3)", fontWeight: 300, letterSpacing: "0.01em" }}
+            style={{ color: "var(--belvo-text-2)", fontWeight: 350, letterSpacing: "0.02em" }}
           >
             Belvo Builds your brand from scratch.<br />
             Helps ideas to come into reality.<br />

@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { motion, useInView, useAnimationFrame, useScroll, useTransform } from "framer-motion";
+import { useRef, useCallback } from "react";
+import { motion, useInView, useAnimationFrame, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface Props {
@@ -161,19 +161,22 @@ function BrandRow({ catName, brands, color, isIvory }: { catName: string; brands
     const logoSrc = getLogoPath(catName, brand.url) || undefined;
     const badge = <BrandBadge logoSrc={logoSrc} initial={initial} color={color} rgb={rgb} />;
     const itemRef = useRef<HTMLAnchorElement>(null);
-    const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-    const handleMove = (e: React.MouseEvent) => {
-      const el = itemRef.current;
+    const handleMove = useCallback((e: React.MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      setTilt({
-        x: ((e.clientY - rect.top) / rect.height - 0.5) * -6,
-        y: ((e.clientX - rect.left) / rect.width - 0.5) * 6,
-      });
-    };
+      const x = ((e.clientY - rect.top) / rect.height - 0.5) * -6;
+      const y = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+      el.style.setProperty('--tilt-x', `${x}deg`);
+      el.style.setProperty('--tilt-y', `${y}deg`);
+    }, []);
 
-    const handleLeave = () => setTilt({ x: 0, y: 0 });
+    const handleLeave = useCallback((e: React.MouseEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      el.style.setProperty('--tilt-x', '0deg');
+      el.style.setProperty('--tilt-y', '0deg');
+    }, []);
 
     const baseStyle: React.CSSProperties = {
       display: "inline-flex", alignItems: "center", gap: "10px",
@@ -187,8 +190,8 @@ function BrandRow({ catName, brands, color, isIvory }: { catName: string; brands
       color: "var(--belvo-text-1)",
       whiteSpace: "nowrap",
       flexShrink: 0,
-      transition: "background 0.2s, border-color 0.2s",
-      transform: `perspective(300px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+      transition: "background 0.2s, border-color 0.2s, transform 0.15s ease-out",
+      transform: 'perspective(300px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))',
     };
     const inner = (
       <>

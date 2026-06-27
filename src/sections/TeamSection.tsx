@@ -1,5 +1,5 @@
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
 
 const imageModules = import.meta.glob<{ default: string }>("/src/Collective/*", { eager: true, import: "default" });
 
@@ -322,23 +322,37 @@ function MemberCard({
   const initials = getInitials(name);
   const img = getImageUrl(name);
   const cardRef = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const rotateX = useSpring(rawX, { stiffness: 200, damping: 25 });
+  const rotateY = useSpring(rawY, { stiffness: 200, damping: 25 });
 
-  const handleMove = (e: React.MouseEvent) => {
+  const handleMove = useCallback((e: React.MouseEvent) => {
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setRotateX(-y * 6);
-    setRotateY(x * 6);
-  };
+    rawX.set(-y * 6);
+    rawY.set(x * 6);
+  }, [rawX, rawY]);
 
-  const handleLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
+  const handleLeave = useCallback(() => {
+    rawX.set(0);
+    rawY.set(0);
+  }, [rawX, rawY]);
+
+  const handleEnter = useCallback((e: React.MouseEvent) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.borderColor = `${color}55`;
+    el.style.boxShadow = `0 16px 56px rgba(123,47,190,0.18), 0 0 0 1px ${color}22`;
+  }, [color]);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.borderColor = "var(--belvo-border-card)";
+    el.style.boxShadow = "none";
+  }, []);
 
   return (
     <motion.div
@@ -348,17 +362,8 @@ function MemberCard({
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = `${color}55`;
-        el.style.boxShadow = `0 16px 56px rgba(123,47,190,0.18), 0 0 0 1px ${color}22`;
-      }}
-      onMouseOut={e => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--belvo-border-card)";
-        el.style.boxShadow = "none";
-      }}
+      onMouseLeave={(e) => { handleLeave(); handleCardLeave(e); }}
+      onMouseEnter={handleEnter}
       style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         padding: "28px 20px 24px",
@@ -373,6 +378,7 @@ function MemberCard({
         rotateX,
         rotateY,
       }}
+      layout
     >
       <div style={{
         position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",

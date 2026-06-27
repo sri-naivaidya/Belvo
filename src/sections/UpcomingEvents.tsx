@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useCallback } from "react";
 import { Link } from "wouter";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { Calendar, Globe, Mail, MapPin, Phone, Wifi } from "lucide-react";
 import { EVENTS } from "@/lib/events";
 
@@ -19,19 +19,23 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const tiltX = useSpring(rawX, { stiffness: 200, damping: 25 });
+  const tiltY = useSpring(rawY, { stiffness: 200, damping: 25 });
 
-  const handleMove = (e: React.MouseEvent) => {
+  const handleMove = useCallback((e: React.MouseEvent) => {
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    setTilt({
-      x: ((e.clientY - rect.top) / rect.height - 0.5) * -4,
-      y: ((e.clientX - rect.left) / rect.width - 0.5) * 4,
-    });
-  };
+    rawX.set(((e.clientY - rect.top) / rect.height - 0.5) * -4);
+    rawY.set(((e.clientX - rect.left) / rect.width - 0.5) * 4);
+  }, [rawX, rawY]);
 
-  const handleLeave = () => setTilt({ x: 0, y: 0 });
+  const handleLeave = useCallback(() => {
+    rawX.set(0);
+    rawY.set(0);
+  }, [rawX, rawY]);
 
   return (
     <motion.div
@@ -46,16 +50,11 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
         whileHover={{ y: -6, transition: { duration: 0.28, ease: easeOut } }}
-        onMouseEnter={e => {
+        onMouseEnter={useCallback((e: React.MouseEvent) => {
           const el = e.currentTarget as HTMLElement;
           el.style.borderColor = "rgba(157,78,221,0.45)";
           el.style.boxShadow = "0 16px 48px rgba(100,20,180,0.18), 0 2px 8px rgba(100,20,180,0.10)";
-        }}
-        onMouseOut={e => {
-          const el = e.currentTarget as HTMLElement;
-          el.style.borderColor = "var(--belvo-border-card)";
-          el.style.boxShadow = "none";
-        }}
+        }, [])}
         style={{
           background: "var(--belvo-bg-card)",
           border: "1px solid var(--belvo-border-card)",
@@ -67,8 +66,8 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
           cursor: "default",
           transformStyle: "preserve-3d",
           perspective: 600,
-          rotateX: tilt.x,
-          rotateY: tilt.y,
+          rotateX: tiltX,
+          rotateY: tiltY,
         }}
       >
       {/* Top accent bar */}
