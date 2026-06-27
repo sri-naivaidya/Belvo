@@ -476,7 +476,7 @@ export default function Footer() {
             <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
               {[
                 { city: "Goregaon", label: "Mumbai, Maharashtra" },
-                { city: "Mumbai", label: "Maharashtra, India" },
+               
               ].map((office, i) => (
                 <motion.div
                   key={office.city}
