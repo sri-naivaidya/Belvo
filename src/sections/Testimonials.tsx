@@ -2,6 +2,8 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Quote } from "lucide-react";
 
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
 // Resolve local images in src/Images via import.meta.url so Vite handles them correctly
 const AVATAR_1 = new URL("../Images/testimonial_avatar_1.png", import.meta.url).href;
 const AVATAR_2 = new URL("../Images/testimonial_avatar_2.png", import.meta.url).href;

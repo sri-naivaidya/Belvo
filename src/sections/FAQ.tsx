@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
 
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   visible: (i: number) => ({

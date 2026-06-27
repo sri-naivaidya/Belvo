@@ -1,6 +1,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
 const imageModules = import.meta.glob<{ default: string }>("/src/Collective/*", { eager: true, import: "default" });
 
 const IMAGE_MAP: Record<string, string> = {};

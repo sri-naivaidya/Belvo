@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Play, Sparkles } from "lucide-react";
 import { useRef } from "react";
 import About from "@/sections/About";
@@ -218,27 +218,6 @@ function FloatingOrbs() {
   );
 }
 
-function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  return (
-    <motion.div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "2px",
-        background: "linear-gradient(90deg, #7B2FBE, #9D4EDD, #C9A341)",
-        transformOrigin: "0% 50%",
-        scaleX,
-        zIndex: 9999,
-      }}
-    />
-  );
-}
-
 const itemUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
@@ -248,21 +227,10 @@ const itemUp = {
 };
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
   return (
     <>
-      <ScrollProgress />
-
       {/* ── HERO ── */}
       <div
-        ref={heroRef}
         className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden text-white"
         style={{ background: "var(--belvo-bg)" }}
       >
@@ -278,7 +246,6 @@ export default function Home() {
 
         <motion.div
           className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-4xl mx-auto pt-20"
-          style={{ y: heroY, opacity: heroOpacity }}
         >
           <motion.div custom={0} variants={itemUp} initial="hidden" animate="visible" className="mb-3">
             <motion.img
@@ -408,35 +375,6 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <motion.div
-            style={{
-              width: 24,
-              height: 40,
-              borderRadius: 12,
-              border: "2px solid rgba(157,78,221,0.3)",
-              display: "flex",
-              justifyContent: "center",
-              paddingTop: 8,
-            }}
-          >
-            <motion.div
-              style={{
-                width: 3,
-                height: 10,
-                borderRadius: 2,
-                background: "#9D4EDD",
-              }}
-              animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
-        </motion.div>
       </div>
 
       {/* ── SECTIONS ── */}
