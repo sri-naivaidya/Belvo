@@ -33,6 +33,17 @@ export default function Navbar() {
   }, [location]);
 
   React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  React.useEffect(() => {
     if (location !== "/") return;
 
     const onScroll = () => {
@@ -288,7 +299,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.28 }}
               className="fixed inset-0 z-40 flex flex-col items-center justify-center"
-              style={{ background: "var(--belvo-bg-nav-mobile)", backdropFilter: "blur(24px)" }}
+              style={{ background: "var(--belvo-bg)" }}
             >
               <div className="flex flex-col items-center gap-9">
                 {NAV_LINKS.map((link, i) => (
