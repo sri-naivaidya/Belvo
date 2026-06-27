@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Calendar, Globe, MapPin, Wifi } from "lucide-react";
+import { Calendar, Globe, Mail, MapPin, Wifi } from "lucide-react";
 
 const EVENTS = [
   {
@@ -149,11 +149,53 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
 
       {/* Body */}
       <div style={{ padding: "22px 28px 28px", flex: 1, display: "flex", flexDirection: "column" }}>
-        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.875rem", lineHeight: 1.78, color: "var(--belvo-text-6)", margin: 0, flex: 1 }}>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.875rem", lineHeight: 1.78, color: "var(--belvo-text-6)", margin: "0 0 20px", flex: 1 }}>
           {event.description}
         </p>
 
-        <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid var(--belvo-border-bottom)", display: "flex", alignItems: "center", gap: "7px" }}>
+        {/* Contact / Registration block */}
+        <div
+          style={{
+            padding: "16px 18px",
+            background: "rgba(123,47,190,0.08)",
+            border: "1px solid rgba(157,78,221,0.18)",
+            borderRadius: "10px",
+            marginBottom: "16px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "6px" }}>
+            <Mail size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
+            
+              href="mailto:career.belvo@gmail.com"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                color: "#9D4EDD",
+                letterSpacing: "0.02em",
+                textDecoration: "none",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.textDecoration = "underline"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.textDecoration = "none"; }}
+            >
+              career.belvo@gmail.com
+            </a>
+          </div>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.72rem",
+              color: "var(--belvo-text-3)",
+              margin: 0,
+              lineHeight: 1.5,
+              letterSpacing: "0.01em",
+            }}
+          >
+            For registrations, please contact us via email.
+          </p>
+        </div>
+
+        <div style={{ paddingTop: "16px", borderTop: "1px solid var(--belvo-border-bottom)", display: "flex", alignItems: "center", gap: "7px" }}>
           {event.mode === "Online"
             ? <Globe size={13} style={{ color: "var(--belvo-text-3)" }} strokeWidth={1.8} />
             : <MapPin size={13} style={{ color: "var(--belvo-text-3)" }} strokeWidth={1.8} />
