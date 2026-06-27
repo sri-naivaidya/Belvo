@@ -48,6 +48,7 @@ const TEAMS = [
       "Lokesh", "Sri Satya", "Akhil", "Harsh", "Saurav",
       "Mohammad Anasuddin Zaid", "Ishwari",
       "Sandali", "Tamil Selvan", "Ramnath",
+      "Guru dutt", "Shailender",
     ],
   },
   {
