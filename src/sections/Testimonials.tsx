@@ -51,6 +51,30 @@ const TESTIMONIALS = [
     review:
       "We needed a full rebrand and a digital overhaul, and BELVO delivered both without missing a beat. They understood our audience, respected our timelines, and the final outcome has genuinely elevated how people perceive us.",
   },
+  {
+    id: 7,
+    name: "Anika Sharma",
+    title: "Product Designer",
+    company: "EdTech Platform",
+    review:
+      "BELVO brought a level of craft to our UI that we hadn't seen from any other agency. Every screen felt intentional. They didn't just execute the brief — they elevated it. We've received more compliments on our product design since the launch than ever before.",
+  },
+  {
+    id: 8,
+    name: "Rohan Verma",
+    title: "CTO",
+    company: "B2B SaaS Company",
+    review:
+      "From architecture to deployment, BELVO's engineering team was thorough and communicative. They flagged issues before they became problems, suggested better approaches, and delivered clean, maintainable code. Exactly what a technical team should be.",
+  },
+  {
+    id: 9,
+    name: "Meera Iyer",
+    title: "Brand Strategist",
+    company: "Consumer Goods Brand",
+    review:
+      "We came to BELVO with a fragmented brand identity and left with something cohesive, confident, and compelling. Their strategic thinking goes far beyond aesthetics — they helped us find our voice and actually use it.",
+  },
 ];
 
 const fadeUp = {
