@@ -1,6 +1,34 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
+const imageModules = import.meta.glob<{ default: string }>("/src/Collective/*", { eager: true, import: "default" });
+
+const IMAGE_MAP: Record<string, string> = {};
+Object.entries(imageModules).forEach(([path, url]) => {
+  const name = path.split("/").pop()!.replace(/\.[^.]+$/, "").toLowerCase();
+  IMAGE_MAP[name] = url;
+});
+
+const NAME_OVERRIDES: Record<string, string> = {
+  "ramnath": "ram nath",
+  "saurav": "sourav",
+  "sharfudeen": "sharfu",
+};
+
+function getImageUrl(memberName: string): string | undefined {
+  const key = memberName.toLowerCase().trim();
+  const override = NAME_OVERRIDES[key];
+  if (override && IMAGE_MAP[override]) return IMAGE_MAP[override];
+  if (IMAGE_MAP[key]) return IMAGE_MAP[key];
+  const firstName = key.split(/\s+/)[0];
+  if (IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
+  const lastName = key.split(/\s+/).pop()!;
+  if (IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
+  const fuzzy = Object.keys(IMAGE_MAP).find(k => key.includes(k) || k.includes(key));
+  if (fuzzy) return IMAGE_MAP[fuzzy];
+  return undefined;
+}
+
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
 const CEO = {
@@ -64,7 +92,7 @@ const TEAMS = [
     name: "Co-Administration",
     color: "#007BFF",
     lightColor: "#0056b3",
-    members: ["Achintya Gurba"],
+    members: ["Ajintya Gurba"],
     responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
 
   }
@@ -92,7 +120,8 @@ const fadeUp = {
 
 function CeoCard({ inView }: { inView: boolean }) {
   const initials = getInitials(CEO.name);
-  const gold = "#C9A341"; // Primary gold accent
+  const gold = "#C9A341";
+  const ceoImg = getImageUrl(CEO.name);
 
   return (
     <motion.div
@@ -148,20 +177,28 @@ function CeoCard({ inView }: { inView: boolean }) {
           {/* Avatar Background - Gold gradient */}
           <div style={{
             width: 120, height: 120, borderRadius: "50%",
-            background: "linear-gradient(135deg, #C9A341, #E0B84A)",
+            background: ceoImg ? "none" : "linear-gradient(135deg, #C9A341, #E0B84A)",
             border: `2px solid ${gold}66`,
             display: "flex", alignItems: "center", justifyContent: "center",
-            position: "relative", zIndex: 1,
+            position: "relative", zIndex: 1, overflow: "hidden",
           }}>
-            <div style={{
-              position: "absolute", inset: 4, borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,0.3)",
-            }} />
-            <span style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 800, fontSize: "2rem", color: "#fff",
-              letterSpacing: "-0.02em", position: "relative", zIndex: 1,
-            }}>{initials}</span>
+            {ceoImg ? (
+              <img src={ceoImg} alt={CEO.name}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+              />
+            ) : (
+              <>
+                <div style={{
+                  position: "absolute", inset: 4, borderRadius: "50%",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                }} />
+                <span style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 800, fontSize: "2rem", color: "#fff",
+                  letterSpacing: "-0.02em", position: "relative", zIndex: 1,
+                }}>{initials}</span>
+              </>
+            )}
           </div>
 
           {/* Gold status dot */}
@@ -238,6 +275,7 @@ function MemberCard({
   responsibilities?: readonly string[]; inView: boolean; index: number;
 }) {
   const initials = getInitials(name);
+  const img = getImageUrl(name);
 
   return (
     <motion.div
@@ -277,21 +315,29 @@ function MemberCard({
       <div style={{ position: "relative", marginBottom: 16 }}>
         <div style={{
           width: 84, height: 84, borderRadius: "50%",
-          background: `linear-gradient(135deg, ${color}cc, ${lightColor}88)`,
+          background: img ? "none" : `linear-gradient(135deg, ${color}cc, ${lightColor}88)`,
           display: "flex", alignItems: "center", justifyContent: "center",
           border: `2px solid ${color}44`,
           boxShadow: `0 0 28px ${color}22`,
-          position: "relative",
+          position: "relative", overflow: "hidden",
         }}>
-          <div style={{
-            position: "absolute", inset: 4, borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }} />
-          <span style={{
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 800, fontSize: "1.35rem", color: "#fff",
-            letterSpacing: "-0.02em", position: "relative", zIndex: 1,
-          }}>{initials}</span>
+          {img ? (
+            <img src={img} alt={name}
+              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+            />
+          ) : (
+            <>
+              <div style={{
+                position: "absolute", inset: 4, borderRadius: "50%",
+                border: "1px solid rgba(255,255,255,0.15)",
+              }} />
+              <span style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 800, fontSize: "1.35rem", color: "#fff",
+                letterSpacing: "-0.02em", position: "relative", zIndex: 1,
+              }}>{initials}</span>
+            </>
+          )}
         </div>
         <div style={{
           position: "absolute", bottom: 4, right: 4,
