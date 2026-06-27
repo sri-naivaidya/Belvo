@@ -93,8 +93,39 @@ const CATEGORY_FOLDERS: Record<string, string> = {
 function getLogoPath(categoryName: string, url: string): string | undefined {
   const folder = CATEGORY_FOLDERS[categoryName];
   if (!folder || !url) return undefined;
-  const handle = url.replace(/\/+$/, "").split("/").pop();
+  let handle = url.replace(/\/+$/, "").split("/").pop();
   if (!handle) return undefined;
+  const FIXES: Record<string, string> = {
+    "cready.in": "cready",
+    "fassetofficial": "fasset_official",
+    "getepay": "getepay.in",
+    "masiaschool": "masia",
+    "theclassoftone": "tcot",
+    "frogsschool": "frogschool",
+    "educurria": "educuria",
+    "veneraworkshops": "venera_workshops",
+    "akclinicsindia": "ak.clinics",
+    "envisalons": "envisalon",
+    "plutocard": "pluto",
+    "kdak.in": "kdak",
+    "sortyourtrips": "sortyourtrip",
+    "fibswags": "",
+    "rdramaofficial": "",
+    "kshmstudio": "",
+    "aamoshjewellery": "",
+    "haomecafe": "",
+    "kathhakatte": "",
+    "kapibarindia": "",
+    "postiano.mumbai": "",
+    "hopayatravels": "",
+    "daisyhouseindia": "",
+    "desarch.design": "",
+    "illumeskincare": "",
+  };
+  if (handle in FIXES) {
+    if (!FIXES[handle]) return undefined;
+    handle = FIXES[handle];
+  }
   return `/PortfoilioLogos/${folder}/${handle}.jpg`;
 }
 
