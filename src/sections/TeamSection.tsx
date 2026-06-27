@@ -51,6 +51,15 @@ const TEAMS = [
     members: ["Mohammad Ali"],
     responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
   },
+  {
+    id: "coadmin",
+    name: "Co-Administration",
+    color: "#C9A341",
+    lightColor: "#E0B84A",
+    members: ["Jashwanth"],
+    responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
+
+  }
 
 ] as const;
 
@@ -316,84 +325,97 @@ function MemberCard({
   );
 }
 
-// ─── TEAM GROUP ───────────────────────────────────────────────────────────────
+// ─── ADMIN GROUP (Side-by-Side Layout) ───────────────────────────────────────
+
+function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: any }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  if (!adminTeam || !coadminTeam) return null;
+
+  return (
+    <div ref={ref} style={{ marginBottom: "64px", width: "100%" }}>
+      {/* 1. The Shared Administration Separator */}
+      <motion.div
+        custom={0} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
+        style={{ display: "flex", alignItems: "center", marginBottom: 40, marginTop: 16 }}
+      >
+        <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
+        <span style={{
+          fontFamily: "'Inter', sans-serif", fontSize: "0.62rem", fontWeight: 600,
+          letterSpacing: "0.22em", textTransform: "uppercase", color: "#E0B84A",
+          background: "rgba(201,163,65,0.1)", border: "0.5px solid rgba(201,163,65,0.3)",
+          borderRadius: "100px", padding: "5px 16px", margin: "0 16px"
+        }}>
+          Administration
+        </span>
+        <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
+      </motion.div>
+
+      {/* 2. The Horizontal Card Container */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 240px))", // Ensures side-by-side
+        gap: 16,
+      }}>
+        {/* Admin Card(s) */}
+        {adminTeam.members.map((name: string, i: number) => (
+          <MemberCard
+            key={name} name={name} team={adminTeam.name} color={adminTeam.color} lightColor={adminTeam.lightColor}
+            responsibilities={"responsibilities" in adminTeam ? adminTeam.responsibilities : undefined}
+            inView={inView} index={i}
+          />
+        ))}
+
+        {/* Co-Admin Card(s) */}
+        {coadminTeam.members.map((name: string, i: number) => (
+          <MemberCard
+            key={name} name={name} team={coadminTeam.name} color={coadminTeam.color} lightColor={coadminTeam.lightColor}
+            responsibilities={"responsibilities" in coadminTeam ? coadminTeam.responsibilities : undefined}
+            inView={inView} index={i + 1}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/// ─── TEAM GROUP (For Regular Teams) ──────────────────────────────────────────
 
 function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const isAdmin = team.id === "admin";
-
   return (
-    <div ref={ref} style={{ marginBottom: isAdmin ? 0 : "64px" }}>
-      {/* Admin separator */}
-      {isAdmin && (
-        <motion.div
-          custom={0} variants={fadeUp} initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            display: "flex", alignItems: "center", gap: 14,
-            marginBottom: 40, marginTop: 16,
-          }}
-        >
-          <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
-          <span style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "0.62rem", fontWeight: 600,
-            letterSpacing: "0.22em", textTransform: "uppercase",
-            color: "#E0B84A",
-            background: "rgba(201,163,65,0.1)",
-            border: "0.5px solid rgba(201,163,65,0.3)",
-            borderRadius: "100px", padding: "5px 16px",
-          }}>Administration</span>
-          <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
-        </motion.div>
-      )}
+    <div ref={ref} style={{ marginBottom: "64px", width: "100%" }}>
+      {/* Group header */}
+      <motion.div
+        custom={0} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
+        style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 32 }}
+      >
+        <div style={{
+          width: 3, height: 22, background: `linear-gradient(180deg, ${team.color}, transparent)`,
+          borderRadius: 2, flexShrink: 0,
+        }} />
+        <h3 style={{
+          fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
+          color: "var(--belvo-text-1)", margin: 0, letterSpacing: "-0.01em",
+        }}>{team.name}</h3>
+        <div style={{ height: 1, flex: 1, background: `linear-gradient(90deg, ${team.color}28, transparent)` }} />
+        <span style={{
+          fontFamily: "'Inter', sans-serif", fontSize: "0.65rem", fontWeight: 600,
+          letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--belvo-text-4)",
+        }}>{team.members.length} {team.members.length <= 1 ? "member" : "members"}</span>
+      </motion.div>
 
-      {/* Group header (skip for admin — label handled by separator above) */}
-      {!isAdmin && (
-        <motion.div
-          custom={0} variants={fadeUp} initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 32 }}
-        >
-          <div style={{
-            width: 3, height: 22,
-            background: `linear-gradient(180deg, ${team.color}, transparent)`,
-            borderRadius: 2, flexShrink: 0,
-          }} />
-          <h3 style={{
-            fontFamily: "'Inter', sans-serif", fontWeight: 800,
-            fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
-            color: "var(--belvo-text-1)", margin: 0, letterSpacing: "-0.01em",
-          }}>{team.name}</h3>
-          <div style={{
-            height: 1, flex: 1,
-            background: `linear-gradient(90deg, ${team.color}28, transparent)`,
-          }} />
-          <span style={{
-            fontFamily: "'Inter', sans-serif", fontSize: "0.65rem", fontWeight: 600,
-            letterSpacing: "0.18em", textTransform: "uppercase",
-            color: "var(--belvo-text-4)",
-          }}>{team.members.length} {team.members.length <= 1 ? "member" : "members"}</span>
-        </motion.div>
-      )}
-
+      {/* Grid for standard members */}
       <div style={{
-        display: "grid",
-        gridTemplateColumns: isAdmin ? "repeat(auto-fill, minmax(200px, 220px))" : "repeat(auto-fill, minmax(160px, 1fr))",
-        gap: 16,
+        display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16,
       }}>
         {team.members.map((name, i) => (
           <MemberCard
-            key={name}
-            name={name}
-            team={team.name}
-            color={team.color}
-            lightColor={team.lightColor}
-            responsibilities={"responsibilities" in team ? team.responsibilities : undefined}
-            inView={inView}
-            index={i + 1}
+            key={name} name={name} team={team.name} color={team.color} lightColor={team.lightColor}
+            inView={inView} index={i + 1}
           />
         ))}
       </div>
@@ -491,10 +513,20 @@ export default function TeamSection() {
           {/* ── CEO card ── */}
           <CeoCard inView={headerInView} />
 
-          {/* ── Team groups ── */}
-          {TEAMS.map((team) => (
+
+
+
+
+          {/* ── Regular Team groups ── */}
+          {TEAMS.filter(t => t.id !== "admin" && t.id !== "coadmin").map((team) => (
             <TeamGroup key={team.id} team={team} />
           ))}
+
+          {/* ── Admin & Co-Admin Side-by-Side ── */}
+          <AdminGroup
+            adminTeam={TEAMS.find(t => t.id === "admin")}
+            coadminTeam={TEAMS.find(t => t.id === "coadmin")}
+          />
 
         </div>
       </section>

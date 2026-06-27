@@ -138,8 +138,8 @@ export default function ServicesSection({ id }: Props) {
 
         {/* Scattered dots */}
         <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-          {[[120,160],[310,80],[490,220],[680,100],[870,250],[1050,130],[1230,200],[1380,90],[200,700],[450,760],[700,680],[950,750],[1150,700],[1340,760]].map(([cx,cy],i)=>(
-            <circle key={i} cx={cx} cy={cy} r={i%3===0?1.5:1} fill={i%2===0?"rgba(200,140,255,0.6)": isIvory ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.35)"} />
+          {[[120, 160], [310, 80], [490, 220], [680, 100], [870, 250], [1050, 130], [1230, 200], [1380, 90], [200, 700], [450, 760], [700, 680], [950, 750], [1150, 700], [1340, 760]].map(([cx, cy], i) => (
+            <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.5 : 1} fill={i % 2 === 0 ? "rgba(200,140,255,0.6)" : isIvory ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.35)"} />
           ))}
         </svg>
 
@@ -233,35 +233,7 @@ export default function ServicesSection({ id }: Props) {
         </div>
       </div>
 
-      {/* ── CTA ───────────────────────────────────────────────────── */}
-      <div
-        ref={ctaRef}
-        style={{ padding: "0 24px 120px", position: "relative", overflow: "hidden", background: "var(--belvo-bg)" }}
-      >
-        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
-        <motion.div
-          custom={0}
-          variants={fadeUp}
-          initial="hidden"
-          animate={ctaInView ? "visible" : "hidden"}
-          style={{ maxWidth: "800px", margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center", background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "16px", padding: "clamp(36px,5vw,60px)", backdropFilter: "blur(12px)" }}
-        >
-          <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.6rem,3.5vw,2.6rem)", lineHeight: 1.1, color: "var(--belvo-text-1)", margin: "0 0 14px" }}>
-            Ready to Scale Your <span style={{ color: "#9D4EDD" }}>Brand?</span>
-          </h2>
-          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.9rem", lineHeight: 1.75, color: "var(--belvo-text-6)", margin: "0 auto 32px", maxWidth: "480px" }}>
-            Let's talk about which services are right for your business. Book a free consultation with our team.
-          </p>
-          <button
-            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "10px 28px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.75rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 24px rgba(130,40,200,0.3)", transition: "box-shadow 0.3s, transform 0.2s" }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 52px rgba(157,78,221,0.55)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 32px rgba(130,40,200,0.35)"; e.currentTarget.style.transform = "translateY(0)"; }}
-          >
-            Book a Free Call <ArrowUpRight size={14} strokeWidth={2.5} />
-          </button>
-        </motion.div>
-      </div>
     </section>
   );
 }

@@ -10,43 +10,43 @@ const ROLES = [
     id: "social-media",
     title: "Social Media Management",
     desc: "Craft and execute social strategies that grow our clients' brands across every major platform.",
-    icon: "📱",
+
   },
   {
     id: "digital-marketing",
     title: "Digital Marketing",
     desc: "Drive measurable growth through data-driven campaigns and creative performance marketing.",
-    icon: "📈",
+
   },
   {
     id: "business-analyst",
     title: "Business Analyst",
     desc: "Bridge client goals and creative execution by turning market insights into actionable strategies.",
-    icon: "📊",
+
   },
   {
     id: "web-developer",
     title: "Web Developers",
     desc: "Build exceptional web experiences with clean code, pixel-perfect precision, and modern frameworks.",
-    icon: "🌐",
+
   },
   {
     id: "app-developer",
     title: "App Developers",
     desc: "Create seamless mobile experiences across iOS and Android that users love and businesses rely on.",
-    icon: "📲",
+
   },
   {
     id: "hr",
     title: "HR",
     desc: "Build and nurture the BELVO team by attracting, retaining, and developing top creative talent.",
-    icon: "🤝",
+
   },
   {
     id: "software-developer",
     title: "Software Developers",
     desc: "Engineer the tools and systems that power BELVO's growing suite of digital products.",
-    icon: "💻",
+
   },
 ];
 
