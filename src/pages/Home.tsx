@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Play, Sparkles, Newspaper } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 import { useRef } from "react";
 import About from "@/sections/About";
 import BookACall from "@/sections/BookACall";
@@ -10,8 +10,6 @@ import Testimonials from "@/sections/Testimonials";
 import PortfolioSection from "@/sections/PortfolioSection";
 import UpcomingEvents from "@/sections/UpcomingEvents";
 import FAQ from "@/sections/FAQ";
-import { blogPosts } from "@/content/blogs";
-import { Link } from "wouter";
 
 function AuroraWaves() {
   return (
@@ -254,131 +252,6 @@ export default function Home() {
       <TeamSection />
       <Testimonials />
       <UpcomingEvents />
-
-      {/* ── LATEST POSTS ── */}
-      <section id="latest-posts" style={{ background: "var(--belvo-bg)", padding: "100px 24px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, var(--belvo-border-divider), rgba(201,163,65,0.2), transparent)" }} />
-        <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "65vw", height: "500px", background: "radial-gradient(ellipse at center, var(--belvo-glow-blob) 0%, transparent 70%)", filter: "blur(70px)", pointerEvents: "none" }} />
-
-        <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} style={{ textAlign: "center", marginBottom: "52px" }}>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(123,47,190,0.15)", border: "1px solid rgba(157,78,221,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9D4EDD", marginBottom: "16px" }}
-            >
-              <Sparkles size={11} />
-              Latest Posts
-            </motion.span>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: "0 0 12px" }}
-            >
-              Fresh from the <span style={{ color: "#9D4EDD" }}>Blog</span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.9rem", color: "var(--belvo-text-3)", maxWidth: "480px", margin: "0 auto 24px", lineHeight: 1.7 }}
-            >
-              Insights, strategies, and stories from the BELVO team.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: "10px",
-                padding: "10px 22px",
-                background: "linear-gradient(135deg, rgba(255,154,201,0.12), rgba(157,78,221,0.08))",
-                border: "1px solid rgba(255,154,201,0.2)",
-                borderRadius: "100px",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <span style={{ fontSize: "1.1rem" }}>✨</span>
-              <span style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.78rem", fontWeight: 600, color: "var(--belvo-text-1)", letterSpacing: "0.02em" }}>
-                A heartfelt welcome to the GenZ — fresh content dropping weekly 💜
-              </span>
-              <img src="/genz-thumbnail.jpeg" alt="GenZ" style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(157,78,221,0.3)" }} />
-            </motion.div>
-          </motion.div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: "20px" }}>
-            {blogPosts.slice(0, 3).map((post, i) => (
-              <Link key={post.slug} href={`/blogs`}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: 0.1 + i * 0.12 }}
-                  whileHover={{ y: -6, transition: { duration: 0.22 } }}
-                  style={{ background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "14px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.3s, box-shadow 0.3s" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(100,20,180,0.18)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
-                >
-                  <div style={{
-                    aspectRatio: "16 / 10",
-                    background: `linear-gradient(135deg, rgba(255,154,201,0.15), rgba(157,78,221,0.25), rgba(80,20,160,0.4)), url(${post.thumbnail})`,
-                    backgroundSize: "cover", backgroundPosition: "center",
-                    position: "relative",
-                  }}>
-                    <div style={{ position: "absolute", bottom: "10px", left: "10px", display: "flex", gap: "4px" }}>
-                      <span style={{ padding: "3px 8px", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", borderRadius: "6px", fontFamily: "'Inter',sans-serif", fontSize: "0.55rem", fontWeight: 600, color: "#fff" }}>
-                        🔥 {post.category}
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ padding: "20px" }}>
-                    <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: "1rem", color: "var(--belvo-text-1)", margin: "0 0 8px", lineHeight: 1.35 }}>{post.title}</h3>
-                    <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.82rem", lineHeight: 1.7, color: "var(--belvo-text-6)", margin: 0 }}>{post.excerpt}</p>
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            style={{ textAlign: "center", marginTop: "36px" }}
-          >
-            <Link href="/blogs">
-              <button
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "8px",
-                  padding: "12px 28px",
-                  background: "transparent",
-                  border: "1px solid rgba(157,78,221,0.3)",
-                  borderRadius: "100px",
-                  color: "#9D4EDD",
-                  fontFamily: "'Inter',sans-serif", fontWeight: 600,
-                  fontSize: "0.78rem", letterSpacing: "0.14em",
-                  textTransform: "uppercase", cursor: "pointer",
-                  transition: "background 0.2s, border-color 0.2s",
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(157,78,221,0.1)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.5)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.3)"; }}
-              >
-                View All Posts <ArrowUpRight size={13} strokeWidth={2.5} />
-              </button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
 
       <BookACall />
       <FAQ />
