@@ -12,14 +12,23 @@ Object.entries(imageModules).forEach(([path, url]) => {
 });
 
 const NAME_OVERRIDES: Record<string, string> = {
-  "ramnath": "ram nath",
-  "ram nath g k": "ram nath",
+  "ram nath g k": "ramnath",
   "saurav": "sourav",
   "sharfudeen": "sharfu",
   "sheth yamani": "yamini",
   "naveen k d": "naveen kumar",
   "mohammad anasuddin zaid": "mohammed anasuddin zaid",
-  "lokesh": "lokesh2",
+  "shailender": "shilendar",
+  "sibijan": "sibi",
+  "raavula vaibhav": "vaibhav",
+  "sanskruti akare": "sanskruthi",
+  "rimi gosh": "rimi",
+  "mohd usaid ali khan": "mohd usaid",
+  "anshika srivastava": "anshika",
+  "sri satya": "sri",
+  "guru dutt": "guru",
+  "anurag khushwaha": "anurag",
+  "achintya gurba": "achintya gurba",
 };
 
 function getImageUrl(memberName: string): string | undefined {
@@ -92,7 +101,7 @@ const TEAMS = [
     name: "Human Resource",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Raavula Vaibhav", "Mohammad Anasuddin Zaid", "Mohd Usaid Ali Khan"],
+    members: ["Raavula Vaibhav", "Mohd Usaid Ali Khan"],
     responsibilities: ["HR"],
   },
   {
@@ -108,9 +117,8 @@ const TEAMS = [
     name: "Co-Administration",
     color: "#007BFF",
     lightColor: "#0056b3",
-    members: ["Achintya Gurba "],
+    members: ["Achintya Gurba"],
     responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
-
   },
   {
     id: "content",
@@ -119,7 +127,6 @@ const TEAMS = [
     lightColor: "#9D4EDD",
     members: ["Sheth Yamani"],
   }
-
 ] as const;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -174,7 +181,6 @@ function CeoCard({ inView }: { inView: boolean }) {
           boxShadow: `0 0 0 1px ${gold}22, inset 0 1px 0 rgba(255,255,255,0.06)`,
         }}
       >
-        {/* top-right ambient glow - Updated to gold */}
         <div style={{
           position: "absolute", top: -60, right: -60,
           width: 220, height: 220, borderRadius: "50%",
@@ -182,7 +188,6 @@ function CeoCard({ inView }: { inView: boolean }) {
           pointerEvents: "none",
         }} />
 
-        {/* avatar */}
         <div style={{ position: "relative", flexShrink: 0 }}>
           <div style={{
             position: "absolute", inset: -8, borderRadius: "50%",
@@ -193,7 +198,6 @@ function CeoCard({ inView }: { inView: boolean }) {
             border: `0.5px dashed ${gold}44`,
           }} />
 
-          {/* Avatar Background - Gold gradient */}
           <div
             style={{
               width: 120, height: 120, borderRadius: "50%",
@@ -224,7 +228,6 @@ function CeoCard({ inView }: { inView: boolean }) {
             )}
           </div>
 
-          {/* Gold status dot */}
           <div style={{
             position: "absolute", bottom: 6, right: 6,
             width: 18, height: 18, borderRadius: "50%",
@@ -235,9 +238,7 @@ function CeoCard({ inView }: { inView: boolean }) {
           }} />
         </div>
 
-        {/* info */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* CEO badge - Gold */}
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             background: `${gold}15`,
@@ -287,7 +288,6 @@ function CeoCard({ inView }: { inView: boolean }) {
     </motion.div>
   );
 }
-
 
 // ─── MEMBER CARD ─────────────────────────────────────────────────────────────
 
@@ -400,7 +400,7 @@ function MemberCard({
   );
 }
 
-// ─── ADMIN GROUP (Side-by-Side Layout) ───────────────────────────────────────
+// ─── ADMIN GROUP ─────────────────────────────────────────────────────────────
 
 function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: any }) {
   const ref = useRef(null);
@@ -410,7 +410,6 @@ function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: a
 
   return (
     <div ref={ref} style={{ marginBottom: "64px", width: "100%" }}>
-      {/* 1. The Shared Administration Separator */}
       <motion.div
         custom={0} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
         style={{ display: "flex", alignItems: "center", marginBottom: 40, marginTop: 16 }}
@@ -418,30 +417,23 @@ function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: a
         <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
         <span style={{
           fontFamily: "'Inter', sans-serif",
-          fontSize: "0.62rem",
-          fontWeight: 600,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          color: "#007BFF", // The blue text color
-          // Background and border updated to blue-tinted transparency
+          fontSize: "0.62rem", fontWeight: 600,
+          letterSpacing: "0.22em", textTransform: "uppercase",
+          color: "#007BFF",
           background: "rgba(0, 123, 255, 0.1)",
           border: "0.5px solid rgba(0, 123, 255, 0.3)",
-          borderRadius: "100px",
-          padding: "5px 16px",
-          margin: "0 16px"
+          borderRadius: "100px", padding: "5px 16px", margin: "0 16px"
         }}>
           ADMINISTRATION
         </span>
         <div style={{ flex: 1, height: 1, background: "var(--belvo-border-card)" }} />
       </motion.div>
 
-      {/* 2. The Horizontal Card Container */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 240px))", // Ensures side-by-side
+        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 240px))",
         gap: 16,
       }}>
-        {/* Admin Card(s) */}
         {adminTeam.members.map((name: string, i: number) => (
           <MemberCard
             key={name} name={name} team={adminTeam.name} color={adminTeam.color} lightColor={adminTeam.lightColor}
@@ -449,8 +441,6 @@ function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: a
             inView={inView} index={i}
           />
         ))}
-
-        {/* Co-Admin Card(s) */}
         {coadminTeam.members.map((name: string, i: number) => (
           <MemberCard
             key={name} name={name} team={coadminTeam.name} color={coadminTeam.color} lightColor={coadminTeam.lightColor}
@@ -463,7 +453,7 @@ function AdminGroup({ adminTeam, coadminTeam }: { adminTeam: any; coadminTeam: a
   );
 }
 
-/// ─── TEAM GROUP (For Regular Teams) ──────────────────────────────────────────
+// ─── TEAM GROUP ───────────────────────────────────────────────────────────────
 
 function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
   const ref = useRef(null);
@@ -471,7 +461,6 @@ function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
 
   return (
     <div ref={ref} style={{ marginBottom: "64px", width: "100%" }}>
-      {/* Group header */}
       <motion.div
         custom={0} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
         style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 32 }}
@@ -491,7 +480,6 @@ function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
         }}>{team.members.length} {team.members.length <= 1 ? "member" : "members"}</span>
       </motion.div>
 
-      {/* Grid for standard members */}
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16,
       }}>
@@ -534,12 +522,10 @@ export default function TeamSection() {
           padding: "100px 24px 120px",
         }}
       >
-        {/* top divider */}
         <div style={{
           position: "absolute", top: 0, left: 0, right: 0, height: 1,
           background: "linear-gradient(90deg, transparent, var(--belvo-border-divider), transparent)",
         }} />
-        {/* ambient glow blob */}
         <div style={{
           position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
           width: "70vw", height: 400,
@@ -549,7 +535,6 @@ export default function TeamSection() {
 
         <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
-          {/* ── Section header ── */}
           <div ref={headerRef} style={{ textAlign: "center", marginBottom: "80px" }}>
             <motion.span
               custom={0} variants={fadeUp} initial="hidden"
@@ -590,19 +575,12 @@ export default function TeamSection() {
             </motion.p>
           </div>
 
-          {/* ── CEO card ── */}
           <CeoCard inView={headerInView} />
 
-
-
-
-
-          {/* ── Regular Team groups ── */}
           {TEAMS.filter(t => t.id !== "admin" && t.id !== "coadmin").map((team) => (
             <TeamGroup key={team.id} team={team} />
           ))}
 
-          {/* ── Admin & Co-Admin Side-by-Side ── */}
           <AdminGroup
             adminTeam={TEAMS.find(t => t.id === "admin")}
             coadminTeam={TEAMS.find(t => t.id === "coadmin")}
