@@ -1,5 +1,22 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
+interface TeamMemberDisplay {
+  name: string;
+  imageUrl?: string | null;
+  responsibilities?: readonly string[];
+}
+
+interface TeamDisplay {
+  id: string;
+  name: string;
+  color: string;
+  lightColor: string;
+  members: TeamMemberDisplay[];
+  responsibilities?: readonly string[];
+}
 
 const easeSmooth = [0.22, 1, 0.36, 1] as const;
 
@@ -54,7 +71,7 @@ const CEO = {
   tagline: "Building BELVO to deliver world-class digital solutions — one idea, one team, one product at a time.",
 };
 
-const TEAMS = [
+const HARDCODED_TEAMS: TeamDisplay[] = [
   {
     id: "web",
     name: "Web Development",
@@ -65,52 +82,52 @@ const TEAMS = [
       "Mohammad Anasuddin Zaid", "Ishwari",
       "Sandali", "Tamil Selvan", "Ram Nath G K",
       "Guru dutt", "Shailender",
-    ],
+    ].map(name => ({ name })),
   },
   {
     id: "app",
     name: "App Development",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar", "Naveen K D"],
+    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar", "Naveen K D"].map(name => ({ name })),
   },
   {
     id: "cyber",
     name: "Cyber Security",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Harsh", "Sourav", "Parv"],
+    members: ["Harsh", "Sourav", "Parv"].map(name => ({ name })),
   },
   {
     id: "analytics",
     name: "Business & Data Analytics",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Ishika", "Obed", "Sasikumar", "Sharfudeen", "Sibijan"],
+    members: ["Ishika", "Obed", "Sasikumar", "Sharfudeen", "Sibijan"].map(name => ({ name })),
   },
   {
     id: "graphic",
     name: "Graphic Designing",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma"],
+    members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma"].map(name => ({ name })),
   },
   {
     id: "content",
     name: "Content Writer",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Sheth Yamani"],
+    members: ["Sheth Yamani"].map(name => ({ name })),
   },
   {
     id: "admin",
     name: "Administration",
     color: "#007BFF",
     lightColor: "#0056b3",
-    members: ["Mohd Usaid Ali Khan", "Raavula Vaibhav", "Achintya Gurba"],
+    members: ["Mohd Usaid Ali Khan", "Raavula Vaibhav", "Achintya Gurba"].map(name => ({ name })),
     responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
   },
-] as const;
+];
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -223,13 +240,14 @@ function CeoCard({ inView }: { inView: boolean }) {
 }
 
 function MemberCard({
-  name, team, color, lightColor, responsibilities, inView, index,
+  name, team, color, lightColor, responsibilities, inView, index, imageUrl,
 }: {
   name: string; team: string; color: string; lightColor: string;
   responsibilities?: readonly string[]; inView: boolean; index: number;
+  imageUrl?: string | null;
 }) {
   const initials = getInitials(name);
-  const img = getImageUrl(name);
+  const img = imageUrl || getImageUrl(name);
   const cardRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -309,7 +327,7 @@ function MemberCard({
   );
 }
 
-function AdminGroup({ adminTeam }: { adminTeam: any }) {
+function AdminGroup({ adminTeam }: { adminTeam?: TeamDisplay }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -334,10 +352,11 @@ function AdminGroup({ adminTeam }: { adminTeam: any }) {
       </motion.div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 240px))", gap: 16 }}>
-        {adminTeam.members.map((name: string, i: number) => (
+        {adminTeam.members.map((member, i) => (
           <MemberCard
-            key={name} name={name} team={adminTeam.name} color={adminTeam.color} lightColor={adminTeam.lightColor}
-            responsibilities={adminTeam.responsibilities}
+            key={member.name} name={member.name} team={adminTeam.name} color={adminTeam.color} lightColor={adminTeam.lightColor}
+            responsibilities={member.responsibilities ?? adminTeam.responsibilities}
+            imageUrl={member.imageUrl}
             inView={inView} index={i}
           />
         ))}
@@ -346,7 +365,7 @@ function AdminGroup({ adminTeam }: { adminTeam: any }) {
   );
 }
 
-function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
+function TeamGroup({ team }: { team: TeamDisplay }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -367,9 +386,11 @@ function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
       </motion.div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16 }}>
-        {team.members.map((name, i) => (
+        {team.members.map((member, i) => (
           <MemberCard
-            key={name} name={name} team={team.name} color={team.color} lightColor={team.lightColor}
+            key={member.name} name={member.name} team={team.name} color={team.color} lightColor={team.lightColor}
+            responsibilities={member.responsibilities}
+            imageUrl={member.imageUrl}
             inView={inView} index={i + 1}
           />
         ))}
@@ -379,8 +400,43 @@ function TeamGroup({ team }: { team: typeof TEAMS[number] }) {
 }
 
 export default function TeamSection() {
+  const [teams, setTeams] = useState<TeamDisplay[] | null>(null);
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${API_BASE}/api/team`).then(r => r.json()),
+      fetch(`${API_BASE}/api/departments`).then(r => r.json()),
+    ]).then(([teamData, deptData]) => {
+      if (!teamData.success || !deptData.success) return;
+      const deptMap = new Map(deptData.departments.map((d: any) => [d.id, d]));
+      const grouped = new Map<string, TeamMemberDisplay[]>();
+      for (const m of teamData.members) {
+        if (!grouped.has(m.team_id)) grouped.set(m.team_id, []);
+        grouped.get(m.team_id)!.push({
+          name: m.name,
+          imageUrl: m.image_url,
+          responsibilities: m.responsibilities,
+        });
+      }
+      const apiTeams: TeamDisplay[] = [];
+      for (const [id, dept] of deptMap) {
+        const members = grouped.get(id);
+        if (!members || members.length === 0) continue;
+        apiTeams.push({
+          id: dept.id,
+          name: dept.name,
+          color: dept.color,
+          lightColor: dept.light_color,
+          members,
+        });
+      }
+      if (apiTeams.length > 0) setTeams(apiTeams);
+    }).catch(() => {});
+  }, []);
+
+  const displayTeams = teams || HARDCODED_TEAMS;
 
   return (
     <>
@@ -443,11 +499,11 @@ export default function TeamSection() {
 
           <CeoCard inView={headerInView} />
 
-          {TEAMS.filter(t => t.id !== "admin").map((team) => (
+          {displayTeams.filter(t => t.id !== "admin").map((team) => (
             <TeamGroup key={team.id} team={team} />
           ))}
 
-          <AdminGroup adminTeam={TEAMS.find(t => t.id === "admin")} />
+          <AdminGroup adminTeam={displayTeams.find(t => t.id === "admin")} />
         </div>
       </section>
     </>
