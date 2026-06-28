@@ -421,9 +421,11 @@ export default function TeamSection() {
         });
       }
       const apiTeams: TeamDisplay[] = [];
+      const apiIds = new Set<string>();
       for (const [id, dept] of deptMap) {
         const members = grouped.get(id);
         if (!members || members.length === 0) continue;
+        apiIds.add(id);
         apiTeams.push({
           id: dept.id,
           name: dept.name,
@@ -431,6 +433,11 @@ export default function TeamSection() {
           lightColor: dept.light_color,
           members,
         });
+      }
+      for (const hard of HARDCODED_TEAMS) {
+        if (!apiIds.has(hard.id)) {
+          apiTeams.push(hard);
+        }
       }
       if (apiTeams.length > 0) setTeams(apiTeams);
     }).catch(() => {});
