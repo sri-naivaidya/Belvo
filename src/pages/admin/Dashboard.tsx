@@ -17,6 +17,46 @@ import {
 
 const IMG_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
+const imageModules = import.meta.glob<{ default: string }>("/src/collectives/*", { eager: true, import: "default" });
+const IMAGE_MAP: Record<string, string> = {};
+Object.entries(imageModules).forEach(([path, url]) => {
+  const name = path.split("/").pop()!.replace(/\.[^.]+$/, "").toLowerCase();
+  IMAGE_MAP[name] = url;
+});
+const NAME_OVERRIDES: Record<string, string> = {
+  "sheth yamani": "seth yamani",
+  "sanskruti akare": "sanskruthi",
+  "rimi gosh": "rimi",
+  "mohd usaid ali khan": "mohd usaid",
+  "mohammad anasuddin zaid": "mohs anas",
+  "anshika srivastava": "anshika",
+  "sri satya": "sri",
+  "guru dutt": "guru",
+  "anurag khushwaha": "anurag",
+  "achintya gurba": "achintya gurba",
+  "deepak sharma": "deepak sharma",
+  "ram nath g k": "ramnath",
+  "naveen k d": "naveen kumar",
+  "raavula vaibhav": "vaibhav",
+  "shailender": "shilendar",
+  "sibijan": "sibi",
+  "tamil selvan": "tamil",
+};
+
+function getLocalImage(name: string): string | undefined {
+  const key = name.toLowerCase().trim();
+  const override = NAME_OVERRIDES[key];
+  if (override && IMAGE_MAP[override]) return IMAGE_MAP[override];
+  if (IMAGE_MAP[key]) return IMAGE_MAP[key];
+  const firstName = key.split(/\s+/)[0];
+  if (IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
+  const lastName = key.split(/\s+/).pop()!;
+  if (IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
+  const fuzzy = Object.keys(IMAGE_MAP).find(k => key.includes(k) || k.includes(key));
+  if (fuzzy) return IMAGE_MAP[fuzzy];
+  return undefined;
+}
+
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
   if (parts.length === 1) return parts[0][0].toUpperCase();
@@ -406,7 +446,7 @@ function MemberCard({
     ? member.image_url.startsWith("http")
       ? member.image_url
       : `${IMG_BASE}${member.image_url}`
-    : "";
+    : getLocalImage(member.name) || "";
 
   return (
     <div
