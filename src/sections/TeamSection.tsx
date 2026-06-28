@@ -23,6 +23,7 @@ const NAME_OVERRIDES: Record<string, string> = {
   "sanskruti akare": "sanskruthi",
   "rimi gosh": "rimi",
   "mohd usaid ali khan": "mohd usaid",
+  "mohammad ali": "mohd usaid",
   "anshika srivastava": "anshika",
   "sri satya": "sri",
   "guru dutt": "guru",
@@ -98,7 +99,7 @@ const TEAMS = [
     name: "Administration",
     color: "#007BFF",
     lightColor: "#0056b3",
-    members: ["Mohammad Ali", "Raavula Vaibhav", "Achintya Gurba"],
+    members: ["Mohd Usaid Ali Khan", "Raavula Vaibhav", "Achintya Gurba"],
     responsibilities: ["Operations", "Team Coordination", "Client Communication", "Internal Management"] as readonly string[],
   },
 ] as const;
