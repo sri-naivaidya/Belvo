@@ -36,13 +36,12 @@ function getImageUrl(memberName: string): string | undefined {
   const key = memberName.toLowerCase().trim();
   const override = NAME_OVERRIDES[key];
   if (override && IMAGE_MAP[override]) return IMAGE_MAP[override];
-  const BLOCKED = new Set(["naveen kumar"]);
-  if (!BLOCKED.has(key) && IMAGE_MAP[key]) return IMAGE_MAP[key];
+  if (IMAGE_MAP[key]) return IMAGE_MAP[key];
   const firstName = key.split(/\s+/)[0];
-  if (!BLOCKED.has(firstName) && IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
+  if (IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
   const lastName = key.split(/\s+/).pop()!;
-  if (!BLOCKED.has(lastName) && IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
-  const fuzzy = Object.keys(IMAGE_MAP).find(k => !BLOCKED.has(k) && (key.includes(k) || k.includes(key)));
+  if (IMAGE_MAP[lastName]) return IMAGE_MAP[lastName];
+  const fuzzy = Object.keys(IMAGE_MAP).find(k => key.includes(k) || k.includes(key));
   if (fuzzy) return IMAGE_MAP[fuzzy];
   return undefined;
 }
@@ -71,7 +70,7 @@ const TEAMS = [
     name: "App Development",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aditya", "Naveen Kumar", "Naveen K D"],
+    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar", "Naveen K D"],
   },
   {
     id: "cyber",
@@ -93,14 +92,6 @@ const TEAMS = [
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
     members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma"],
-  },
-  {
-    id: "hr",
-    name: "Human Resource",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
-    members: ["Raavula Vaibhav", "Mohd Usaid Ali Khan"],
-    responsibilities: ["HR"],
   },
   {
     id: "admin",
