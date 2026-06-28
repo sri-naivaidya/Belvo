@@ -12,6 +12,8 @@ import About from "@/sections/About";
 import ComingSoon from "@/pages/ComingSoon";
 import EventRegistration from "@/pages/EventRegistration";
 import Works from "@/pages/works";
+import AdminLogin from "@/pages/admin/Login";
+import AdminDashboard from "@/pages/admin/Dashboard";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChatBot from "@/components/ChatBot";
@@ -42,6 +44,21 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
 
 function Router() {
   const [location] = useLocation();
+
+  if (location.startsWith("/admin")) {
+    return (
+      <div
+        style={{ background: "var(--belvo-bg)", minHeight: "100dvh", color: "var(--belvo-text-1)" }}
+      >
+        <Switch>
+          <Route path="/admin/login" component={AdminLogin} />
+          <Route path="/admin">
+            <AdminDashboard />
+          </Route>
+        </Switch>
+      </div>
+    );
+  }
 
   return (
     <div
