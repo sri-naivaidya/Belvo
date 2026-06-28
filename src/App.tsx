@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Redirect, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
@@ -14,6 +14,7 @@ import EventRegistration from "@/pages/EventRegistration";
 import Works from "@/pages/works";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
+import { isAuthenticated } from "@/lib/admin-api";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChatBot from "@/components/ChatBot";
@@ -53,7 +54,7 @@ function Router() {
         <Switch>
           <Route path="/admin/login" component={AdminLogin} />
           <Route path="/admin">
-            <AdminDashboard />
+            {isAuthenticated() ? <AdminDashboard /> : <Redirect to="/admin/login" />}
           </Route>
         </Switch>
       </div>

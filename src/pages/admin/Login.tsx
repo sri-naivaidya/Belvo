@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { login } from "@/lib/admin-api";
+import { login, isAuthenticated } from "@/lib/admin-api";
 
 export default function AdminLogin() {
+  if (isAuthenticated()) {
+    window.location.href = "/admin";
+    return null;
+  }
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
