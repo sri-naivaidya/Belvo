@@ -247,7 +247,7 @@ function MemberCard({
   imageUrl?: string | null;
 }) {
   const initials = getInitials(name);
-  const img = imageUrl || getImageUrl(name);
+  const img = getImageUrl(name) || imageUrl;
   const cardRef = useRef<HTMLDivElement>(null);
 
   return (
