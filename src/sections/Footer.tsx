@@ -235,7 +235,7 @@ export default function Footer() {
                 <motion.button
                   key={link.id}
                   custom={i + 16} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-                  onClick={() => document.getElementById(link.id)?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() => { const el = document.getElementById(link.id); if (el) el.scrollIntoView({ behavior: "smooth" }) }}
                   style={{
                     display: "inline-flex", alignItems: "center", gap: "8px",
                     background: "none", border: "none", padding: 0, cursor: "pointer",

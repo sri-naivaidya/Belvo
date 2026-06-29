@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, ArrowUpRight, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { smoothScrollTo, smoothScrollToElement } from "@/lib/smoothScroll";
 
 const NAV_LINKS = [
   { name: "Home",     href: "/" },
@@ -72,14 +73,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [location]);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => smoothScrollTo(0);
 
   const scrollToId = (id: string) => {
     let attempts = 0;
     const tryScroll = () => {
       const el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        smoothScrollToElement(id);
       } else if (attempts < 10) {
         attempts++;
         setTimeout(tryScroll, 80);

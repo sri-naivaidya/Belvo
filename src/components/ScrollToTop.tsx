@@ -1,4 +1,5 @@
 import { motion, useScroll, useSpring } from "framer-motion";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 export default function ScrollToTop() {
   const { scrollYProgress } = useScroll();
@@ -11,7 +12,7 @@ export default function ScrollToTop() {
         style={{ scaleX, background: "linear-gradient(90deg, #7B2FBE, #9D4EDD)" }}
       />
       <motion.button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => smoothScrollTo(0)}
         className="fixed bottom-8 right-8 z-[9999] flex items-center justify-center w-12 h-12 rounded-full cursor-pointer border-none shadow-lg"
         style={{ background: "var(--belvo-accent, #9D4EDD)", color: "#fff" }}
         initial={{ opacity: 0, scale: 0.5, y: 20 }}

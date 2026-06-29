@@ -285,7 +285,10 @@ function MemberCard({
           position: "relative", overflow: "hidden",
         }}>
           {img ? (
-            <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+            <img src={img} alt={name} style={{
+              width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%",
+              objectPosition: name === "Mohammad Anasuddin Zaid" ? "50% 30%" : "50% 50%",
+            }} />
           ) : (
             <>
               <div style={{ position: "absolute", inset: 4, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)" }} />

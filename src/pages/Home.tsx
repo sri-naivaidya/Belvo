@@ -11,6 +11,7 @@ import PortfolioSection from "@/sections/PortfolioSection";
 import UpcomingEvents from "@/sections/UpcomingEvents";
 import FAQ from "@/sections/FAQ";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -281,7 +282,7 @@ export default function Home() {
             <span className="block" style={{ color: "var(--belvo-text-1)" }}>
               A Perfect Agency
             </span>
-            <span className="block shimmer-text">
+            <span className="block" style={{ color: "var(--belvo-text-1)" }}>
               For Your Brand.
             </span>
           </motion.h1>
@@ -302,7 +303,7 @@ export default function Home() {
             className="flex flex-col sm:flex-row items-center gap-4"
           >
             <MagneticButton
-              onClick={() => document.getElementById("book-a-call")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => smoothScrollToElement("book-a-call")}
               data-testid="button-hero-cta"
               className="inline-flex items-center gap-2.5 px-8 py-3.5 font-semibold text-sm tracking-[0.12em] uppercase"
               style={{
@@ -330,7 +331,7 @@ export default function Home() {
             </MagneticButton>
 
             <MagneticButton
-              onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => smoothScrollToElement("services")}
               data-testid="button-hero-services"
               className="inline-flex items-center gap-2.5 px-8 py-3.5 font-semibold text-sm tracking-[0.12em] uppercase"
               style={{

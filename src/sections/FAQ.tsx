@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -466,11 +467,7 @@ export default function FAQ() {
           >
             Everything you need to know about Belvo. Can't find your answer?{" "}
             <button
-              onClick={() =>
-                document
-                  .getElementById("book-a-call")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => smoothScrollToElement("book-a-call")}
               style={{
                 background: "none",
                 border: "none",

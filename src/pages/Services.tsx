@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 import Footer from "@/sections/Footer";
 import BookACall from "@/sections/BookACall";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -169,7 +170,7 @@ export default function Services() {
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
             <button
-              onClick={() => document.getElementById("services-grid")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => smoothScrollToElement("services-grid")}
               data-testid="button-explore-services"
               style={{ display: "inline-flex", alignItems: "center", gap: "10px", padding: "14px 36px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.82rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 32px rgba(130,40,200,0.38)", transition: "box-shadow 0.3s, transform 0.2s" }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 52px rgba(157,78,221,0.55)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
