@@ -119,12 +119,12 @@ function AuroraWaves() {
             animation: morphBlob 12s ease-in-out infinite;
           }
           .shimmer-text {
-            background: linear-gradient(90deg, #9D4EDD 0%, #C9A341 25%, #9D4EDD 50%, #C9A341 75%, #9D4EDD 100%);
+            background: linear-gradient(90deg, #9D4EDD 0%, #B06AE8 25%, #7B2FBE 50%, #B06AE8 75%, #9D4EDD 100%);
             background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 4s ease-in-out infinite;
+            animation: shimmer 3s ease-in-out infinite;
           }
         `}</style>
       </defs>
@@ -282,7 +282,7 @@ export default function Home() {
             <span className="block" style={{ color: "var(--belvo-text-1)" }}>
               A Perfect Agency
             </span>
-            <span className="block" style={{ color: "var(--belvo-text-1)" }}>
+            <span className="block shimmer-text">
               For Your Brand.
             </span>
           </motion.h1>
