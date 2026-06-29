@@ -90,7 +90,7 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
     name: "App Development",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar", "Naveen K D"].map(name => ({ name })),
+    members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar"].map(name => ({ name })),
   },
   {
     id: "cyber",
