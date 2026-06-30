@@ -49,12 +49,17 @@ const NAME_OVERRIDES: Record<string, string> = {
   "achintya gurba": "achintya gurba",
   "deepak sharma": "deepak sharma",
   "tamil selvan": "tamil",
+  "yash": "yash1",
+  "harshitha": "",
 };
 
 function getImageUrl(memberName: string): string | undefined {
   const key = memberName.toLowerCase().trim();
   const override = NAME_OVERRIDES[key];
-  if (override && IMAGE_MAP[override]) return IMAGE_MAP[override];
+  if (override !== undefined) {
+    if (override === "") return undefined;
+    if (IMAGE_MAP[override]) return IMAGE_MAP[override];
+  }
   if (IMAGE_MAP[key]) return IMAGE_MAP[key];
   const firstName = key.split(/\s+/)[0];
   if (IMAGE_MAP[firstName]) return IMAGE_MAP[firstName];
@@ -82,7 +87,7 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
       "Mohammad Anasuddin Zaid", "Ishwari",
       "Sandali", "Tamil Selvan", "Ram Nath G K",
       "Guru dutt", "Shailender",
-      "Aditya Sarkar", "Divyansh Salanki",
+      "Aditya Sarkar", "Divyansh Salanki", "Harshitha",
     ].map(name => ({ name })),
   },
   {
@@ -111,14 +116,14 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
     name: "Business & Data Analytics",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Ishika", "Obed", "Sasikumar", "Sharfudeen", "Sibijan"].map(name => ({ name })),
+    members: ["Ishika", "Obed", "Sasikumar", "Sharfudeen", "Sibijan", "Tejaswini"].map(name => ({ name })),
   },
   {
     id: "graphic",
     name: "Graphic Designing",
     color: "#7B2FBE",
     lightColor: "#9D4EDD",
-    members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma", "Neha"].map(name => ({ name })),
+    members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma", "Neha", "Yash"].map(name => ({ name })),
   },
   {
     id: "social",
