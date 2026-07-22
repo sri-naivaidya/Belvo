@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, ArrowLeft, FileText, Clock, BookOpen, Zap, GitBranch, Code, Cpu, Layers, ArrowUpRight } from "lucide-react";
+import { Search, ArrowLeft, FileText, Clock, BookOpen, Code, Cpu, Layers, ArrowUpRight } from "lucide-react";
 import { Link } from "wouter";
 
 const pdfData = [
@@ -14,28 +14,6 @@ const pdfData = [
     pages: "15 pages",
     tags: ["Claude AI", "Prompt Engineering", "AI"],
     icon: Cpu,
-  },
-  {
-    file: "ClaudeAI Notes (1).pdf",
-    title: "ClaudeAI Notes (Extended)",
-    category: "AI & Machine Learning",
-    author: "Claude AI",
-    date: "March 2026",
-    size: "2.3 MB",
-    pages: "18 pages",
-    tags: ["Claude AI", "Advanced Prompts", "Workflows"],
-    icon: Zap,
-  },
-  {
-    file: "Git and GitHub Notes.pdf",
-    title: "Git and GitHub Notes",
-    category: "Version Control",
-    author: "GitHub Education",
-    date: "February 2026",
-    size: "1.8 MB",
-    pages: "12 pages",
-    tags: ["Git", "GitHub", "Version Control"],
-    icon: GitBranch,
   },
   {
     file: "Java_Complete_Guide-1.pdf",
