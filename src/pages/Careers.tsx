@@ -480,6 +480,26 @@ export default function Careers() {
               >
                 Notes <ArrowUpRight size={11} strokeWidth={2.5} />
               </button>
+              <button
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "6px",
+                  padding: "8px 18px",
+                  background: "rgba(123,47,190,0.08)",
+                  border: "1px solid rgba(157,78,221,0.25)",
+                  borderRadius: "100px",
+                  fontFamily: "'Inter',sans-serif",
+                  fontSize: "0.7rem", fontWeight: 500,
+                  color: "#7B2FBE",
+                  letterSpacing: "0.04em", cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "box-shadow 0.3s, transform 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px rgba(157,78,221,0.3)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "translateY(0)"; }}
+                onClick={() => window.location.href = "/notes-pdfs"}
+              >
+                PDFs <ArrowUpRight size={11} strokeWidth={2.5} />
+              </button>
             </div>
 
             <div style={{
