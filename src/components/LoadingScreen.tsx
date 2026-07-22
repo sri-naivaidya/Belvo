@@ -50,7 +50,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const doneRef = useRef(onComplete);
   doneRef.current = onComplete;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -60,8 +59,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     }
 
     const canvas = canvasRef.current;
-    const video = videoRef.current;
-    if (!canvas || !video) return;
+    if (!canvas) return;
 
     const w = innerWidth;
     const h = innerHeight;
@@ -208,7 +206,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         geo.attributes.position.needsUpdate = true;
         mat.opacity = ease * 0.95;
         gMat.opacity = ease * 0.12;
-        video.style.opacity = String(ease);
         mesh.rotation.y = elapsed * 0.25;
         gMesh.rotation.y = elapsed * 0.18;
       } else if (elapsed < 3.5) {
@@ -217,7 +214,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         gMesh.rotation.y = rt * 0.32;
         mat.opacity = 0.95;
         gMat.opacity = 0.12;
-        video.style.opacity = '1';
         const breathe = 1 + Math.sin(rt * 1.8) * 0.025;
         mesh.scale.set(breathe, breathe, breathe);
       } else if (elapsed < 3.8) {
@@ -226,7 +222,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         mesh.scale.set(s, s, s);
         mat.opacity = 0.95 - t * 0.15;
         gMat.opacity = 0.12 - t * 0.05;
-        video.style.opacity = String(1 - t * 0.1);
       } else if (elapsed < 4.8) {
         const t = (elapsed - 3.8) / 1.0;
         for (let i = 0; i < N; i++) {
@@ -240,7 +235,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         geo.attributes.position.needsUpdate = true;
         mat.opacity = Math.max(0, 0.85 - t * 0.85);
         gMat.opacity = Math.max(0, 0.12 - t * 0.12);
-        video.style.opacity = String(Math.max(0, 0.9 - t * 0.9));
         mesh.rotation.y += 0.03;
         gMesh.rotation.y += 0.02;
         mesh.scale.set(1, 1, 1);
@@ -255,7 +249,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         mat.opacity = Math.max(0, mat.opacity - 0.03);
         gMat.opacity = Math.max(0, gMat.opacity - 0.02);
         flashMat.opacity = Math.max(0, flashMat.opacity - 0.04);
-        video.style.opacity = String(Math.max(0, parseFloat(video.style.opacity || '1') - 0.03));
       }
 
       renderer.render(scene, camera);
@@ -311,27 +304,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         inset: 0,
         zIndex: 9999,
         overflow: "hidden",
-        backgroundColor: "#04000e",
+        backgroundColor: "#000000",
       }}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          opacity: 0,
-          zIndex: 0,
-        }}
-      >
-        <source src="/videos/belvo-opening-bg.mp4" type="video/mp4" />
-      </video>
       <canvas
         ref={canvasRef}
         style={{
@@ -383,17 +358,17 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 transition={
                   phase === "exit"
                     ? {
-                        duration: 0.6,
-                        delay: 0.03 * i,
-                        ease: [0.55, 0, 1, 0.45],
-                      }
+                      duration: 0.6,
+                      delay: 0.03 * i,
+                      ease: [0.55, 0, 1, 0.45],
+                    }
                     : {
-                        duration: 3.5,
-                        delay: 0.15 + i * 0.12,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                      }
+                      duration: 3.5,
+                      delay: 0.15 + i * 0.12,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }
                 }
                 style={{ display: "inline-block" }}
               >
@@ -462,7 +437,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at 50% 50%, transparent 20%, #04000e 100%)",
+              "radial-gradient(ellipse at 50% 50%, transparent 20%, #000000 100%)",
             zIndex: 3,
             pointerEvents: "none",
           }}
