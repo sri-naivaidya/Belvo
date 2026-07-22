@@ -84,6 +84,7 @@ function Router() {
               </Route>
               <Route path="/demo" component={DemoOne} />
               <Route path="/notes-pdfs" component={NotesPDFs} />
+              <Route path="/resources"><Redirect to="/notes-pdfs" /></Route>
               <Route component={NotFound} />
             </Switch>
           </AnimatedPage>
