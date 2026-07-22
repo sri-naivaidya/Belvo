@@ -73,6 +73,7 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^5.0.4",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.8.3",
