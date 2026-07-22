@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { ArrowUpRight, Briefcase, Mail, Upload, CheckCircle2 } from "lucide-react";
+import { useLocation } from "wouter";
 import Footer from "@/sections/Footer";
 import { saveSubmission } from "@/lib/contact";
 
