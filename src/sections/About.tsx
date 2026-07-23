@@ -163,7 +163,6 @@ export default function About() {
         style={{
           position: "relative",
           zIndex: 1,
-          maxWidth: "1100px",
           width: "100%",
         }}
       >
