@@ -179,6 +179,7 @@ gl_FragColor=vec4(color,1.0);
     let pointerStartX = 0;
     let pointerStartY = 0;
     let pointerDown = false;
+    let wheelCooldown = false;
 
     const onPointerDown = (e: PointerEvent) => {
       pointerStartX = e.clientX;
@@ -196,7 +197,9 @@ gl_FragColor=vec4(color,1.0);
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (!settledRef.current) return;
+      if (!settledRef.current || wheelCooldown) return;
+      wheelCooldown = true;
+      setTimeout(() => { wheelCooldown = false; }, 600);
       if (e.deltaY > 0) advance();
       else if (e.deltaY < 0) retreat();
     };
@@ -402,14 +405,4 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.transform = "scale(1)";
               }}
             >
-              explore videos
-            </div>
-          </div>
-        </div>
-
-        <style>{heroStyles}</style>
-      </div>
-
-    </>
-  );
-}
+             
