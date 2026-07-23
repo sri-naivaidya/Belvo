@@ -365,10 +365,10 @@ gl_FragColor=vec4(color,1.0);
 
           <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
             <div
-              onClick={() => navigate("/videos")}
+              onClick={() => { window.location.href = "/about#explore"; }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter") navigate("/videos"); }}
+              onKeyDown={(e) => { if (e.key === "Enter") { window.location.href = "/about#explore"; } }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -402,9 +402,4 @@ gl_FragColor=vec4(color,1.0);
         </div>
 
         <style>{heroStyles}</style>
-      </div>
-
-      <ExploreSection />
-    </>
-  );
-}
+     
