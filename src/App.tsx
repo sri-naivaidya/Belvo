@@ -11,6 +11,7 @@ import Careers from "@/pages/Careers";
 import Blogs from "@/pages/Blogs";
 import About from "@/sections/About";
 import ComingSoon from "@/pages/ComingSoon";
+import Services from "@/pages/Services";
 import EventRegistration from "@/pages/EventRegistration";
 import Works from "@/pages/works";
 import Tools from "@/pages/Tools";
@@ -76,15 +77,20 @@ function Router() {
               <Route path="/about" component={About} />
               <Route path="/careers" component={Careers} />
               <Route path="/blogs" component={Blogs} />
+              <Route path="/services" component={Services} />
               <Route path="/works" component={Works} />
               <Route path="/tools" component={Tools} />
               <Route path="/tools/register" component={ToolRegister} />
               <Route path="/event-register/:id" component={EventRegistration} />
+              <Route path="/events">
+                <ComingSoon title="Events" />
+              </Route>
               <Route path="/contact">
                 <ComingSoon title="Contact Us" />
               </Route>
               <Route path="/demo" component={DemoOne} />
               <Route path="/notes-pdfs" component={NotesPDFs} />
+              <Route path="/llms" component={LLMs} />
               <Route path="/lms" component={LLMs} />
               <Route path="/resources" component={Blogs} />
               <Route component={NotFound} />
