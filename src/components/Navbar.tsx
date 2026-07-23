@@ -3,15 +3,13 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, ArrowUpRight, Moon, Sun, ArrowDownLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { smoothScrollTo, smoothScrollToElement } from "@/lib/smoothScroll";
 
 const NAV_LINKS = [
   { name: "Home",     href: "/" },
-  { name: "About",    href: "/#about" },
-  { name: "Services", href: "/#services" },
-  { name: "Works",    href: "/#portfolio" },
-
-  { name: "Events",   href: "/#events" },
+  { name: "About",    href: "/about" },
+  { name: "Services", href: "/services" },
+  { name: "Works",    href: "/works" },
+  { name: "Events",   href: "/events" },
   { name: "Careers",  href: "/careers" },
   { name: "Resources", href: "/resources" },
 ];
@@ -20,7 +18,6 @@ export default function Navbar() {
   const [location, navigate] = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
-  const [activeSection, setActiveSection] = React.useState("");
   const { theme, toggleTheme } = useTheme();
   const isIvory = theme === "ivory";
 
@@ -32,7 +29,6 @@ export default function Navbar() {
 
   React.useEffect(() => {
     setIsOpen(false);
-    setActiveSection("");
   }, [location]);
 
   React.useEffect(() => {
@@ -46,93 +42,28 @@ export default function Navbar() {
     };
   }, [isOpen]);
 
-  React.useEffect(() => {
-    if (location !== "/") return;
-
-    const onScroll = () => {
-      const scrollY = window.scrollY;
-      const about = document.getElementById("about");
-      const services = document.getElementById("services");
-      const portfolio = document.getElementById("portfolio");
-      const tools = document.getElementById("tools-pricing");
-      const events = document.getElementById("events");
-
-      if (events && scrollY >= events.offsetTop - 100) {
-        setActiveSection("events");
-      } else if (tools && scrollY >= tools.offsetTop - 100) {
-        setActiveSection("tools-pricing");
-      } else if (portfolio && scrollY >= portfolio.offsetTop - 100) {
-        setActiveSection("portfolio");
-      } else if (services && scrollY >= services.offsetTop - 100) {
-        setActiveSection("services");
-      } else if (about && scrollY >= about.offsetTop - 100) {
-        setActiveSection("about");
-      } else {
-        setActiveSection("");
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [location]);
-
-  const scrollToTop = () => smoothScrollTo(0);
-
-  const scrollToId = (id: string) => {
-    let attempts = 0;
-    const tryScroll = () => {
-      const el = document.getElementById(id);
-      if (el) {
-        smoothScrollToElement(id);
-      } else if (attempts < 10) {
-        attempts++;
-        setTimeout(tryScroll, 80);
-      }
-    };
-    tryScroll();
-  };
-
   const handleBookCall = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsOpen(false);
-    if (location === "/") {
-      scrollToId("book-a-call");
-    } else {
-      navigate("/");
-      setTimeout(() => scrollToId("book-a-call"), 300);
-    }
+    navigate("/");
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
     setIsOpen(false);
-    if (href.startsWith("/#")) {
-      const id = href.slice(2);
-      if (location === "/") {
-        scrollToId(id);
-      } else {
-        navigate("/");
-        setTimeout(() => scrollToId(id), 300);
-      }
+    if (location === href) {
+      window.scrollTo(0, 0);
     } else {
-      if (location === href) {
-        scrollToTop();
-      } else {
-        navigate(href);
-        setTimeout(scrollToTop, 50);
-      }
+      navigate(href);
     }
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (location === "/") {
-      scrollToTop();
-      setActiveSection("");
+      window.scrollTo(0, 0);
     } else {
       navigate("/");
-      setTimeout(scrollToTop, 50);
     }
   };
 
@@ -140,11 +71,7 @@ export default function Navbar() {
     ? isIvory ? "rgba(248,245,239,0.96)" : "rgba(4,0,14,0.88)"
     : "var(--belvo-bg-nav)";
 
-  const isLinkActive = (href: string) => {
-    if (href === "/") return location === "/" && activeSection === "";
-    if (href.startsWith("/#")) return location === "/" && activeSection === href.slice(2);
-    return location === href;
-  };
+  const isLinkActive = (href: string) => location === href;
 
   return (
     <header
