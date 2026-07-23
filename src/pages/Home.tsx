@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import ExploreSection from "@/sections/ExploreSection";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 
 const TEXT_SETS = [
   {
@@ -362,6 +364,10 @@ gl_FragColor=vec4(color,1.0);
 
           <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
             <div
+              onClick={() => smoothScrollToElement("belvo-videos")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter") smoothScrollToElement("belvo-videos"); }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -377,7 +383,7 @@ gl_FragColor=vec4(color,1.0);
                 letterSpacing: "0.02em",
                 color: "#1a1418",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,0.12)",
-                cursor: "default",
+                cursor: "pointer",
                 transition: "all 0.25s",
               }}
               onMouseEnter={(e) => {
@@ -385,15 +391,4 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#1a1418";
-                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-              }}
-            >
-              explore videos
-            </div>
-          </div>
-        </div>
-
-        <style>{`
-          @media (max-width: 1000px) {
-            .hero-lay
+     
