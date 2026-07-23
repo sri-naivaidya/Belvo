@@ -179,7 +179,6 @@ gl_FragColor=vec4(color,1.0);
     let pointerStartX = 0;
     let pointerStartY = 0;
     let pointerDown = false;
-    let wheelCooldown = false;
 
     const onPointerDown = (e: PointerEvent) => {
       pointerStartX = e.clientX;
@@ -197,9 +196,7 @@ gl_FragColor=vec4(color,1.0);
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (!settledRef.current || wheelCooldown) return;
-      wheelCooldown = true;
-      setTimeout(() => { wheelCooldown = false; }, 600);
+      if (!settledRef.current) return;
       if (e.deltaY > 0) advance();
       else if (e.deltaY < 0) retreat();
     };
@@ -224,9 +221,14 @@ gl_FragColor=vec4(color,1.0);
 
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
-      const diff = targetRef.current - stateRef.current;
-      stateRef.current = targetRef.current;
-      settledRef.current = true;
+      stateRef.current += (targetRef.current - stateRef.current) * 0.06;
+
+      if (Math.abs(targetRef.current - stateRef.current) < 0.001) {
+        stateRef.current = targetRef.current;
+        settledRef.current = true;
+      } else {
+        settledRef.current = false;
+      }
 
       const snap = Math.round(stateRef.current);
       if (snap !== lastSnapRef.current) {
@@ -404,5 +406,4 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.color = "#1a1418";
                 (e.currentTarget as HTMLElement).style.transform = "scale(1)";
               }}
-            >
-             
+            
