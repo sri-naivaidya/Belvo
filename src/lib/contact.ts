@@ -12,8 +12,8 @@ type ContactTargets = {
 export const CONTACT_TARGETS: ContactTargets = {
   founderWhatsappNumber: "",
   instagramUrl: "https://www.instagram.com/belvo_official/",
-  linkedinUrl: "https://www.linkedin.com/company/belvo.buzz/",
-  whatsappCommunityUrl: "https://chat.whatsapp.com/Is2DmjNcycI8vK7hJaWEaL?s=cl&p=a&ilr=4&amv=3",
+  linkedinUrl: "https://www.linkedin.com/company/126133994/admin/dashboard/",
+  whatsappCommunityUrl: "https://chat.whatsapp.com/EoicXUyjXfD9Zvy47ursid?s=sh&p=a&ilr=4",
   portfolioUrl: "",
 };
 

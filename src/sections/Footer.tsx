@@ -62,6 +62,46 @@ const SOCIAL_LINKS = [
       </svg>
     ),
   },
+  {
+    id: "whatsapp-community",
+    label: "WhatsApp Community",
+    href: CONTACT_TARGETS.whatsappCommunityUrl,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M12.04 2C6.58 2 2.15 6.16 2.15 11.5c0 1.94.57 3.77 1.58 5.3L2 22l5.4-1.43A9.39 9.39 0 0 0 12.04 20c5.46 0 9.89-4.16 9.89-9.5S17.5 2 12.04 2zm0 16.9c-1.53 0-2.98-.42-4.25-1.2l-.3-.18-3.2.85.86-3.12-.2-.32A7.74 7.74 0 0 1 4.27 11.5c0-4.3 3.5-7.8 7.77-7.8 4.28 0 7.77 3.5 7.77 7.8 0 4.3-3.49 7.8-7.77 7.8zm4.4-5.86c-.24-.12-1.43-.71-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.01-.37.1-.49.11-.1.24-.27.36-.41.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.48-.39-.41-.54-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03 0 1.2.87 2.35.99 2.51.12.16 1.71 2.62 4.16 3.67.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z" />
+      </svg>
+    ),
+  },
+  {
+    id: "pinterest",
+    label: "Pinterest",
+    href: "https://www.pinterest.com/",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 4.809 2.84 8.92 6.9 10.65-.09-.82-.16-2.08.03-2.97.18-.78 1.16-4.95 1.16-4.95s-.3-.59-.3-1.47c0-1.38.8-2.41 1.8-2.41.85 0 1.26.64 1.26 1.4 0 .85-.54 2.14-.82 3.33-.23 1 .49 1.81 1.46 1.81 1.75 0 3.1-1.84 3.1-4.5 0-2.35-1.69-4-4.11-4-2.8 0-4.44 2.1-4.44 4.27 0 .84.32 1.74.73 2.23.08.09.09.17.07.27-.08.34-.26 1.06-.29 1.21-.04.17-.15.2-.34.12-1.27-.58-1.95-2.4-1.95-3.86 0-3.14 2.28-6.02 6.58-6.02 3.45 0 6.13 2.46 6.13 5.74 0 3.43-2.16 6.19-5.16 6.19-1.01 0-1.96-.53-2.29-1.14l-.62 2.38c-.23.88-.84 1.98-1.25 2.65.94.29 1.93.45 2.95.45 6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+      </svg>
+    ),
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    href: "https://www.youtube.com/",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M23.498 6.186a2.995 2.995 0 0 0-2.11-2.12C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.388.566A2.995 2.995 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a2.995 2.995 0 0 0 2.11 2.12C4.495 20.5 12 20.5 12 20.5s7.505 0 9.388-.566a2.995 2.995 0 0 0 2.11-2.12C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+      </svg>
+    ),
+  },
+  {
+    id: "twitter",
+    label: "Twitter",
+    href: "https://x.com/",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M18.244 2H21.5l-6.68 7.64L22.5 22h-6.08l-4.77-6.23L5.98 22H2.72l7.18-8.2L1.5 2h6.22l4.32 5.71L18.244 2zm-1.07 18h1.18L6.83 4H5.58l11.59 16z" />
+      </svg>
+    ),
+  },
 ];
 
 const PHONE_NUMBERS = [
@@ -69,7 +109,14 @@ const PHONE_NUMBERS = [
   { id: "phone-2", label: "+91 98495 67122", href: "tel:+919849567122" },
 ];
 
-const LINK_COLUMNS = [
+type FooterLink = {
+  label: string;
+  id?: string;
+  path?: string;
+  href?: string;
+};
+
+const LINK_COLUMNS: Array<{ title: string; links: FooterLink[] }> = [
   {
     title: "Company",
     links: [
@@ -84,6 +131,17 @@ const LINK_COLUMNS = [
       { label: "Tools & Pricing", path: "/tools" },
       { label: "FAQ", id: "faq" },
       { label: "Book A Call", id: "book-a-call" },
+    ],
+  },
+  {
+    title: "Join & Support",
+    links: [
+      { label: "Join as a Belvo Client", href: "mailto:contact.belvo@gmail.com?subject=Join%20as%20Belvo%20Client" },
+      { label: "Referral Programs", href: "mailto:contact.belvo@gmail.com?subject=Referral%20Programs" },
+      { label: "Help & Support", href: "mailto:contact.belvo@gmail.com?subject=Help%20and%20Support" },
+      { label: "Collaboration With Us", href: "mailto:contact.belvo@gmail.com?subject=Collaboration%20With%20Us" },
+      { label: "Press & Media", href: "mailto:contact.belvo@gmail.com?subject=Press%20and%20Media" },
+      { label: "Refund & Cancellation Policy", href: "mailto:contact.belvo@gmail.com?subject=Refund%20and%20Cancellation%20Policy" },
     ],
   },
 ];
@@ -376,26 +434,39 @@ export default function Footer() {
                 {col.title}
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {col.links.map(link => (
-                  <button
-                    key={"id" in link ? link.id : link.path}
-                    onClick={() => {
-                      if ("path" in link) navigate(link.path);
-                      else scrollToId((link as { id: string }).id);
-                    }}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: "8px",
-                      background: "none", border: "none", padding: 0, cursor: "pointer",
-                      color: COLORS.textPrimary,
-                      fontFamily: "'Inter', sans-serif", fontSize: "0.875rem",
-                      letterSpacing: "0.01em", textAlign: "left", transition: "color 0.2s",
-                    }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = COLORS.pink; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = COLORS.textPrimary; }}
-                  >
-                    {link.label}
-                  </button>
-                ))}
+                {col.links.map(link => {
+                  const isExternal = !!link.href && /^(https?:|mailto:)/i.test(link.href);
+
+                  return (
+                    <a
+                      key={link.label}
+                      href={link.href ?? (link.path ?? (link.id ? `#${link.id}` : "#"))}
+                      target={isExternal && link.href?.startsWith("http") ? "_blank" : undefined}
+                      rel={isExternal && link.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                      onClick={e => {
+                        if (link.path) {
+                          e.preventDefault();
+                          navigate(link.path);
+                        } else if (link.id) {
+                          e.preventDefault();
+                          scrollToId(link.id);
+                        }
+                      }}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: "8px",
+                        background: "none", border: "none", padding: 0, cursor: "pointer",
+                        color: COLORS.textPrimary,
+                        fontFamily: "'Inter', sans-serif", fontSize: "0.875rem",
+                        letterSpacing: "0.01em", textAlign: "left", transition: "color 0.2s",
+                        textDecoration: "none",
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = COLORS.pink; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = COLORS.textPrimary; }}
+                    >
+                      {link.label}
+                    </a>
+                  );
+                })}
               </div>
             </motion.div>
           ))}
