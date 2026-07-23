@@ -13,11 +13,11 @@ import { smoothScrollToElement } from "@/lib/smoothScroll";
 
 const TEXT_SETS = [
   {
-    title: '<span style="color:#b84a6a">Gen-Z</span> taste<br>with<br><span style="color:#b84a6a">millennial</span> experience',
+    title: '<span style="color:#581a8a">Gen-Z</span> taste<br>with<br><span style="color:#581a8a">millennial</span> experience',
     sub: "We are a team of 50+ creative Gen Zs ruling over millennials",
   },
   {
-    title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
+    title: 'Business/ Startup<br>Yours<br><span style="color:#581a8a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
     sub: "You don't need to worry. We do everything in a creative manner",
   },
   {
