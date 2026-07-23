@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "wouter";
 
 
 
@@ -31,7 +30,6 @@ const heroStyles = `
 `;
 
 export default function Home() {
-  const [, navigate] = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
