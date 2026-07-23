@@ -1,6 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Play, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import About from "@/sections/About";
 import BookACall from "@/sections/BookACall";
 import Footer from "@/sections/Footer";
@@ -9,506 +7,414 @@ import TeamSection from "@/sections/TeamSection";
 import Testimonials from "@/sections/Testimonials";
 import PortfolioSection from "@/sections/PortfolioSection";
 import UpcomingEvents from "@/sections/UpcomingEvents";
+import ToolsPricing from "@/sections/ToolsPricing";
 import FAQ from "@/sections/FAQ";
-import ExploreSection from "@/sections/ExploreSection";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 
-function jumpToVideoShowcase() {
-  const videoShowcase = document.getElementById("belvo-videos");
-  if (!videoShowcase) return;
-
-  const root = document.documentElement;
-  const previousScrollBehavior = root.style.scrollBehavior;
-  const targetTop = window.scrollY + videoShowcase.getBoundingClientRect().top
-    - Math.max(80, (window.innerHeight - videoShowcase.offsetHeight) / 2);
-
-  root.style.scrollBehavior = "auto";
-  window.scrollTo(0, Math.max(0, targetTop));
-  window.requestAnimationFrame(() => {
-    root.style.scrollBehavior = previousScrollBehavior;
-  });
-}
-
-function MagneticButton({ children, className, style, onClick, as: Component = "button", ...props }: any) {
-  const ref = useRef<HTMLElement>(null);
-
-  const handleMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    const dist = Math.sqrt(x * x + y * y);
-    const maxDist = 150;
-    const strength = Math.max(0, 1 - dist / maxDist);
-    el.style.transform = `translate(${x * 0.25 * strength}px, ${y * 0.25 * strength}px) scale(${1 + 0.03 * strength})`;
-  };
-
-  const handleLeave = () => {
-    if (ref.current) ref.current.style.transform = "translate(0,0) scale(1)";
-  };
-
-  return (
-    <Component
-      ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      onClick={onClick}
-      className={className}
-      style={{ ...style, transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}
-      {...props}
-    >
-      {children}
-    </Component>
-  );
-}
-
-function AuroraWaves() {
-  return (
-    <svg
-      className="absolute inset-0 w-full h-full"
-      viewBox="0 0 1440 900"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <defs>
-        <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur1" />
-          <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur2" />
-          <feMerge><feMergeNode in="blur2" /><feMergeNode in="blur1" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <filter id="glow-soft" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="28" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <filter id="glow-ambient" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="55" />
-        </filter>
-        <filter id="particle-glow" x="-200%" y="-200%" width="500%" height="500%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-        </filter>
-        <style>{`
-          @keyframes wave1 {
-            0%   { d: path("M-100 520 C 120 380, 340 600, 560 420 S 820 200, 1000 380 S 1250 560, 1540 400"); }
-            25%  { d: path("M-100 490 C 140 360, 360 580, 540 400 S 840 180, 1020 360 S 1270 540, 1540 380"); }
-            50%  { d: path("M-100 460 C 100 340, 380 560, 580 380 S 860 160, 1040 340 S 1280 520, 1540 360"); }
-            75%  { d: path("M-100 500 C 130 370, 350 590, 550 410 S 830 190, 1010 370 S 1260 550, 1540 390"); }
-            100% { d: path("M-100 520 C 120 380, 340 600, 560 420 S 820 200, 1000 380 S 1250 560, 1540 400"); }
-          }
-          @keyframes wave2 {
-            0%   { d: path("M-100 560 C 150 420, 320 640, 540 460 S 800 240, 980 420 S 1220 600, 1540 440"); }
-            25%  { d: path("M-100 530 C 170 400, 300 620, 520 440 S 820 220, 1000 400 S 1240 580, 1540 420"); }
-            50%  { d: path("M-100 500 C 130 380, 360 600, 560 420 S 840 200, 1020 380 S 1260 560, 1540 400"); }
-            75%  { d: path("M-100 540 C 160 410, 310 630, 530 450 S 810 230, 990 410 S 1230 590, 1540 430"); }
-            100% { d: path("M-100 560 C 150 420, 320 640, 540 460 S 800 240, 980 420 S 1220 600, 1540 440"); }
-          }
-          @keyframes wave3 {
-            0%   { d: path("M-100 440 C 200 300, 400 500, 620 340 S 880 120, 1060 300 S 1300 480, 1540 320"); }
-            50%  { d: path("M-100 460 C 180 320, 420 520, 640 360 S 900 140, 1080 320 S 1320 500, 1540 340"); }
-            100% { d: path("M-100 440 C 200 300, 400 500, 620 340 S 880 120, 1060 300 S 1300 480, 1540 320"); }
-          }
-          @keyframes float-particle {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
-          }
-          @keyframes morphBlob {
-            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-          }
-          @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-          }
-          .wave-path-1 { animation: wave1 9s ease-in-out infinite; }
-          .wave-path-2 { animation: wave2 11s ease-in-out infinite; }
-          .wave-path-3 { animation: wave3 7s ease-in-out infinite; }
-          .particle {
-            animation: float-particle var(--dur) ease-in-out infinite;
-            animation-delay: var(--del);
-          }
-          .morph-blob {
-            animation: morphBlob 12s ease-in-out infinite;
-          }
-          .shimmer-text {
-            background: linear-gradient(90deg, #9D4EDD 0%, #B06AE8 25%, #7B2FBE 50%, #B06AE8 75%, #9D4EDD 100%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s ease-in-out infinite;
-          }
-        `}</style>
-      </defs>
-
-      <ellipse cx="720" cy="450" rx="520" ry="300" fill="rgba(90,20,160,0.22)" filter="url(#glow-ambient)">
-        <animate attributeName="rx" values="520;580;520" dur="8s" repeatCount="indefinite" />
-        <animate attributeName="ry" values="300;340;300" dur="8s" repeatCount="indefinite" />
-      </ellipse>
-      <ellipse cx="200" cy="550" rx="320" ry="200" fill="rgba(100,20,180,0.18)" filter="url(#glow-ambient)">
-        <animate attributeName="rx" values="320;370;320" dur="10s" repeatCount="indefinite" />
-      </ellipse>
-      <ellipse cx="1240" cy="350" rx="300" ry="180" fill="rgba(80,15,150,0.16)" filter="url(#glow-ambient)">
-        <animate attributeName="rx" values="300;350;300" dur="7s" repeatCount="indefinite" />
-        <animate attributeName="cy" values="350;330;350" dur="9s" repeatCount="indefinite" />
-      </ellipse>
-
-      <path className="wave-path-1" d="M-100 520 C 120 380, 340 600, 560 420 S 820 200, 1000 380 S 1250 560, 1540 400"
-        stroke="rgba(120,30,210,0.18)" strokeWidth="120" fill="none" filter="url(#glow-ambient)" />
-      <path className="wave-path-2" d="M-100 560 C 150 420, 320 640, 540 460 S 800 240, 980 420 S 1220 600, 1540 440"
-        stroke="rgba(140,40,220,0.35)" strokeWidth="30" fill="none" filter="url(#glow-soft)" />
-      <path className="wave-path-3" d="M-100 440 C 200 300, 400 500, 620 340 S 880 120, 1060 300 S 1300 480, 1540 320"
-        stroke="rgba(160,60,240,0.55)" strokeWidth="3" fill="none" filter="url(#glow-strong)" />
-      <path className="wave-path-1" d="M-100 520 C 120 380, 340 600, 560 420 S 820 200, 1000 380 S 1250 560, 1540 400"
-        stroke="rgba(180,80,255,0.65)" strokeWidth="1.5" fill="none" filter="url(#glow-strong)" />
-      <path className="wave-path-2" d="M-100 560 C 150 420, 320 640, 540 460 S 800 240, 980 420 S 1220 600, 1540 440"
-        stroke="rgba(150,50,230,0.5)" strokeWidth="2" fill="none" filter="url(#glow-strong)" />
-
-      {[
-        [120, 160], [310, 80], [490, 220], [680, 100], [870, 250], [1050, 130], [1230, 200], [1380, 90],
-        [200, 700], [450, 760], [700, 680], [950, 750], [1150, 700], [1340, 760],
-        [80, 420], [1460, 380], [360, 500], [1100, 480],
-      ].map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.5 : 1}
-          fill={i % 2 === 0 ? "rgba(200,140,255,0.7)" : "rgba(255,255,255,0.4)"}>
-          <animate attributeName="opacity" values="0.4;1;0.4" dur={`${3 + i % 4}s`} repeatCount="indefinite" />
-        </circle>
-      ))}
-
-      {Array.from({ length: 30 }).map((_, i) => (
-        <circle key={`float-${i}`} className="particle"
-          cx={100 + Math.random() * 1240} cy={100 + Math.random() * 700}
-          r={1 + Math.random() * 2.5}
-          fill={i % 2 === 0 ? "rgba(200,140,255,0.8)" : "rgba(157,78,221,0.6)"}
-          filter="url(#particle-glow)"
-          style={{
-            "--dx": `${(Math.random() - 0.5) * 300}px`,
-            "--dy": `${-(60 + Math.random() * 200)}px`,
-            "--dur": `${6 + Math.random() * 10}s`,
-            "--del": `${Math.random() * 12}s`,
-          } as React.CSSProperties}
-        />
-      ))}
-    </svg>
-  );
-}
-
-function FloatingOrbs() {
-  return (
-    <>
-      {[
-        { size: 60, x: "15%", y: "20%", dur: 7, color: "rgba(157,78,221,0.08)" },
-        { size: 40, x: "80%", y: "30%", dur: 9, color: "rgba(201,163,65,0.06)" },
-        { size: 80, x: "70%", y: "70%", dur: 11, color: "rgba(157,78,221,0.05)" },
-        { size: 50, x: "25%", y: "75%", dur: 8, color: "rgba(201,163,65,0.04)" },
-      ].map((orb, i) => (
-        <motion.div
-          key={i}
-          className="morph-blob"
-          style={{
-            position: "absolute",
-            width: orb.size,
-            height: orb.size,
-            left: orb.x,
-            top: orb.y,
-            background: orb.color,
-            filter: "blur(40px)",
-            pointerEvents: "none",
-          }}
-          animate={{
-            y: [0, -30, 0, 20, 0],
-            x: [0, 20, -15, 10, 0],
-            scale: [1, 1.2, 0.9, 1.1, 1],
-          }}
-          transition={{
-            duration: orb.dur,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </>
-  );
-}
-
-const itemUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.75, delay: i * 0.18, ease: [0.16, 1, 0.3, 1] as const },
-  }),
-};
+const TEXT_SETS = [
+  {
+    title: '<span style="color:#b84a6a">Gen-Z</span> taste<br>with<br><span style="color:#b84a6a">millennial</span> experience',
+    sub: "We are a team of 50+ creative Gen Zs ruling over millennials",
+  },
+  {
+    title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
+    sub: "You don't need to worry. We do everything in a creative manner",
+  },
+  {
+    title: 'Your <span style="color:#020c47">Brand</span> is<br>in Right Hand<br><span style="color:#020c47">Diva!</span>',
+    sub: "We will scroll reels, You scroll website and explore Belvo",
+  },
+];
 
 export default function Home() {
-  const [showNaivaidyaSoon, setShowNaivaidyaSoon] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef(0);
+  const targetRef = useRef(0);
+  const lastSnapRef = useRef(-1);
+  const settledRef = useRef(true);
+  const scrolledRef = useRef(false);
 
   useEffect(() => {
-    if (!showNaivaidyaSoon) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setShowNaivaidyaSoon(false);
+    const gl = canvas.getContext("webgl", { alpha: false, antialias: true, premultipliedAlpha: false });
+    if (!gl) return;
+
+    function resize() {
+      const rect = canvas.parentElement!.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const w = rect.width * dpr;
+      const h = rect.height * dpr;
+      canvas!.width = w;
+      canvas!.height = h;
+      canvas!.style.width = rect.width + "px";
+      canvas!.style.height = rect.height + "px";
+      gl!.viewport(0, 0, w, h);
+    }
+
+    window.addEventListener("resize", resize);
+    new ResizeObserver(() => resize()).observe(canvas.parentElement!);
+
+    const vsSource = `attribute vec2 a_position;void main(){gl_Position=vec4(a_position,0.0,1.0);}`;
+
+    const fsSource = `
+precision highp float;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_state;
+vec3 purplePalette(float t){vec3 a=vec3(0.922,0.871,0.961);vec3 b=vec3(0.820,0.722,0.882);vec3 c=vec3(0.690,0.569,0.780);vec3 d=vec3(0.871,0.780,0.922);float p=mod(t,1.0)*3.0;if(p<1.0)return mix(a,b,p);if(p<2.0)return mix(b,c,p-1.0);return mix(c,d,p-2.0);}
+vec3 pinkPalette(float t){vec3 a=vec3(0.980,0.788,0.835);vec3 b=vec3(0.902,0.447,0.553);vec3 c=vec3(0.929,0.675,0.663);vec3 d=vec3(0.961,0.820,0.780);float p=mod(t,1.0)*3.0;if(p<1.0)return mix(a,b,p);if(p<2.0)return mix(b,c,p-1.0);return mix(c,d,p-2.0);}
+vec3 bluePalette(float t){vec3 a=vec3(0.808,0.878,0.969);vec3 b=vec3(0.620,0.729,0.902);vec3 c=vec3(0.455,0.592,0.831);vec3 d=vec3(0.749,0.827,0.941);float p=mod(t,1.0)*3.0;if(p<1.0)return mix(a,b,p);if(p<2.0)return mix(b,c,p-1.0);return mix(c,d,p-2.0);}
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float smoothNoise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*f*(f*(f*6.0-15.0)+10.0);float a=hash(i);float b=hash(i+vec2(1.0,0.0));float c=hash(i+vec2(0.0,1.0));float d=hash(i+vec2(1.0,1.0));return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
+float fbm(vec2 p){float v=0.0;float amp=0.6;float freq=0.8;for(int i=0;i<5;i++){v+=amp*smoothNoise(p*freq);amp*=0.5;freq*=1.7;}return v*0.8+0.1;}
+float dither(vec2 uv,float t){return fract(sin(dot(uv*512.0,vec2(12.9898,78.233))+t)*43758.5453);}
+void main(){
+vec2 uv=gl_FragCoord.xy/u_resolution;
+vec2 p=uv*2.0-1.0;
+float aspect=u_resolution.x/u_resolution.y;
+p.x*=aspect;
+float t=u_time*0.2;
+vec2 flow1=vec2(fbm(p*0.6+vec2(t*0.18,0.0)),fbm(p*0.6+vec2(0.0,t*0.15)))*2.0-1.0;
+vec2 warp1=p+flow1*1.0;
+vec2 flow2=vec2(fbm(warp1*1.3+vec2(t*0.10,t*0.08)),fbm(warp1*1.3+vec2(t*0.08,t*0.12)+3.7))*2.0-1.0;
+vec2 warped=warp1+flow2*0.8;
+vec2 flow3=vec2(fbm(warped*2.0+vec2(t*0.12,-t*0.10)+1.2),fbm(warped*2.0+vec2(-t*0.10,t*0.15)+8.4))*2.0-1.0;
+vec2 finalUV=warped+flow3*0.5;
+float mixVal=0.0;
+float n1=fbm(finalUV*0.5+t*0.02);
+float n2=fbm(finalUV*0.8-t*0.035+2.0);
+float n3=fbm(finalUV*1.3+t*0.04+4.5);
+float n4=fbm(finalUV*2.0-t*0.03+7.1);
+float n5=fbm(finalUV*3.0+t*0.035+10.2);
+mixVal=n1*0.25+n2*0.25+n3*0.20+n4*0.16+n5*0.14;
+mixVal=clamp(mixVal*1.3-0.15,0.0,1.0);
+float wave=sin(t*0.10+finalUV.x*0.5+finalUV.y*0.25)*0.18;
+float colorPos=mixVal*4.0+wave+finalUV.x*0.03;
+colorPos=mod(colorPos,4.0)/4.0;
+vec3 purple=purplePalette(colorPos*4.0+t*0.015);
+vec3 pink=pinkPalette(colorPos*4.0+t*0.015);
+vec3 blue=bluePalette(colorPos*4.0+t*0.015);
+vec3 color;
+if(u_state<1.0)color=mix(purple,pink,u_state);
+else color=mix(pink,blue,u_state-1.0);
+color+=(dither(gl_FragCoord.xy,t)*2.0-1.0)/255.0;
+float vignette=1.0-length(p*0.55)*0.3;
+color*=mix(vignette,1.0,0.3);
+vec3 auraP1=vec3(0.85,0.72,0.92);vec3 auraP2=vec3(0.75,0.60,0.85);vec3 auraP3=vec3(0.65,0.50,0.78);
+vec3 auraK1=vec3(0.98,0.65,0.78);vec3 auraK2=vec3(0.90,0.45,0.60);vec3 auraK3=vec3(0.80,0.35,0.55);
+vec3 auraB1=vec3(0.65,0.78,0.95);vec3 auraB2=vec3(0.50,0.65,0.88);vec3 auraB3=vec3(0.38,0.52,0.78);
+float s=u_state;
+vec3 a1=s<1.0?mix(auraP1,auraK1,s):mix(auraK1,auraB1,s-1.0);
+vec3 a2=s<1.0?mix(auraP2,auraK2,s):mix(auraK2,auraB2,s-1.0);
+vec3 a3=s<1.0?mix(auraP3,auraK3,s):mix(auraK3,auraB3,s-1.0);
+float aura1=exp(-length(p*0.65-vec2(0.08,0.04))*1.8)*0.40;
+color+=a1*aura1;
+float aura2=exp(-length(p*0.45+vec2(0.18,-0.08))*1.6)*0.28;
+color+=a2*aura2;
+float aura3=exp(-length(p*0.85-vec2(-0.12,0.12))*2.0)*0.18;
+color+=a3*aura3;
+float edgeFade=1.0-abs(p.x*p.y)*0.10;
+color=mix(color,color*0.92,1.0-edgeFade);
+gl_FragColor=vec4(color,1.0);
+}`;
+
+    function compileShader(source: string, type: number) {
+      const shader = gl.createShader(type);
+      if (!shader) return null;
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = compileShader(vsSource, gl.VERTEX_SHADER);
+    const fs = compileShader(fsSource, gl.FRAGMENT_SHADER);
+    if (!vs || !fs) return;
+
+    const program = gl.createProgram();
+    if (!program) return;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+    const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+    const posLoc = gl.getAttribLocation(program, "a_position");
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const uniforms = {
+      u_resolution: gl.getUniformLocation(program, "u_resolution"),
+      u_time: gl.getUniformLocation(program, "u_time"),
+      u_state: gl.getUniformLocation(program, "u_state"),
     };
 
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeOnEscape);
+    function advance() {
+      if (!settledRef.current) return;
+      if (targetRef.current < 2) {
+        settledRef.current = false;
+        targetRef.current += 1;
+      } else if (!scrolledRef.current) {
+        scrolledRef.current = true;
+        smoothScrollToElement("about");
+      }
+    }
+
+    function retreat() {
+      if (!settledRef.current) return;
+      if (targetRef.current > 0) {
+        settledRef.current = false;
+        targetRef.current -= 1;
+      }
+    }
+
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let pointerDown = false;
+
+    document.addEventListener("pointerdown", (e) => {
+      pointerStartX = e.clientX;
+      pointerStartY = e.clientY;
+      pointerDown = true;
+    });
+
+    document.addEventListener("pointerup", (e) => {
+      if (!pointerDown) return;
+      pointerDown = false;
+      const dy = e.clientY - pointerStartY;
+      if (dy > 40) advance();
+      else if (dy < -40) retreat();
+    });
+
+    document.addEventListener("wheel", (e) => {
+      if (scrolledRef.current) return;
+      e.preventDefault();
+      if (!settledRef.current) return;
+      if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
+      if (e.deltaY > 20) advance();
+      else if (e.deltaY < -20) retreat();
+    }, { passive: false });
+
+    let startTime = performance.now();
+
+    function render() {
+      const elapsed = (performance.now() - startTime) / 1000;
+      const diff = targetRef.current - stateRef.current;
+      if (Math.abs(diff) < 0.01) {
+        stateRef.current = targetRef.current;
+        settledRef.current = true;
+      } else {
+        stateRef.current += diff * 0.15;
+      }
+
+      const snap = Math.round(stateRef.current);
+      if (snap !== lastSnapRef.current) {
+        lastSnapRef.current = snap;
+        if (titleRef.current) titleRef.current.innerHTML = TEXT_SETS[snap].title;
+        if (subRef.current) subRef.current.textContent = TEXT_SETS[snap].sub;
+      }
+
+      gl.useProgram(program);
+      gl.uniform2f(uniforms.u_resolution, canvas!.width, canvas!.height);
+      gl.uniform1f(uniforms.u_time, elapsed);
+      gl.uniform1f(uniforms.u_state, stateRef.current);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+
+    resize();
+    render();
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", resize);
     };
-  }, [showNaivaidyaSoon]);
+  }, []);
 
   return (
     <>
-      {/* ── HERO ── */}
       <div
-        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden text-white"
-        style={{ background: "var(--belvo-bg)" }}
+        style={{
+          position: "relative",
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          background: "#0a0810",
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          touchAction: "none",
+          userSelect: "none",
+        }}
       >
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <AuroraWaves />
-          <FloatingOrbs />
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, var(--belvo-vignette-1) 100%)" }} />
-          <div className="absolute inset-x-0 top-0 h-32" style={{ background: "linear-gradient(to bottom, var(--belvo-vignette-2), transparent)" }} />
-          <div className="absolute inset-x-0 bottom-0 h-40" style={{ background: "linear-gradient(to top, var(--belvo-vignette-3), transparent)" }} />
-          <div className="absolute inset-y-0 left-0 w-32" style={{ background: "linear-gradient(to right, var(--belvo-vignette-4), transparent)" }} />
-          <div className="absolute inset-y-0 right-0 w-32" style={{ background: "linear-gradient(to left, var(--belvo-vignette-4), transparent)" }} />
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            display: "block",
+            pointerEvents: "none",
+            zIndex: 1,
+            background: "#0a0810",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 6,
+            pointerEvents: "none",
+            backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.06 0"/></filter><rect width="100%" height="100%" filter="url(%23g)" opacity="0.12"/></svg>')`,
+            backgroundSize: "200px 200px",
+            opacity: 0.15,
+            mixBlendMode: "soft-light" as any,
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 5,
+            pointerEvents: "none",
+            background: "radial-gradient(ellipse at center, transparent 60%, #0a0810 100%)",
+            opacity: 0.4,
+          }}
+        />
+
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            width: "100%",
+            height: "100%",
+            padding: "3.5rem 4.5rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            color: "#1a1418",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              textAlign: "left",
+            }}
+          >
+            <h1
+              ref={titleRef}
+              style={{
+                fontSize: "clamp(3.5rem, 10vw, 7rem)",
+                fontWeight: 900,
+                letterSpacing: "-0.045em",
+                lineHeight: 0.88,
+                fontFamily: "'Inter', 'Helvetica Neue', 'GT America', sans-serif",
+                color: "#161014",
+                textShadow: "0 4px 30px rgba(0,0,0,0.02)",
+                background: "rgba(255,245,240,0.04)",
+                backdropFilter: "blur(2px)",
+                WebkitBackdropFilter: "blur(2px)",
+                padding: "0.2rem 1rem 0.2rem 0",
+                borderRadius: "16px",
+                display: "inline-block",
+              }}
+              dangerouslySetInnerHTML={{ __html: TEXT_SETS[0].title }}
+            />
+            <div
+              ref={subRef}
+              style={{
+                marginTop: "0.5rem",
+                fontSize: "clamp(0.85rem, 1.3vw, 1.25rem)",
+                fontWeight: 400,
+                letterSpacing: "-0.01em",
+                color: "#1f181c",
+                maxWidth: "48%",
+                lineHeight: 1.5,
+                opacity: 0.85,
+                background: "rgba(255,245,240,0.04)",
+                backdropFilter: "blur(2px)",
+                WebkitBackdropFilter: "blur(2px)",
+                padding: "0.15rem 1rem",
+                borderRadius: "40px",
+              }}
+            >
+              {TEXT_SETS[0].sub}
+            </div>
+          </div>
+
+          <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                background: "rgba(255,245,240,0.12)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "2px solid #1a1418",
+                padding: "0.9rem 2.2rem",
+                borderRadius: "60px",
+                fontWeight: 600,
+                fontSize: "1rem",
+                letterSpacing: "0.02em",
+                color: "#1a1418",
+                boxShadow: "0 8px 32px -8px rgba(0,0,0,0.12)",
+                cursor: "default",
+                transition: "all 0.25s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "#581a8a";
+                (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "#1a1418";
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+              }}
+            >
+              explore videos
+            </div>
+          </div>
         </div>
 
-        <motion.div
-          className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-4xl mx-auto pt-20"
-        >
-          <motion.div custom={0} variants={itemUp} initial="hidden" animate="visible" className="mb-3">
-            <img
-              src="/belvo-logo-transparent.png"
-              alt="BELVO"
-              className="w-auto object-contain"
-              data-testid="img-hero-logo"
-              style={{ height: "clamp(7rem, 14vw, 12rem)", clipPath: "inset(0 0 38% 0)", marginBottom: "-2rem", filter: "drop-shadow(0 0 20px rgba(157,78,221,0.3))" }}
-            />
-          </motion.div>
-
-          <motion.div custom={1} variants={itemUp} initial="hidden" animate="visible" className="mb-1">
-            <span className="font-semibold tracking-[0.35em] text-xl md:text-2xl"
-              style={{ fontFamily: "'Inter', sans-serif", color: "var(--belvo-text-1)" }}>
-              BELVO
-            </span>
-          </motion.div>
-
-          <motion.div custom={2} variants={itemUp} initial="hidden" animate="visible" className="mb-10">
-            <motion.span
-              className="tracking-[0.4em] text-xs uppercase font-medium shimmer-text"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              Growth Core
-            </motion.span>
-          </motion.div>
-
-          <motion.h1
-            custom={3} variants={itemUp} initial="hidden" animate="visible"
-            className="leading-[1.05] font-black uppercase mb-5 w-full"
-            style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(2.2rem, 5.8vw, 5.8rem)", fontWeight: 900 }}
-          >
-            <span className="block" style={{ color: "var(--belvo-text-1)" }}>
-              A Perfect Agency
-            </span>
-            <span className="block" style={{ color: "#5B1A8A" }}>
-              For Your Brand.
-            </span>
-          </motion.h1>
-
-          <motion.p
-            custom={4} variants={itemUp} initial="hidden" animate="visible"
-            className="max-w-lg text-sm md:text-base leading-relaxed mb-10"
-            style={{ color: "var(--belvo-text-2)", fontWeight: 350, letterSpacing: "0.02em" }}
-          >
-            Belvo Builds your brand from scratch.<br />
-            Helps ideas to come into reality.<br />
-            Helps you to scale your business globally<br />
-            and compete with your competitors.
-          </motion.p>
-
-          <motion.div
-            custom={5} variants={itemUp} initial="hidden" animate="visible"
-            className="flex flex-col sm:flex-row items-center gap-4"
-          >
-            <MagneticButton
-              onClick={jumpToVideoShowcase}
-              data-testid="button-hero-videos"
-              className="inline-flex items-center gap-2.5 px-8 py-3.5 font-semibold text-sm tracking-[0.12em] uppercase"
-              style={{
-                background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
-                borderRadius: "8px", color: "#ffffff",
-                boxShadow: "0 0 32px rgba(130,40,200,0.4)", border: "none", cursor: "pointer",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 48px rgba(157,78,221,0.6)";
-                (e.currentTarget as HTMLElement).style.background = "linear-gradient(135deg, #9D4EDD, #B06AE8)";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 32px rgba(130,40,200,0.4)";
-                (e.currentTarget as HTMLElement).style.background = "linear-gradient(135deg, #7B2FBE, #9D4EDD)";
-              }}
-            >
-              Explore Videos
-              <motion.span
-                animate={{ x: [0, 3, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                style={{ display: "inline-flex" }}
-              >
-                <Play size={14} fill="currentColor" strokeWidth={0} />
-              </motion.span>
-            </MagneticButton>
-
-            <MagneticButton
-              onClick={() => setShowNaivaidyaSoon(true)}
-              data-testid="button-hero-naivaidya"
-              className="inline-flex items-center gap-2.5 px-8 py-3.5 font-semibold text-sm tracking-[0.12em] uppercase"
-              style={{
-                background: "var(--belvo-bg-card)",
-                border: "1px solid var(--belvo-border-card)",
-                borderRadius: "8px", color: "var(--belvo-text-1)",
-                cursor: "pointer", textDecoration: "none",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = "var(--belvo-bg-card-2)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = "var(--belvo-bg-card)";
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)";
-              }}
-            >
-              <motion.span
-                animate={{ x: [0, 2, 0], y: [0, -2, 0] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                style={{ display: "inline-flex" }}
-              >
-                <ArrowUpRight size={15} strokeWidth={2.4} />
-              </motion.span>
-              Explore Naivaidya
-            </MagneticButton>
-          </motion.div>
-        </motion.div>
-
+        <style>{`
+          @media (max-width: 1000px) {
+            .hero-layout { padding: 2rem 2.5rem; }
+            .hero-subtitle { max-width: 65%; }
+          }
+          @media (max-width: 700px) {
+            .hero-layout { padding: 1.5rem; }
+            .hero-title { max-width: 100%; font-size: clamp(3rem, 12vw, 5rem); }
+            .hero-subtitle { max-width: 100%; font-size: 0.8rem; }
+          }
+        `}</style>
       </div>
 
-      {/* ── SECTIONS ── */}
-      <About />
+      <div id="about"><About /></div>
       <ServicesSection id="services" />
       <PortfolioSection id="portfolio" />
-      <ExploreSection />
       <TeamSection />
       <Testimonials />
-
+      <ToolsPricing />
       <UpcomingEvents />
       <BookACall />
       <FAQ />
       <Footer />
-
-      <AnimatePresence>
-        {showNaivaidyaSoon && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="naivaidya-coming-soon-title"
-            data-testid="naivaidya-coming-soon-dialog"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setShowNaivaidyaSoon(false)}
-            className="fixed inset-0 z-[100] grid place-items-center px-5 py-8"
-            style={{
-              background: "rgba(12, 5, 22, 0.68)",
-              backdropFilter: "blur(14px)",
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 22, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 14, scale: 0.98 }}
-              transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(event) => event.stopPropagation()}
-              className="relative w-full max-w-[520px] overflow-hidden p-8 sm:p-10"
-              style={{
-                borderRadius: "28px",
-                border: "1px solid var(--belvo-border-card)",
-                background: "var(--belvo-bg-card)",
-                boxShadow: "0 30px 100px rgba(12, 5, 22, 0.38)",
-              }}
-            >
-              <div
-                aria-hidden="true"
-                className="absolute -right-20 -top-24 h-64 w-64 rounded-full"
-                style={{
-                  background: "radial-gradient(circle, rgba(157,78,221,0.24), transparent 68%)",
-                }}
-              />
-
-              <button
-                type="button"
-                aria-label="Close Naivaidya coming soon"
-                data-testid="button-close-naivaidya-dialog"
-                onClick={() => setShowNaivaidyaSoon(false)}
-                className="absolute right-5 top-5 z-10 grid h-10 w-10 place-items-center rounded-full"
-                style={{
-                  border: "1px solid var(--belvo-border-card)",
-                  background: "var(--belvo-bg-card-2)",
-                  color: "var(--belvo-text-1)",
-                  cursor: "pointer",
-                }}
-              >
-                <X size={18} />
-              </button>
-
-              <div className="relative z-[1]">
-                <div
-                  className="mb-6 inline-flex items-center gap-2 rounded-full px-3 py-2 text-[0.68rem] font-bold uppercase tracking-[0.16em]"
-                  style={{
-                    color: "#9D4EDD",
-                    background: "rgba(157,78,221,0.1)",
-                    border: "1px solid rgba(157,78,221,0.22)",
-                  }}
-                >
-                  In the works
-                </div>
-
-                <h2
-                  id="naivaidya-coming-soon-title"
-                  className="mb-4 pr-10 text-[2.35rem] font-bold leading-[0.98] sm:text-[3.2rem]"
-                  style={{
-                    color: "var(--belvo-text-1)",
-                    fontFamily: "'Cormorant Garamond', serif",
-                  }}
-                >
-                  Naivaidya is coming soon.
-                </h2>
-                <p
-                  className="mb-7 max-w-md text-sm leading-7 sm:text-base"
-                  style={{ color: "var(--belvo-text-2)" }}
-                >
-                  We&apos;re adding the final polish before the big reveal. The full experience will be ready to explore soon—and it&apos;ll be worth the wait.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowNaivaidyaSoon(false)}
-                  className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-xs font-bold uppercase tracking-[0.14em] text-white"
-                  style={{
-                    background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
-                    boxShadow: "0 12px 30px rgba(123,47,190,0.28)",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Got it
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
