@@ -370,7 +370,7 @@ export default function Careers() {
                 fontWeight: 600,
                 letterSpacing: "0.3em",
                 textTransform: "uppercase",
-                color: "#9D4EDD",
+                color: "#000000",
               }}
             >
               <Briefcase size={11} />
