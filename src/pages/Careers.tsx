@@ -1,52 +1,60 @@
 import React, { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { ArrowUpRight, Briefcase, Mail, Upload, CheckCircle2 } from "lucide-react";
+import { useLocation } from "wouter";
 import Footer from "@/sections/Footer";
 import { saveSubmission } from "@/lib/contact";
+import ScrollBackground from "@/components/ScrollBackground";
+
+const SvgIcon = ({ children }: { children: React.ReactNode }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9D4EDD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    {children}
+  </svg>
+);
 
 const ROLES = [
   {
     id: "social-media",
     title: "Social Media Management",
     desc: "Craft and execute social strategies that grow our clients' brands across every major platform.",
-    icon: "📱",
+    icon: <SvgIcon><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><line x1="9" y1="10" x2="15" y2="10" /></SvgIcon>,
   },
   {
     id: "digital-marketing",
     title: "Digital Marketing",
     desc: "Drive measurable growth through data-driven campaigns and creative performance marketing.",
-    icon: "📊",
+    icon: <SvgIcon><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></SvgIcon>,
   },
   {
     id: "business-analyst",
     title: "Business Analyst",
     desc: "Bridge client goals and creative execution by turning market insights into actionable strategies.",
-    icon: "📈",
+    icon: <SvgIcon><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></SvgIcon>,
   },
   {
     id: "web-developer",
     title: "Web Developers",
     desc: "Build exceptional web experiences with clean code, pixel-perfect precision, and modern frameworks.",
-    icon: "🌐",
+    icon: <SvgIcon><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></SvgIcon>,
   },
   {
     id: "app-developer",
     title: "App Developers",
     desc: "Create seamless mobile experiences across iOS and Android that users love and businesses rely on.",
-    icon: "📱",
+    icon: <SvgIcon><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></SvgIcon>,
   },
   {
     id: "hr",
     title: "HR",
     desc: "Build and nurture the BELVO team by attracting, retaining, and developing top creative talent.",
-    icon: "🤝",
+    icon: <SvgIcon><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></SvgIcon>,
   },
   {
     id: "software-developer",
     title: "Software Developers",
     desc: "Engineer the tools and systems that power BELVO's growing suite of digital products.",
-    icon: "💻",
+    icon: <SvgIcon><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></SvgIcon>,
   },
 ];
 
@@ -189,6 +197,8 @@ export default function Careers() {
   const formRef = useRef<HTMLDivElement>(null);
   const positionsRef = useRef(null);
   const formSectionRef = useRef(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const positionsInView = useInView(positionsRef, {
     once: true,
     margin: "-80px",
@@ -219,7 +229,7 @@ export default function Careers() {
   return (
     <>
       {/* HERO */}
-      <section
+      <section ref={heroRef}
         style={{
           minHeight: "100vh",
           background: "var(--belvo-bg)",
@@ -233,6 +243,7 @@ export default function Careers() {
           textAlign: "center",
         }}
       >
+        <ScrollBackground scrollYProgress={scrollYProgress} />
         {/* Ambient glows */}
         <div
           style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
@@ -359,7 +370,7 @@ export default function Careers() {
                 fontWeight: 600,
                 letterSpacing: "0.3em",
                 textTransform: "uppercase",
-                color: "#9D4EDD",
+                color: "#000000",
               }}
             >
               <Briefcase size={11} />
@@ -417,15 +428,15 @@ export default function Careers() {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "10px",
-                  padding: "14px 36px",
+                  gap: "8px",
+                  padding: "12px 28px",
                   background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
                   border: "none",
                   borderRadius: "8px",
                   color: "#ffffff",
                   fontFamily: "'Inter',sans-serif",
                   fontWeight: 600,
-                  fontSize: "0.82rem",
+                  fontSize: "0.75rem",
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   cursor: "pointer",
@@ -443,20 +454,54 @@ export default function Careers() {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                View Open Positions <ArrowUpRight size={14} strokeWidth={2.5} />
+                View Open Positions <ArrowUpRight size={13} strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={() => window.location.href = "/notes-pdfs"}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "12px 28px",
+                  background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "#ffffff",
+                  fontFamily: "'Inter',sans-serif",
+                  fontWeight: 600,
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  boxShadow: "0 0 32px rgba(130,40,200,0.38)",
+                  transition: "box-shadow 0.3s, transform 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 52px rgba(157,78,221,0.55)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 32px rgba(130,40,200,0.38)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                Explore Notes <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
               <span style={{
-                display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "10px 20px",
+                display: "inline-flex", alignItems: "center", gap: "6px",
+                padding: "8px 16px",
                 background: "rgba(123,47,190,0.1)",
                 border: "1px solid rgba(157,78,221,0.2)",
                 borderRadius: "100px",
                 fontFamily: "'Inter',sans-serif",
-                fontSize: "0.78rem",
-                color: "#9D4EDD",
+                fontSize: "0.7rem",
+                color: "#000000",
                 letterSpacing: "0.04em",
+                whiteSpace: "nowrap",
               }}>
-                <Mail size={13} />
+                <Mail size={11} />
                 career.belvo@gmail.com
               </span>
             </div>
@@ -676,7 +721,6 @@ export default function Careers() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "1.3rem",
                       flexShrink: 0,
                     }}
                   >

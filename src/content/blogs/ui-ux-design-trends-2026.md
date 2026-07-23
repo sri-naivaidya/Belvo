@@ -3,8 +3,8 @@ title: Top UI/UX Design Trends for 2026
 date: 2026-03-22
 category: Tech
 excerpt: AI-assisted interfaces, spatial design principles, and the return of tactile aesthetics — here's what's shaping the way products look and feel in 2026.
-thumbnail: /blog-covers/ui-ux-design-trends.png
-published: false
+thumbnail: /blog-covers/ui-ux-design-trends-soft.jpg
+published: true
 ---
 
 Design trends in 2026 are being shaped by two forces: the proliferation of AI-native products and a user backlash against sterile, template-driven interfaces. Here's what's resonating.
