@@ -102,7 +102,6 @@ export default function About() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         justifyContent: "center",
         position: "relative",
         padding: "100px 24px",
