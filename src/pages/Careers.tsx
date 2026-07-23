@@ -456,21 +456,6 @@ export default function Careers() {
               >
                 View Open Positions <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "6px",
-                padding: "8px 16px",
-                background: "rgba(123,47,190,0.1)",
-                border: "1px solid rgba(157,78,221,0.2)",
-                borderRadius: "100px",
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.7rem",
-                color: "#000000",
-                letterSpacing: "0.04em",
-                whiteSpace: "nowrap",
-              }}>
-                <Mail size={11} />
-                career.belvo@gmail.com
-              </span>
               <button
                 onClick={() => window.location.href = "/notes-pdfs"}
                 style={{
@@ -504,6 +489,21 @@ export default function Careers() {
               >
                 Explore Notes <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: "6px",
+                padding: "8px 16px",
+                background: "rgba(123,47,190,0.1)",
+                border: "1px solid rgba(157,78,221,0.2)",
+                borderRadius: "100px",
+                fontFamily: "'Inter',sans-serif",
+                fontSize: "0.7rem",
+                color: "#000000",
+                letterSpacing: "0.04em",
+                whiteSpace: "nowrap",
+              }}>
+                <Mail size={11} />
+                career.belvo@gmail.com
+              </span>
             </div>
 
             <div style={{
