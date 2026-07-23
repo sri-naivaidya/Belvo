@@ -215,13 +215,14 @@ function CeoCard({ inView }: { inView: boolean }) {
       variants={fadeUp}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
-      style={{ marginBottom: "80px" }}
+      style={{ display: "flex", justifyContent: "center", marginBottom: "80px" }}
     >
       <motion.div
         style={{
           display: "flex",
           alignItems: "center",
           gap: "48px",
+          maxWidth: "680px",
           width: "100%",
           padding: "48px 56px",
           background: "var(--belvo-bg-card)",
@@ -506,7 +507,7 @@ export default function TeamSection() {
           filter: "blur(70px)", pointerEvents: "none",
         }} />
 
-        <div style={{ width: "100%", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div ref={headerRef} style={{ textAlign: "center", marginBottom: "80px" }}>
             <motion.span
               custom={0} variants={fadeUp} initial="hidden" animate={headerInView ? "visible" : "hidden"}
