@@ -1,5 +1,6 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, type ReactNode } from "react";
+import { useLocation } from "wouter";
 import { Mail, Download, Phone, ArrowUpRight } from "lucide-react";
 import { CONTACT_TARGETS } from "@/lib/contact";
 
@@ -80,7 +81,7 @@ const LINK_COLUMNS = [
   {
     title: "Resources",
     links: [
-      { label: "Tools & Pricing", id: "tools-pricing" },
+      { label: "Tools & Pricing", path: "/tools" },
       { label: "FAQ", id: "faq" },
       { label: "Book A Call", id: "book-a-call" },
     ],
@@ -201,6 +202,7 @@ function BrandMark() {
 
 export default function Footer() {
   const ref = useRef(null);
+  const [, navigate] = useLocation();
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, -20]);
@@ -377,8 +379,11 @@ export default function Footer() {
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 {col.links.map(link => (
                   <button
-                    key={link.id}
-                    onClick={() => scrollToId(link.id)}
+                    key={"id" in link ? link.id : link.path}
+                    onClick={() => {
+                      if ("path" in link) navigate(link.path);
+                      else scrollToId((link as { id: string }).id);
+                    }}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: "8px",
                       background: "none", border: "none", padding: 0, cursor: "pointer",
