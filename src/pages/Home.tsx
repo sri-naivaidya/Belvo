@@ -1,15 +1,4 @@
 import { useEffect, useRef } from "react";
-import About from "@/sections/About";
-import BookACall from "@/sections/BookACall";
-import Footer from "@/sections/Footer";
-import ServicesSection from "@/sections/ServicesSection";
-import TeamSection from "@/sections/TeamSection";
-import Testimonials from "@/sections/Testimonials";
-import PortfolioSection from "@/sections/PortfolioSection";
-import UpcomingEvents from "@/sections/UpcomingEvents";
-import ToolsPricing from "@/sections/ToolsPricing";
-import FAQ from "@/sections/FAQ";
-import { smoothScrollToElement } from "@/lib/smoothScroll";
 
 const TEXT_SETS = [
   {
@@ -17,7 +6,7 @@ const TEXT_SETS = [
     sub: "We are a team of 50+ creative Gen Zs ruling over millennials",
   },
   {
-    title: 'Business/ Startup<br>Yours<br><span style="color:#581a8a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
+    title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
     sub: "You don't need to worry. We do everything in a creative manner",
   },
   {
@@ -34,7 +23,6 @@ export default function Home() {
   const targetRef = useRef(0);
   const lastSnapRef = useRef(-1);
   const settledRef = useRef(true);
-  const scrolledRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -162,13 +150,8 @@ gl_FragColor=vec4(color,1.0);
 
     function advance() {
       if (!settledRef.current) return;
-      if (targetRef.current < 2) {
-        settledRef.current = false;
-        targetRef.current += 1;
-      } else if (!scrolledRef.current) {
-        scrolledRef.current = true;
-        smoothScrollToElement("about");
-      }
+      settledRef.current = false;
+      targetRef.current = (targetRef.current + 1) % 3;
     }
 
     function retreat() {
@@ -198,7 +181,6 @@ gl_FragColor=vec4(color,1.0);
     });
 
     document.addEventListener("wheel", (e) => {
-      if (scrolledRef.current) return;
       e.preventDefault();
       if (!settledRef.current) return;
       if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
@@ -405,16 +387,6 @@ gl_FragColor=vec4(color,1.0);
         `}</style>
       </div>
 
-      <div id="about"><About /></div>
-      <ServicesSection id="services" />
-      <PortfolioSection id="portfolio" />
-      <TeamSection />
-      <Testimonials />
-      <ToolsPricing />
-      <UpcomingEvents />
-      <BookACall />
-      <FAQ />
-      <Footer />
     </>
   );
 }
