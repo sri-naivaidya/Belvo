@@ -1,380 +1,153 @@
-import React, { useRef, useState } from "react";
-import { motion, useInView, useScroll } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { ArrowUpRight, Briefcase, Mail, Upload, CheckCircle2 } from "lucide-react";
-import { useLocation } from "wouter";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { ArrowUpRight, Sparkles } from "lucide-react";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
+import ServiceDialog from "@/components/ServiceDialog";
+import { SERVICES as SERVICE_ITEMS, type ServiceItem } from "@/content/services";
 import Footer from "@/sections/Footer";
-import { saveSubmission } from "@/lib/contact";
-import ScrollBackground from "@/components/ScrollBackground";
+import BookACall from "@/sections/BookACall";
+import ToolsPricing from "@/sections/ToolsPricing";
+import { useTheme } from "@/contexts/ThemeContext";
 
-const SvgIcon = ({ children }: { children: React.ReactNode }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9D4EDD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    {children}
-  </svg>
-);
-
-const ROLES = [
+const SERVICES = [
+  {
+    id: "seo-digital-marketing",
+    category: "SEO Digital Marketing",
+    keywords: ["SEO", "organic growth", "search ranking", "keyword strategy", "on-page/off-page"],
+    desc: "We optimize your digital presence to rank higher on search engines. From keyword research to technical SEO and link building, we drive sustainable organic traffic that converts.",
+  },
+  {
+    id: "brand-outreach-pr",
+    category: "Brand Outreach & PR",
+    keywords: ["public relations", "brand awareness", "media coverage", "press", "outreach"],
+    desc: "We craft compelling narratives and pitch your brand to the right publications and media houses — building credibility and expanding your brand's reach in the right circles.",
+  },
+  {
+    id: "branding",
+    category: "Branding",
+    keywords: ["brand identity", "logo", "brand guide", "visual language", "positioning"],
+    desc: "From naming and logo design to a complete brand identity system, we build brands that are memorable, consistent, and strategically positioned for long-term growth.",
+  },
   {
     id: "social-media",
-    title: "Social Media Management",
-    desc: "Craft and execute social strategies that grow our clients' brands across every major platform.",
-    icon: <SvgIcon><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><line x1="9" y1="10" x2="15" y2="10" /></SvgIcon>,
+    category: "Social Media",
+    keywords: ["content creation", "social strategy", "community management", "Instagram", "LinkedIn"],
+    desc: "We manage and grow your social media presence with a data-driven content strategy — combining creative storytelling with platform-specific tactics to build loyal communities.",
   },
   {
-    id: "digital-marketing",
-    title: "Digital Marketing",
-    desc: "Drive measurable growth through data-driven campaigns and creative performance marketing.",
-    icon: <SvgIcon><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></SvgIcon>,
+    id: "3d-cgi",
+    category: "3D & CGI",
+    keywords: ["3D rendering", "CGI", "product visualization", "architectural renders", "3D animation"],
+    desc: "We create hyper-realistic 3D visuals and CGI content for products, architecture, ads, and campaigns — enabling stunning visuals before anything is physically built.",
   },
   {
-    id: "business-analyst",
-    title: "Business Analyst",
-    desc: "Bridge client goals and creative execution by turning market insights into actionable strategies.",
-    icon: <SvgIcon><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></SvgIcon>,
+    id: "animation-vfx",
+    category: "Animation & VFX",
+    keywords: ["motion graphics", "visual effects", "2D/3D animation", "explainer videos"],
+    desc: "From sleek motion graphics to full visual effects pipelines, we bring your stories to life through animation and VFX that captivate and communicate at the highest level.",
   },
   {
-    id: "web-developer",
-    title: "Web Developers",
-    desc: "Build exceptional web experiences with clean code, pixel-perfect precision, and modern frameworks.",
-    icon: <SvgIcon><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></SvgIcon>,
+    id: "graphics-designing",
+    category: "Graphics Designing",
+    keywords: ["graphic design", "visual content", "marketing creatives", "UI graphics", "print"],
+    desc: "Our designers produce impactful visual content — from marketing creatives and social graphics to packaging and print — all aligned with your brand identity.",
   },
   {
-    id: "app-developer",
-    title: "App Developers",
-    desc: "Create seamless mobile experiences across iOS and Android that users love and businesses rely on.",
-    icon: <SvgIcon><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></SvgIcon>,
+    id: "web-development",
+    category: "Web Development",
+    keywords: ["website design", "frontend", "backend", "responsive", "CMS", "custom web apps"],
+    desc: "We build fast, beautiful, and fully responsive websites and web applications using modern tech stacks — engineered for performance, SEO, and exceptional user experience.",
   },
   {
-    id: "hr",
-    title: "HR",
-    desc: "Build and nurture the BELVO team by attracting, retaining, and developing top creative talent.",
-    icon: <SvgIcon><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></SvgIcon>,
+    id: "ecommerce-management",
+    category: "E-Commerce Management",
+    keywords: ["e-commerce", "Shopify", "WooCommerce", "product listings", "conversion rate", "store management"],
+    desc: "End-to-end e-commerce solutions — from store setup and product management to CRO and scaling. We manage your online store so you can focus on growing your business.",
   },
   {
-    id: "software-developer",
-    title: "Software Developers",
-    desc: "Engineer the tools and systems that power BELVO's growing suite of digital products.",
-    icon: <SvgIcon><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></SvgIcon>,
+    id: "performance-marketing",
+    category: "Performance Marketing",
+    keywords: ["paid ads", "Google Ads", "Meta Ads", "ROI", "ROAS", "PPC", "conversion campaigns"],
+    desc: "We run data-driven paid media campaigns across Google, Meta, and beyond — optimizing every rupee spent for maximum ROI with transparent reporting and rapid iteration.",
+  },
+  {
+    id: "influencer-marketing",
+    category: "Influencer Marketing",
+    keywords: ["influencer outreach", "UGC", "creator campaigns", "brand collaborations", "micro-influencers"],
+    desc: "We connect your brand with the right influencers — from macro to micro — to create authentic campaigns that reach your exact target audience and drive real results.",
+  },
+  {
+    id: "app-development",
+    category: "App Development",
+    keywords: ["mobile app", "iOS", "Android", "Flutter", "React Native", "UI/UX", "app design"],
+    desc: "We design and develop intuitive mobile applications for iOS and Android — from concept and wireframing to launch and post-launch support, built for performance and scale.",
+  },
+  {
+    id: "software-development",
+    category: "Software Development",
+    keywords: ["custom software", "SaaS", "enterprise solutions", "API", "backend systems"],
+    desc: "We engineer custom software solutions tailored to your business needs — scalable, secure, and built with clean architecture to solve complex problems efficiently.",
+  },
+  {
+    id: "crm-automation",
+    category: "CRM & Automation",
+    keywords: ["CRM setup", "workflow automation", "Zapier", "HubSpot", "customer retention", "lead management"],
+    desc: "We implement and optimize CRM systems and automation workflows that streamline your sales, marketing, and operations — reducing manual work and improving customer retention.",
   },
 ];
 
-type ApplicationData = {
-  fullName: string;
-  age: string;
-  role: string;
-  qualification: string;
-  experience: string;
-  education: string;
-  address: string;
-  message: string;
-  email: string;
-  whatsapp: string;
-  resume: FileList;
-};
-
-const premiumCardStyle: React.CSSProperties = {
-  position: "relative",
-  overflow: "hidden",
-  background:
-    "linear-gradient(145deg, rgba(255,255,255,0.995), rgba(246,240,255,0.96))",
-  border: "1px solid rgba(157,78,221,0.18)",
-  borderRadius: "32px",
-  padding: "clamp(28px,5vw,60px)",
-  backdropFilter: "blur(26px)",
-  boxShadow:
-    "0 36px 110px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255,255,255,0.92)",
-};
-
-const inputBase: React.CSSProperties = {
-  width: "100%",
-  minHeight: "54px",
-  background: "linear-gradient(180deg, rgba(255,255,255,0.995), rgba(247,243,255,0.96))",
-  border: "1px solid rgba(157,78,221,0.14)",
-  borderRadius: "16px",
-  padding: "14px 16px",
-  color: "var(--belvo-text-1)",
-  fontFamily: "'Inter', sans-serif",
-  fontSize: "0.95rem",
-  fontWeight: 600,
-  letterSpacing: "0.01em",
-  lineHeight: 1.4,
-  outline: "none",
-  transition: "border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease",
-  boxSizing: "border-box",
-  boxShadow: "inset 0 1px 2px rgba(15,23,42,0.04)",
-  backdropFilter: "blur(6px)",
-};
-
-const inputErr: React.CSSProperties = {
-  ...inputBase,
-  border: "1px solid rgba(239,68,68,0.6)",
-  boxShadow: "0 0 0 3px rgba(239,68,68,0.12)",
-};
-
-const fieldLabelStyle: React.CSSProperties = {
-  fontSize: "0.72rem",
-  fontFamily: "'Inter',sans-serif",
-  fontWeight: 700,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-  color: "var(--belvo-text-2)",
-  display: "block",
-  marginBottom: "6px",
-};
-
-const fieldErrorStyle: React.CSSProperties = {
-  fontSize: "0.74rem",
-  color: "rgba(239,100,100,0.95)",
-  fontFamily: "'Inter',sans-serif",
-  fontWeight: 500,
-  marginTop: "6px",
-};
-
-const textareaBase: React.CSSProperties = {
-  ...inputBase,
-  minHeight: "130px",
-  resize: "vertical",
-  lineHeight: 1.7,
-  borderRadius: "14px",
-  padding: "14px 16px",
-};
-
-function focusIn(
-  e: React.FocusEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >
-) {
-  e.currentTarget.style.borderColor = "rgba(157,78,221,0.7)";
-  e.currentTarget.style.boxShadow =
-    "0 0 0 3px rgba(130,40,200,0.14), 0 12px 24px rgba(130,40,200,0.08)";
-  e.currentTarget.style.transform = "translateY(-1px)";
-}
-function focusOut(
-  e: React.FocusEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >,
-  err: boolean
-) {
-  e.currentTarget.style.borderColor = err
-    ? "rgba(239,68,68,0.6)"
-    : "rgba(157,78,221,0.18)";
-  e.currentTarget.style.boxShadow = "inset 0 1px 2px rgba(15,23,42,0.04)";
-  e.currentTarget.style.transform = "translateY(0)";
-}
-
-function Field({
-  label,
-  error,
-  children,
-}: {
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      <label style={fieldLabelStyle}>{label}</label>
-      {children}
-      {error && <span style={fieldErrorStyle}>{error}</span>}
-    </div>
-  );
-}
-
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      delay: i * 0.09,
-      ease: [0.16, 1, 0.3, 1] as const,
-    },
-  }),
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] as const } }),
 };
 
-export default function Careers() {
-  const formRef = useRef<HTMLDivElement>(null);
-  const positionsRef = useRef(null);
-  const formSectionRef = useRef(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const positionsInView = useInView(positionsRef, {
-    once: true,
-    margin: "-80px",
-  });
-  const formInView = useInView(formSectionRef, { once: true, margin: "-80px" });
-
-  const [selectedRole, setSelectedRole] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitSuccessful },
-    reset,
-    setValue,
-  } = useForm<ApplicationData>();
-
-  const onSubmit = (data: ApplicationData) => {
-    saveSubmission("career-application", { ...data, resume: data.resume?.[0]?.name ?? "" });
-    setTimeout(() => reset(), 3500);
-  };
-
-  const handleApplyNow = (roleTitle: string) => {
-    setSelectedRole(roleTitle);
-    setValue("role", roleTitle);
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+export default function Services() {
+  const { theme } = useTheme();
+  const isIvory = theme === "ivory";
+  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  const gridRef = useRef(null);
+  const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
+  const ctaRef = useRef(null);
+  const ctaInView = useInView(ctaRef, { once: true, margin: "-80px" });
 
   return (
     <>
-      {/* HERO */}
-      <section ref={heroRef}
+      {/* ── HERO ──────────────────────────────────────────────────── */}
+      <section
         style={{
-          minHeight: "100vh",
           background: "var(--belvo-bg)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           position: "relative",
           overflow: "hidden",
-          padding: "100px 24px 80px",
+          padding: "20px 24px 20px",
           textAlign: "center",
         }}
       >
-        <ScrollBackground scrollYProgress={scrollYProgress} />
         {/* Ambient glows */}
-        <div
-          style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: "30%",
-              left: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "80vw",
-              height: "60vh",
-              background:
-                "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)",
-              filter: "blur(60px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: "15%",
-              width: "50vw",
-              height: "40vh",
-              background:
-                "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)",
-              filter: "blur(80px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: "0",
-              background:
-                "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, var(--belvo-vignette-1) 100%)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "120px",
-              background:
-                "linear-gradient(to bottom, var(--belvo-vignette-2), transparent)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "140px",
-              background:
-                "linear-gradient(to top, var(--belvo-vignette-3), transparent)",
-            }}
-          />
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+          <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
+          <div style={{ position: "absolute", bottom: 0, left: "15%", width: "50vw", height: "40vh", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(80px)" }} />
+          <div style={{ position: "absolute", top: 0, right: "10%", width: "40vw", height: "35vh", background: "radial-gradient(ellipse at center, rgba(80,15,150,0.1) 0%, transparent 70%)", filter: "blur(70px)" }} />
+          <div style={{ position: "absolute", inset: "0", background: isIvory ? "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(248,245,239,0.85) 100%)" : "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(4,0,14,0.6) 100%)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "120px", background: isIvory ? "linear-gradient(to bottom, var(--belvo-bg), transparent)" : "linear-gradient(to bottom, rgba(4,0,14,0.9), transparent)" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "140px", background: isIvory ? "linear-gradient(to top, var(--belvo-bg), transparent)" : "linear-gradient(to top, rgba(4,0,14,0.95), transparent)" }} />
         </div>
 
         {/* Scattered dots */}
-        <svg
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-          viewBox="0 0 1440 900"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          {[
-            [120, 160],
-            [310, 80],
-            [490, 220],
-            [680, 100],
-            [870, 250],
-            [1050, 130],
-            [1230, 200],
-            [1380, 90],
-            [200, 700],
-            [450, 760],
-            [700, 680],
-            [950, 750],
-            [1150, 700],
-            [1340, 760],
-          ].map(([cx, cy], i) => (
-            <circle
-              key={i}
-              cx={cx}
-              cy={cy}
-              r={i % 3 === 0 ? 1.5 : 1}
-              fill={
-                i % 2 === 0
-                  ? "rgba(200,140,255,0.6)"
-                  : "rgba(157,78,221,0.35)"
-              }
-            />
+        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+          {[[120, 160], [310, 80], [490, 220], [680, 100], [870, 250], [1050, 130], [1230, 200], [1380, 90], [200, 700], [450, 760], [700, 680], [950, 750], [1150, 700], [1340, 760]].map(([cx, cy], i) => (
+            <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.5 : 1} fill={i % 2 === 0 ? "rgba(200,140,255,0.6)" : isIvory ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.35)"} />
           ))}
         </svg>
 
-        <div
-          style={{ position: "relative", zIndex: 1, maxWidth: "760px" }}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ marginBottom: "18px" }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 18px",
-                background: "rgba(123,47,190,0.15)",
-                border: "1px solid rgba(157,78,221,0.3)",
-                borderRadius: "100px",
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.68rem",
-                fontWeight: 600,
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-                color: "#9D4EDD",
-              }}
-            >
-              <Briefcase size={11} />
-              We're Hiring
+        <div style={{ position: "relative", zIndex: 1, maxWidth: "800px" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ marginBottom: "18px" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(123,47,190,0.15)", border: "1px solid rgba(157,78,221,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9D4EDD" }}>
+              <Sparkles size={11} />
+              Our Services
             </span>
           </motion.div>
 
@@ -382,966 +155,154 @@ export default function Careers() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
-            style={{
-              fontFamily: "'Inter',sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(2.4rem,6vw,5.5rem)",
-              lineHeight: 1.04,
-              color: "var(--belvo-text-1)",
-              margin: "0 0 10px",
-              letterSpacing: "-0.01em",
-            }}
+            style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "var(--belvo-text-1)", margin: "0 0 10px", letterSpacing: "-0.01em" }}
           >
-            Join the <span style={{ color: "#9D4EDD" }}>BELVO</span> Team
+            Full-Service{" "}
+            <span style={{ color: "#9D4EDD" }}>Creative</span>{" "}
+            Agency
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
-            style={{
-              fontFamily: "'Inter',sans-serif",
-              fontSize: "clamp(0.9rem,1.6vw,1.05rem)",
-              lineHeight: 1.75,
-              color: "var(--belvo-text-2)",
-              margin: "0 auto 36px",
-              maxWidth: "520px",
-              letterSpacing: "0.01em",
-            }}
+            style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(0.9rem,1.6vw,1.05rem)", lineHeight: 1.75, color: "var(--belvo-text-2)", margin: "0 auto 36px", maxWidth: "560px", letterSpacing: "0.01em" }}
           >
-            Be part of a premium creative agency that builds brands that
-            dominate. We're looking for driven, talented people to help scale
-            businesses globally.
+            From SEO and branding to web development and performance marketing — we offer
+            14 specialised services designed to take your brand from zero to dominate.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
-              <button
-                onClick={() =>
-                  formRef.current?.scrollIntoView({ behavior: "smooth" })
-                }
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "12px 28px",
-                  background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
-                  border: "none",
-                  borderRadius: "8px",
-                  color: "#ffffff",
-                  fontFamily: "'Inter',sans-serif",
-                  fontWeight: 600,
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                  boxShadow: "0 0 32px rgba(130,40,200,0.38)",
-                  transition: "box-shadow 0.3s, transform 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 52px rgba(157,78,221,0.55)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 32px rgba(130,40,200,0.38)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                View Open Positions <ArrowUpRight size={13} strokeWidth={2.5} />
-              </button>
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "6px",
-                padding: "8px 16px",
-                background: "rgba(123,47,190,0.1)",
-                border: "1px solid rgba(157,78,221,0.2)",
-                borderRadius: "100px",
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.7rem",
-                color: "#000000",
-                letterSpacing: "0.04em",
-                whiteSpace: "nowrap",
-              }}>
-                <Mail size={11} />
-                career.belvo@gmail.com
-              </span>
-              <button
-                onClick={() => window.location.href = "/notes-pdfs"}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "12px 28px",
-                  background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
-                  border: "none",
-                  borderRadius: "8px",
-                  color: "#ffffff",
-                  fontFamily: "'Inter',sans-serif",
-                  fontWeight: 600,
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                  boxShadow: "0 0 32px rgba(130,40,200,0.38)",
-                  transition: "box-shadow 0.3s, transform 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 52px rgba(157,78,221,0.55)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 32px rgba(130,40,200,0.38)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                Explore Notes <ArrowUpRight size={13} strokeWidth={2.5} />
-              </button>
-            </div>
-
-            <div style={{
-              display: "flex", alignItems: "center", gap: "12px",
-              padding: "12px 24px",
-              background: "linear-gradient(135deg, rgba(255,154,201,0.08), rgba(157,78,221,0.06))",
-              border: "1px solid rgba(255,154,201,0.15)",
-              borderRadius: "100px",
-              backdropFilter: "blur(8px)",
-              marginTop: "8px",
-            }}>
-              <img
-                src="/genz-thumbnail.jpeg"
-                alt="GenZ"
-                style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(157,78,221,0.3)" }}
-              />
-              <span style={{
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.7rem",
-                fontWeight: 500,
-                color: "var(--belvo-text-2)",
-                letterSpacing: "0.04em",
-              }}>
-                A heartfelt welcome to the next gen of creators — {" "}
-                <span style={{ color: "#9D4EDD", fontWeight: 700 }}>#GenZatBELVO</span>
-              </span>
-            </div>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
+            <button
+              onClick={() => smoothScrollToElement("services-grid")}
+              data-testid="button-explore-services"
+              style={{ display: "inline-flex", alignItems: "center", gap: "10px", padding: "14px 36px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.82rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 32px rgba(130,40,200,0.38)", transition: "box-shadow 0.3s, transform 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 52px rgba(157,78,221,0.55)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 32px rgba(130,40,200,0.38)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              Explore Services <ArrowUpRight size={14} strokeWidth={2.5} />
+            </button>
           </motion.div>
         </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          style={{
-            position: "absolute",
-            bottom: "28px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "6px",
-          }}
-        >
-          <div
-            style={{
-              width: "26px",
-              height: "42px",
-              borderRadius: "100px",
-              border: "1px solid var(--belvo-border-card)",
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "center",
-              paddingTop: "8px",
-            }}
-          >
-            <motion.div
-              style={{
-                width: "4px",
-                height: "8px",
-                borderRadius: "100px",
-                background: "rgba(157,78,221,0.8)",
-              }}
-              animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.8 }} style={{ position: "absolute", bottom: "28px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+          <div style={{ width: "26px", height: "42px", borderRadius: "100px", border: "1px solid var(--belvo-border-card)", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: "8px" }}>
+            <motion.div style={{ width: "4px", height: "8px", borderRadius: "100px", background: "rgba(157,78,221,0.8)" }} animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }} />
           </div>
-          <span
-            style={{
-              fontSize: "9px",
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              color: "var(--belvo-text-4)",
-              fontFamily: "'Inter',sans-serif",
-            }}
-          >
-            Scroll
-          </span>
+          <span style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--belvo-text-4)", fontFamily: "'Inter',sans-serif" }}>Scroll</span>
         </motion.div>
       </section>
 
-      {/* OPEN POSITIONS */}
+      {/* ── SERVICES GRID ─────────────────────────────────────────── */}
       <section
-        id="positions"
-        ref={positionsRef}
-        style={{
-          background: "var(--belvo-bg)",
-          padding: "100px 24px 120px",
-          position: "relative",
-          overflow: "hidden",
-        }}
+        id="services-grid"
+        ref={gridRef}
+        style={{ background: "var(--belvo-bg)", padding: "20px 24px 120px", position: "relative", overflow: "hidden" }}
       >
-        <div
-          style={{
-            height: "1px",
-            background:
-              "linear-gradient(90deg,transparent,var(--belvo-border-divider),rgba(201,163,65,0.18),transparent)",
-            marginBottom: "0",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "70vw",
-            height: "400px",
-            background:
-              "radial-gradient(ellipse at center, var(--belvo-glow-blob) 0%, transparent 70%)",
-            filter: "blur(60px)",
-            pointerEvents: "none",
-          }}
-        />
+        <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          <motion.div
-            custom={0}
-            variants={fadeUp}
-            initial="hidden"
-            animate={positionsInView ? "visible" : "hidden"}
-            style={{ textAlign: "center", marginBottom: "64px" }}
-          >
-            <span
-              style={{
-                display: "block",
-                fontSize: "0.68rem",
-                letterSpacing: "0.35em",
-                textTransform: "uppercase",
-                color: "#9D4EDD",
-                fontFamily: "'Inter',sans-serif",
-                marginBottom: "14px",
-              }}
-            >
-              Open Positions
-            </span>
-            <h2
-              style={{
-                fontFamily: "'Inter',sans-serif",
-                fontWeight: 900,
-                fontSize: "clamp(1.9rem,4.5vw,3.4rem)",
-                lineHeight: 1.06,
-                color: "var(--belvo-text-1)",
-                margin: 0,
-              }}
-            >
-              Where Will You{" "}
-              <span style={{ color: "#9D4EDD" }}>Grow?</span>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <motion.div custom={0} variants={fadeUp} initial="hidden" animate={gridInView ? "visible" : "hidden"} style={{ textAlign: "center", marginBottom: "64px" }}>
+            <span style={{ display: "block", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#9D4EDD", fontFamily: "'Inter',sans-serif", marginBottom: "14px" }}>What We Do</span>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
+              14 Services. <span style={{ color: "#9D4EDD" }}>One Mission.</span>
             </h2>
           </motion.div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))",
-              gap: "20px",
-            }}
-          >
-            {ROLES.map((role, i) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: "20px" }}>
+            {SERVICE_ITEMS.map((svc, i) => (
               <motion.div
-                key={role.id}
+                key={svc.id}
                 custom={i + 1}
                 variants={fadeUp}
                 initial="hidden"
-                animate={positionsInView ? "visible" : "hidden"}
-                style={{
-                  background: "var(--belvo-bg-card)",
-                  border: "1px solid var(--belvo-border-card)",
-                  borderRadius: "14px",
-                  padding: "28px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                  transition:
-                    "border-color 0.3s, box-shadow 0.3s",
-                  cursor: "default",
-                }}
+                animate={gridInView ? "visible" : "hidden"}
+                data-testid={`card-service-${svc.id}`}
+                style={{ background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "14px", padding: "28px", display: "flex", flexDirection: "column", gap: "14px", transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s", cursor: "pointer", boxShadow: isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none" }}
                 whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "rgba(157,78,221,0.4)";
-                  (e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 8px 40px rgba(100,20,180,0.18)";
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 8px 32px rgba(100,20,180,0.10)" : "0 8px 40px rgba(100,20,180,0.18)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none"; }}
+                onClick={() => setSelectedService(svc)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setSelectedService(svc);
+                  }
                 }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "var(--belvo-border-card)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                }}
+                tabIndex={0}
+                role="button"
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "44px",
-                      height: "44px",
-                      borderRadius: "10px",
-                      background:
-                        "linear-gradient(135deg,rgba(123,47,190,0.22),rgba(157,78,221,0.08))",
-                      border: "1px solid rgba(157,78,221,0.2)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {role.icon}
+                <img
+                  src={svc.image}
+                  alt={svc.title}
+                  style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", borderRadius: "10px", border: "1px solid var(--belvo-border-card)", display: "block" }}
+                />
+
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg,rgba(123,47,190,0.22),rgba(157,78,221,0.08))", border: "1px solid rgba(157,78,221,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.85rem", color: "#9D4EDD", flexShrink: 0 }}>
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                  <h3
-                    style={{
-                      fontFamily: "'Inter',sans-serif",
-                      fontWeight: 700,
-                      fontSize: "0.97rem",
-                      color: "var(--belvo-text-1)",
-                      margin: 0,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {role.title}
+                  <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.97rem", color: "var(--belvo-text-1)", margin: 0, lineHeight: 1.3 }}>
+                    {svc.title}
                   </h3>
                 </div>
 
-                <p
-                  style={{
-                    fontFamily: "'Inter',sans-serif",
-                    fontSize: "0.85rem",
-                    lineHeight: 1.7,
-                    color: "var(--belvo-text-3)",
-                    margin: 0,
-                    flexGrow: 1,
-                  }}
-                >
-                  {role.desc}
+                <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.85rem", lineHeight: 1.7, color: "var(--belvo-text-6)", margin: 0, flexGrow: 1 }}>
+                  {svc.desc}
                 </p>
 
-                <button
-                  onClick={() => handleApplyNow(role.title)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "7px",
-                    padding: "10px 20px",
-                    background: "rgba(123,47,190,0.12)",
-                    border: "1px solid rgba(157,78,221,0.28)",
-                    borderRadius: "7px",
-                    color: "#9D4EDD",
-                    fontFamily: "'Inter',sans-serif",
-                    fontWeight: 600,
-                    fontSize: "0.76rem",
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    transition: "background 0.2s, border-color 0.2s",
-                    alignSelf: "flex-start",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background =
-                      "rgba(157,78,221,0.2)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(157,78,221,0.5)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background =
-                      "rgba(123,47,190,0.12)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(157,78,221,0.28)";
-                  }}
-                >
-                  Apply Now <ArrowUpRight size={12} strokeWidth={2.5} />
-                </button>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "4px" }}>
+                  {svc.keywords.map((kw) => (
+                    <span
+                      key={kw}
+                      style={{ padding: "4px 10px", background: "rgba(157,78,221,0.08)", border: "1px solid rgba(157,78,221,0.15)", borderRadius: "6px", fontFamily: "'Inter',sans-serif", fontSize: "0.65rem", fontWeight: 500, color: "rgba(157,78,221,0.7)", letterSpacing: "0.02em", whiteSpace: "nowrap" }}
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* APPLICATION FORM */}
+      {/* ── CTA ───────────────────────────────────────────────────── */}
       <section
-        id="apply"
-        ref={formSectionRef}
-        style={{
-          background: "var(--belvo-bg)",
-          padding: "0 24px 120px",
-          position: "relative",
-          overflow: "hidden",
-        }}
+        ref={ctaRef}
+        style={{ background: "var(--belvo-bg)", padding: "0 24px 120px", position: "relative", overflow: "hidden" }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "70vw",
-            height: "400px",
-            background:
-              "radial-gradient(ellipse at center, var(--belvo-glow-blob) 0%, transparent 70%)",
-            filter: "blur(60px)",
-            pointerEvents: "none",
-          }}
-        />
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
-        <div
-          ref={formRef}
-          style={{
-            maxWidth: "860px",
-            margin: "0 auto",
-            position: "relative",
-            zIndex: 1,
-            paddingTop: "100px",
-          }}
+        <motion.div
+          custom={0}
+          variants={fadeUp}
+          initial="hidden"
+          animate={ctaInView ? "visible" : "hidden"}
+          style={{ maxWidth: "800px", margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center", background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "16px", padding: "clamp(36px,5vw,60px)", backdropFilter: "blur(12px)" }}
         >
-          <motion.div
-            custom={0}
-            variants={fadeUp}
-            initial="hidden"
-            animate={formInView ? "visible" : "hidden"}
-            style={{ textAlign: "center", marginBottom: "52px" }}
+          <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.6rem,3.5vw,2.6rem)", lineHeight: 1.1, color: "var(--belvo-text-1)", margin: "0 0 14px" }}>
+            Ready to Scale Your <span style={{ color: "#9D4EDD" }}>Brand?</span>
+          </h2>
+          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.9rem", lineHeight: 1.75, color: "var(--belvo-text-6)", margin: "0 auto 32px", maxWidth: "480px" }}>
+            Let's talk about which services are right for your business. Book a free consultation with our team.
+          </p>
+          <button
+            data-testid="button-services-cta"
+            style={{ display: "inline-flex", alignItems: "center", gap: "10px", padding: "14px 40px", background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)", border: "none", borderRadius: "8px", color: "#ffffff", fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: "0.82rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", boxShadow: "0 0 32px rgba(130,40,200,0.35)", transition: "box-shadow 0.3s, transform 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 52px rgba(157,78,221,0.55)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 32px rgba(130,40,200,0.35)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
-            <span
-              style={{
-                display: "block",
-                fontSize: "0.68rem",
-                letterSpacing: "0.35em",
-                textTransform: "uppercase",
-                color: "#9D4EDD",
-                fontFamily: "'Inter',sans-serif",
-                marginBottom: "14px",
-              }}
-            >
-              Ready to Apply?
-            </span>
-            <h2
-              style={{
-                fontFamily: "'Inter',sans-serif",
-                fontWeight: 900,
-                fontSize: "clamp(1.9rem,4.5vw,3.4rem)",
-                lineHeight: 1.06,
-                color: "var(--belvo-text-1)",
-                margin: "0 0 14px",
-              }}
-            >
-              Submit Your{" "}
-              <span style={{ color: "#9D4EDD" }}>Application</span>
-            </h2>
-            <p
-              style={{
-                color: "var(--belvo-text-3)",
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.9rem",
-                lineHeight: 1.7,
-              }}
-            >
-              Tell us about yourself. We'll get back within 48 hours.
-            </p>
-          </motion.div>
-
-          <motion.div
-            custom={1}
-            variants={fadeUp}
-            initial="hidden"
-            animate={formInView ? "visible" : "hidden"}
-            style={{
-              ...premiumCardStyle,
-              borderRadius: "28px",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(135deg, rgba(157,78,221,0.08), transparent 55%)",
-                pointerEvents: "none",
-              }}
-            />
-            <div style={{ position: "relative", zIndex: 1 }}>
-            {isSubmitSuccessful ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{
-                  textAlign: "center",
-                  padding: "40px 24px",
-                  background:
-                    "linear-gradient(135deg, rgba(123,47,190,0.06), rgba(255,255,255,0.95))",
-                  border: "1px solid rgba(157,78,221,0.16)",
-                  borderRadius: "22px",
-                  boxShadow: "0 18px 50px rgba(15,23,42,0.05)",
-                }}
-              >
-                <div
-                  style={{
-                    width: 68,
-                    height: 68,
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 20px",
-                    boxShadow: "0 16px 34px rgba(123,47,190,0.26)",
-                  }}
-                >
-                  <CheckCircle2 size={30} color="#fff" />
-                </div>
-                <h3
-                  style={{
-                    color: "var(--belvo-text-1)",
-                    fontFamily: "'Inter',sans-serif",
-                    fontWeight: 700,
-                    fontSize: "1.28rem",
-                    margin: "0 0 8px",
-                  }}
-                >
-                  Application Submitted!
-                </h3>
-                <p
-                  style={{
-                    color: "var(--belvo-text-3)",
-                    fontFamily: "'Inter',sans-serif",
-                    fontSize: "0.92rem",
-                    lineHeight: 1.7,
-                    margin: 0,
-                  }}
-                >
-                  We've received your application and will be in touch within
-                  48 hours.
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                {/* Row: Full Name + Age */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit,minmax(200px,1fr))",
-                    gap: "22px",
-                    marginBottom: "24px",
-                  }}
-                >
-                  <Field
-                    label="Full Name"
-                    error={errors.fullName?.message}
-                  >
-                    <input
-                      placeholder="John Smith"
-                      style={errors.fullName ? inputErr : inputBase}
-                      {...register("fullName", {
-                        required: "Full name is required",
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.fullName)}
-                    />
-                  </Field>
-                  <Field label="Age" error={errors.age?.message}>
-                    <input
-                      type="number"
-                      min="16"
-                      max="65"
-                      placeholder="24"
-                      style={errors.age ? inputErr : inputBase}
-                      {...register("age", {
-                        required: "Age is required",
-                        min: { value: 16, message: "Must be at least 16" },
-                        max: {
-                          value: 65,
-                          message: "Must be 65 or under",
-                        },
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.age)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Role */}
-                <div style={{ marginBottom: "24px" }}>
-                  <Field
-                    label="Role Applying For"
-                    error={errors.role?.message}
-                  >
-                    <select
-                      value={selectedRole}
-                      style={{
-                        ...(errors.role ? inputErr : inputBase),
-                        appearance: "none",
-                        cursor: "pointer",
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(157,78,221,0.8)' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "right 16px center",
-                        paddingRight: "42px",
-                      }}
-                      {...register("role", {
-                        required: "Please select a role",
-                      })}
-                      onChange={(e) => {
-                        setSelectedRole(e.target.value);
-                      }}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.role)}
-                    >
-                      <option
-                        value=""
-                        style={{ background: "var(--belvo-bg)" }}
-                      >
-                        Select a role
-                      </option>
-                      {ROLES.map((r) => (
-                        <option
-                          key={r.id}
-                          value={r.title}
-                          style={{ background: "var(--belvo-bg)" }}
-                        >
-                          {r.title}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                </div>
-
-                {/* Row: Qualification + Education */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit,minmax(200px,1fr))",
-                    gap: "22px",
-                    marginBottom: "24px",
-                  }}
-                >
-                  <Field
-                    label="Highest Qualification"
-                    error={errors.qualification?.message}
-                  >
-                    <input
-                      placeholder="e.g. B.Tech, MBA, BCA…"
-                      style={errors.qualification ? inputErr : inputBase}
-                      {...register("qualification", {
-                        required: "Qualification is required",
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.qualification)}
-                    />
-                  </Field>
-                  <Field
-                    label="School / College / University"
-                    error={errors.education?.message}
-                  >
-                    <input
-                      placeholder="e.g. IIT Mumbai"
-                      style={errors.education ? inputErr : inputBase}
-                      {...register("education", {
-                        required: "Education is required",
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.education)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Row: Email + WhatsApp */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fit,minmax(200px,1fr))",
-                    gap: "22px",
-                    marginBottom: "24px",
-                  }}
-                >
-                  <Field label="Email ID" error={errors.email?.message}>
-                    <input
-                      type="email"
-                      placeholder="john@example.com"
-                      style={errors.email ? inputErr : inputBase}
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Enter a valid email",
-                        },
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.email)}
-                    />
-                  </Field>
-                  <Field
-                    label="WhatsApp Number"
-                    error={errors.whatsapp?.message}
-                  >
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      style={errors.whatsapp ? inputErr : inputBase}
-                      {...register("whatsapp", {
-                        required: "WhatsApp number is required",
-                        pattern: {
-                          value: /^[+\d\s\-()]{7,20}$/,
-                          message: "Enter a valid number",
-                        },
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.whatsapp)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Past Work Experience */}
-                <div style={{ marginBottom: "24px" }}>
-                  <Field
-                    label="Past Work Experience"
-                    error={errors.experience?.message}
-                  >
-                    <textarea
-                      placeholder="Describe your relevant experience, roles, and achievements…"
-                      style={{
-                        ...(errors.experience ? inputErr : textareaBase),
-                        resize: "vertical",
-                      }}
-                      {...register("experience", {
-                        required: "Please describe your experience",
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.experience)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Current Address */}
-                <div style={{ marginBottom: "24px" }}>
-                  <Field
-                    label="Current Address"
-                    error={errors.address?.message}
-                  >
-                    <textarea
-                      placeholder="City, State, Country"
-                      style={{
-                        ...(errors.address ? inputErr : textareaBase),
-                        minHeight: "100px",
-                        resize: "vertical",
-                      }}
-                      {...register("address", {
-                        required: "Address is required",
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.address)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Quick Message */}
-                <div style={{ marginBottom: "24px" }}>
-                  <Field
-                    label="Quick Message for Recruiter"
-                    error={errors.message?.message}
-                  >
-                    <textarea
-                      placeholder="Tell us why you're the perfect fit for BELVO…"
-                      style={{
-                        ...(errors.message ? inputErr : textareaBase),
-                      }}
-                      {...register("message", {
-                        required: "Please write a message",
-                        minLength: {
-                          value: 20,
-                          message: "At least 20 characters",
-                        },
-                      })}
-                      onFocus={focusIn}
-                      onBlur={(e) => focusOut(e, !!errors.message)}
-                    />
-                  </Field>
-                </div>
-
-                {/* Resume Upload */}
-                <div style={{ marginBottom: "36px" }}>
-                  <Field label="Resume / CV" error={errors.resume?.message}>
-                    <label
-                      htmlFor="resume-upload"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "14px",
-                        width: "100%",
-                        minHeight: "92px",
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.98), rgba(247,242,255,0.94))",
-                        border: "1px dashed rgba(157,78,221,0.32)",
-                        borderRadius: "18px",
-                        padding: "18px 20px",
-                        cursor: "pointer",
-                        transition: "border-color 0.2s ease, background 0.2s ease, transform 0.2s ease",
-                        boxSizing: "border-box",
-                        boxShadow: "inset 0 1px 2px rgba(15,23,42,0.03)",
-                      }}
-                      onMouseEnter={(e) => {
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.borderColor = "rgba(157,78,221,0.6)";
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.background = "rgba(157,78,221,0.05)";
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.transform = "translateY(-1px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.borderColor = "rgba(157,78,221,0.3)";
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.background =
-                          "linear-gradient(135deg, rgba(255,255,255,0.98), rgba(247,242,255,0.94))";
-                        (
-                          e.currentTarget as HTMLElement
-                        ).style.transform = "translateY(0)";
-                      }}
-                    >
-                      <Upload
-                        size={18}
-                        style={{
-                          color: "rgba(157,78,221,0.7)",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <div>
-                        <p
-                          style={{
-                            margin: 0,
-                            fontFamily: "'Inter',sans-serif",
-                            fontSize: "0.85rem",
-                            color: "var(--belvo-text-2)",
-                          }}
-                        >
-                          Click to upload your resume
-                        </p>
-                        <p
-                          style={{
-                            margin: "3px 0 0",
-                            fontFamily: "'Inter',sans-serif",
-                            fontSize: "0.72rem",
-                            color: "var(--belvo-text-4)",
-                          }}
-                        >
-                          PDF, DOC, DOCX — max 5 MB
-                        </p>
-                      </div>
-                    </label>
-                    <input
-                      id="resume-upload"
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      style={{ display: "none" }}
-                      {...register("resume", {
-                        required: "Please upload your resume",
-                        validate: {
-                          fileSize: (v) =>
-                            !v?.[0] ||
-                            v[0].size <= 5_000_000 ||
-                            "File must be under 5 MB",
-                        },
-                      })}
-                    />
-                  </Field>
-                </div>
-
-                {/* Submit */}
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <button
-                    type="submit"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      padding: "15px 42px",
-                      minHeight: "50px",
-                      background:
-                        "linear-gradient(135deg,#7B2FBE 0%,#9D4EDD 55%,#B26BFF 100%)",
-                      border: "none",
-                      borderRadius: "999px",
-                      color: "#ffffff",
-                      fontFamily: "'Inter',sans-serif",
-                      fontWeight: 700,
-                      fontSize: "0.8rem",
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                      cursor: "pointer",
-                      boxShadow: "0 16px 35px rgba(123,47,190,0.28)",
-                      transition: "box-shadow 0.28s ease, transform 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        "0 20px 44px rgba(157,78,221,0.35)";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        "0 16px 35px rgba(123,47,190,0.28)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                    onMouseDown={(e) => {
-                      e.currentTarget.style.transform = "translateY(1px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 10px 24px rgba(123,47,190,0.24)";
-                    }}
-                    onMouseUp={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow =
-                        "0 16px 35px rgba(123,47,190,0.28)";
-                    }}
-                  >
-                    Apply Now <ArrowUpRight size={15} strokeWidth={2.5} />
-                  </button>
-                </div>
-              </form>
-            )}
-            </div>
-          </motion.div>
-        </div>
+            Book a Free Call <ArrowUpRight size={14} strokeWidth={2.5} />
+          </button>
+        </motion.div>
       </section>
 
+      <ToolsPricing />
+      <BookACall />
+      <ServiceDialog service={selectedService} onClose={() => setSelectedService(null)} />
       <Footer />
     </>
   );
