@@ -12,6 +12,7 @@ import Blogs from "@/pages/Blogs";
 import About from "@/sections/About";
 import ComingSoon from "@/pages/ComingSoon";
 import Services from "@/pages/Services";
+import Events from "@/pages/Events";
 import EventRegistration from "@/pages/EventRegistration";
 import Works from "@/pages/works";
 import Tools from "@/pages/Tools";
@@ -82,9 +83,7 @@ function Router() {
               <Route path="/tools" component={Tools} />
               <Route path="/tools/register" component={ToolRegister} />
               <Route path="/event-register/:id" component={EventRegistration} />
-              <Route path="/events">
-                <ComingSoon title="Events" />
-              </Route>
+              <Route path="/events" component={Events} />
               <Route path="/contact">
                 <ComingSoon title="Contact Us" />
               </Route>
