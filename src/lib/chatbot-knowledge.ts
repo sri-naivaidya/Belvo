@@ -107,7 +107,7 @@ export const INTENTS: Intent[] = [
   },
   {
     keywords: ["pricing", "cost", "how much", "price", "budget", "rates", "package"],
-    answer: { text: "Our pricing is project-based and tailored to your needs. Budget ranges: **Under $1,000**, **$1,000 - $5,000**, **$5,000 - $10,000**, **$10,000 - $25,000**, and **$25,000+**. Book a free call and we'll give you a custom quote within 24 hours." },
+    answer: { text: "Our pricing is project-based and tailored to your needs. Budget ranges: **Under ₹1,000**, **₹1,000 - ₹5,000**, **₹5,000 - ₹10,000**, **₹10,000 - ₹25,000**, and **₹25,000+**. Book a free call and we'll give you a custom quote within 24 hours." },
   },
   {
     keywords: ["contact", "email", "reach", "get in touch", "contact us"],
@@ -127,7 +127,7 @@ export const INTENTS: Intent[] = [
   },
   {
     keywords: ["book a call", "free call", "consultation", "hire", "contact form"],
-    answer: { text: "You can book a free call with us through the 'Book A Free Call' section on our website. We'll get back to you within 24 hours. The form asks for your Full Name, Email, Company Name, Budget (options: Under $1,000, $1,000-$5,000, $5,000-$10,000, $10,000-$25,000, $25,000+), Project Type (Brand Identity, Website Design, Social Media Strategy, Marketing & Growth, Full Brand Build, or Other), and a Message." },
+    answer: { text: "You can book a free call with us through the 'Book A Free Call' section on our website. We'll get back to you within 24 hours. The form asks for your Full Name, Email, Company Name, Budget (options: Under ₹1,000, ₹1,000-₹5,000, ₹5,000-₹10,000, ₹10,000-₹25,000, ₹25,000+), Project Type (Brand Identity, Website Design, Social Media Strategy, Marketing & Growth, Full Brand Build, or Other), and a Message." },
   },
   {
     keywords: ["career", "job", "hiring", "vacancy", "apply", "position", "intern"],
@@ -147,7 +147,7 @@ export const INTENTS: Intent[] = [
   },
   {
     keywords: ["pricing", "cost", "price", "budget", "how much"],
-    answer: { text: "Our pricing is project-based and varies depending on scope, complexity, and deliverables. Budget ranges: Under $1,000, $1,000 - $5,000, $5,000 - $10,000, $10,000 - $25,000, and $25,000+. We offer custom quotes tailored to each client's needs. During your free discovery call, we'll discuss your requirements and provide a transparent pricing proposal with no hidden fees." },
+    answer: { text: "Our pricing is project-based and varies depending on scope, complexity, and deliverables. Budget ranges: Under ₹1,000, ₹1,000 - ₹5,000, ₹5,000 - ₹10,000, ₹10,000 - ₹25,000, and ₹25,000+. We offer custom quotes tailored to each client's needs. During your free discovery call, we'll discuss your requirements and provide a transparent pricing proposal with no hidden fees." },
   },
   {
     keywords: ["timeline", "how long", "delivery", "deadline"],
