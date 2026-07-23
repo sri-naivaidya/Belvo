@@ -166,27 +166,31 @@ gl_FragColor=vec4(color,1.0);
     let pointerStartY = 0;
     let pointerDown = false;
 
-    document.addEventListener("pointerdown", (e) => {
+    const onPointerDown = (e: PointerEvent) => {
       pointerStartX = e.clientX;
       pointerStartY = e.clientY;
       pointerDown = true;
-    });
+    };
 
-    document.addEventListener("pointerup", (e) => {
+    const onPointerUp = (e: PointerEvent) => {
       if (!pointerDown) return;
       pointerDown = false;
       const dy = e.clientY - pointerStartY;
       if (dy > 40) advance();
       else if (dy < -40) retreat();
-    });
+    };
 
-    document.addEventListener("wheel", (e) => {
+    const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (!settledRef.current) return;
       if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
       if (e.deltaY > 20) advance();
       else if (e.deltaY < -20) retreat();
-    }, { passive: false });
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("wheel", onWheel, { passive: false });
 
     let startTime = performance.now();
 
@@ -220,6 +224,9 @@ gl_FragColor=vec4(color,1.0);
 
     return () => {
       window.removeEventListener("resize", resize);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("wheel", onWheel);
     };
   }, []);
 
