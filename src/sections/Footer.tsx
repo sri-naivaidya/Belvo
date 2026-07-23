@@ -3,21 +3,22 @@ import { useRef, useState, type ReactNode } from "react";
 import { Mail, Download, Phone, ArrowUpRight } from "lucide-react";
 import { CONTACT_TARGETS } from "@/lib/contact";
 
-// ── DARK PURPLE COLOR PALETTE ──
+// ── DARK PINK COLOR PALETTE ──
 const PINK = {
-  primary: "#6b21a8",
-  light: "#8b5cf6",
-  dark: "#3b0764",
-  soft: "rgba(107,33,168,0.7)",
-  muted: "rgba(107,33,168,0.45)",
-  glow: "rgba(107,33,168,0.3)",
+  primary: "#b1005a",
+  light: "#d63384",
+  dark: "#6d003d",
+  soft: "rgba(177,0,90,0.7)",
+  muted: "rgba(177,0,90,0.45)",
+  glow: "rgba(177,0,90,0.3)",
 };
 
 const COLORS = {
   white: "#ffffff",
-  textPrimary: "rgba(255,255,255,0.92)",
-  textSecondary: "rgba(255,255,255,0.62)",
-  textMuted: "rgba(255,255,255,0.4)",
+  black: "#000000",
+  textPrimary: "#ffffff",
+  textSecondary: "rgba(255,255,255,0.78)",
+  textMuted: "rgba(255,255,255,0.58)",
   pink: PINK.primary,
   pinkLight: PINK.light,
   pinkDark: PINK.dark,
@@ -184,8 +185,8 @@ function BrandMark() {
           letterSpacing: "0.2em",
           textTransform: "uppercase",
           background: hovered
-            ? `linear-gradient(135deg, #ffffff 0%, ${COLORS.pinkLight} 50%, ${COLORS.pink} 100%)`
-            : `linear-gradient(135deg, #ffffff 0%, ${COLORS.pink} 50%, ${COLORS.pinkDark} 100%)`,
+            ? `linear-gradient(135deg, #000000 0%, #ffffff 50%, #000000 100%)`
+            : `linear-gradient(135deg, #ffffff 0%, #000000 50%, #ffffff 100%)`,
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           display: "inline-block",
@@ -209,7 +210,7 @@ export default function Footer() {
       ref={ref}
       id="footer"
       style={{
-        background: "linear-gradient(180deg, #09010f 0%, #220b43 100%)",
+        background: "linear-gradient(180deg, #4b0f3d 0%, #2b0a36 100%)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -220,7 +221,7 @@ export default function Footer() {
           inset: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(circle at top left, rgba(139,92,246,0.22), transparent 28%), radial-gradient(circle at bottom right, rgba(59,7,100,0.4), transparent 38%)",
+            "radial-gradient(circle at top left, rgba(255,255,255,0.12), transparent 28%), radial-gradient(circle at bottom right, rgba(107,33,168,0.28), transparent 38%)",
         }}
       />
       <div
@@ -255,15 +256,15 @@ export default function Footer() {
       >
         <path d="M0,92 C120,70 240,64 360,78 C480,92 600,122 720,120 C840,118 960,90 1080,82 C1240,72 1360,72 1440,70 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.10)" />
         <path d="M0,112 C140,86 270,80 420,98 C560,116 700,146 840,142 C980,138 1120,106 1260,102 C1350,100 1408,100 1440,100" stroke="rgba(255,255,255,0.22)" strokeWidth="2" fill="none" />
-        <path d="M0,124 C160,96 320,92 480,112 C640,132 800,164 960,156 C1120,148 1280,120 1440,112" stroke="rgba(139,92,246,0.42)" strokeWidth="3" fill="none" />
+        <path d="M0,124 C160,96 320,92 480,112 C640,132 800,164 960,156 C1120,148 1280,120 1440,112" stroke="rgba(0,0,0,0.35)" strokeWidth="3" fill="none" />
       </svg>
       <svg
         viewBox="0 0 1440 320"
         preserveAspectRatio="none"
         style={{ position: "absolute", left: 0, right: 0, bottom: 0, width: "100%", height: "180px", zIndex: 0 }}
       >
-        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(72,18,129,0.38)" />
-        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(34,11,67,0.7)" />
+        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(109,0,61,0.38)" />
+        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(59,10,79,0.75)" />
       </svg>
       {/* Top border line */}
       <div
@@ -527,7 +528,7 @@ export default function Footer() {
             <span
               style={{
                 fontFamily: "'Inter', sans-serif", fontSize: "0.78rem",
-                color: "#f5d8ff", letterSpacing: "0.04em", fontWeight: 600,
+                color: "#000000", letterSpacing: "0.04em", fontWeight: 700,
               }}
             >
               Growth Core
