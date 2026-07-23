@@ -1,5 +1,6 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import ExploreSection from "./ExploreSection";
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -344,6 +345,7 @@ export default function About() {
           </motion.div>
         </div>
       </div>
+      <ExploreSection />
     </section>
   );
 }
