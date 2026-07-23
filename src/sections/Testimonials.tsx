@@ -84,9 +84,11 @@ const CARD_COUNT = TESTIMONIALS.length;
 
 function getRadius() {
   const w = window.innerWidth;
-  if (w <= 480) return Math.round((w - 220) / 2);
-  if (w <= 768) return Math.round((w - 280) / 2);
-  return Math.min(340, Math.round((w - 360) / 2));
+  let r;
+  if (w <= 480) r = Math.round((w - 220) / 2);
+  else if (w <= 768) r = Math.round((w - 280) / 2);
+  else r = Math.min(340, Math.round((w - 360) / 2));
+  return Math.max(80, r);
 }
 
 export default function Testimonials() {
@@ -167,14 +169,26 @@ export default function Testimonials() {
       ScrollTrigger.refresh(true);
     }
 
-    refresh();
-    requestAnimationFrame(() => refresh());
-    requestAnimationFrame(() => requestAnimationFrame(() => refresh()));
+    function doRefreshChain(times = 3) {
+      for (let i = 0; i < times; i++) {
+        setTimeout(() => refresh(), i * 200);
+      }
+    }
+
+    doRefreshChain(4);
 
     window.addEventListener("load", refresh);
     window.addEventListener("resize", () => {
       radius = getRadius();
-      refresh();
+      setTimeout(() => refresh(), 50);
+    });
+
+    const imgs = wrapper.querySelectorAll<HTMLImageElement>(".avatar-img img");
+    let loadedCount = 0;
+    imgs.forEach(img => {
+      if (img.complete) loadedCount++;
+      else img.addEventListener("load", () => { loadedCount++; if (loadedCount === imgs.length) doRefreshChain(3); }, { once: true });
+      img.addEventListener("error", () => { img.style.display = "none"; }, { once: true });
     });
 
     return () => {
@@ -226,6 +240,19 @@ export default function Testimonials() {
           height: 100%;
           object-fit: cover;
           display: block;
+        }
+        .testimonial-card .avatar-fallback {
+          display: none;
+          width: 100%;
+          height: 100%;
+          align-items: center; justify-content: center;
+          background: linear-gradient(135deg, #7B2FBE, #9D4EDD);
+          color: #fff; font-weight: 700; font-size: 1.2rem;
+          font-family: 'Inter', sans-serif;
+          border-radius: 50%;
+        }
+        .testimonial-card .avatar-img img[style*="display: none"] + .avatar-fallback {
+          display: flex;
         }
         .testimonial-card .author-name {
           font-size: 1.05rem;
@@ -296,7 +323,7 @@ export default function Testimonials() {
         }} />
 
         <div style={{
-          position: "relative", zIndex: 2, maxWidth: "1100px", width: "100%",
+          position: "relative", zIndex: 2, width: "100%",
           padding: "100px 24px 60px", textAlign: "center", margin: "0 auto",
         }}>
           <p style={{
@@ -354,7 +381,8 @@ export default function Testimonials() {
               >
                 <div className="avatar-row">
                   <div className="avatar-img">
-                    <img src={t.image} alt={t.name} />
+                    <img src={t.image} alt={t.name} onError={e => { (e.currentTarget as HTMLElement).style.display = "none"; }} />
+                    <div className="avatar-fallback">{t.name.split(" ").map(s => s[0]).join("").slice(0, 2).toUpperCase()}</div>
                   </div>
                   <div>
                     <div className="author-name">{t.name}</div>
