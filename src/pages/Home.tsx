@@ -190,21 +190,9 @@ gl_FragColor=vec4(color,1.0);
       else if (e.deltaY < -20) retreat();
     };
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (!settledRef.current) return;
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        advance();
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        retreat();
-      }
-    };
-
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("pointerup", onPointerUp);
     document.addEventListener("wheel", onWheel, { passive: false });
-    document.addEventListener("keydown", onKeyDown);
 
     let startTime = performance.now();
 
@@ -241,7 +229,6 @@ gl_FragColor=vec4(color,1.0);
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("pointerup", onPointerUp);
       document.removeEventListener("wheel", onWheel);
-      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
@@ -391,4 +378,29 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
               }}
               onMouseLeave={(e) => {
-     
+                (e.currentTarget as HTMLElement).style.color = "#1a1418";
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+              }}
+            >
+              explore videos
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          @media (max-width: 1000px) {
+            .hero-layout { padding: 2rem 2.5rem; }
+            .hero-subtitle { max-width: 65%; }
+          }
+          @media (max-width: 700px) {
+            .hero-layout { padding: 1.5rem; }
+            .hero-title { max-width: 100%; font-size: clamp(3rem, 12vw, 5rem); }
+            .hero-subtitle { max-width: 100%; font-size: 0.8rem; }
+          }
+        `}</style>
+      </div>
+
+      <ExploreSection />
+    </>
+  );
+}
