@@ -232,9 +232,62 @@ export default function BookACall() {
           >
             Tell us about your project and we'll get back to you within 24 hours.
           </motion.p>
+
+          {/* ✅ NEW: Cal.com direct booking link – added right here */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.35, ease: easeOut }}
+            style={{ textAlign: "center", marginTop: "20px" }}
+          >
+            <a
+              href="https://cal.com/hrishikesh-mishra-kvcmv0"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 24px",
+                background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+                border: "none",
+                borderRadius: "8px",
+                color: "#fff",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                cursor: "pointer",
+                boxShadow: "0 0 24px rgba(130,40,200,0.3)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 0 40px rgba(130,40,200,0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 0 24px rgba(130,40,200,0.3)";
+              }}
+            >
+              Book a Free Call
+            </a>
+            <p
+              style={{
+                marginTop: "8px",
+                fontSize: "0.75rem",
+                color: "var(--belvo-text-3)",
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              No form needed – pick a time that works for you
+            </p>
+          </motion.div>
         </motion.div>
 
-        {/* Form card */}
+        {/* Form card – unchanged */}
         <motion.div
           custom={1} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
           style={{
