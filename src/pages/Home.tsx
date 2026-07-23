@@ -197,9 +197,8 @@ gl_FragColor=vec4(color,1.0);
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (!settledRef.current) return;
-      if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
-      if (e.deltaY > 20) advance();
-      else if (e.deltaY < -20) retreat();
+      if (e.deltaY > 0) advance();
+      else if (e.deltaY < 0) retreat();
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -223,12 +222,8 @@ gl_FragColor=vec4(color,1.0);
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
       const diff = targetRef.current - stateRef.current;
-      if (Math.abs(diff) < 0.01) {
-        stateRef.current = targetRef.current;
-        settledRef.current = true;
-      } else {
-        stateRef.current += diff * 0.15;
-      }
+      stateRef.current = targetRef.current;
+      settledRef.current = true;
 
       const snap = Math.round(stateRef.current);
       if (snap !== lastSnapRef.current) {
