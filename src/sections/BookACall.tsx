@@ -196,7 +196,7 @@ export default function BookACall() {
             transition={{ duration: 0.5, delay: 0.1, ease: easeOut }}
             style={{
               display: "block", fontSize: "0.7rem", letterSpacing: "0.35em",
-              textTransform: "uppercase", color: "#9D4EDD",
+              textTransform: "uppercase", color: "#0b3b9c",
               fontFamily: "'Inter', sans-serif", marginBottom: "16px",
             }}
           >
@@ -208,11 +208,11 @@ export default function BookACall() {
             color: "var(--belvo-text-1)", margin: 0,
           }}>
             Book A{" "}
-            <span style={{ color: "#9D4EDD", position: "relative" }}>
+            <span style={{ color: "#0b3b9c", position: "relative" }}>
               Free Call
               <motion.span style={{
                 position: "absolute", bottom: -2, left: 0, right: 0, height: "3px",
-                background: "linear-gradient(90deg, transparent, #9D4EDD, transparent)",
+                background: "linear-gradient(90deg, transparent, #0b3b9c, transparent)",
                 borderRadius: "2px",
               }}
                 initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
@@ -256,7 +256,7 @@ export default function BookACall() {
                 transition={{ duration: 0.5, ease: easeOut }}
                 style={{
                   width: 56, height: 56, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+                  background: "linear-gradient(135deg, #071a63, #4aa7e6)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   margin: "0 auto 20px", fontSize: "1.4rem",
                   boxShadow: "0 0 32px rgba(157,78,221,0.4)",
@@ -372,7 +372,7 @@ function MagneticButton() {
       style={{
         display: "inline-flex", alignItems: "center", gap: "10px",
         padding: "14px 40px",
-        background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+        background: "linear-gradient(135deg, #071a63, #4aa7e6)",
         border: "none", borderRadius: "8px", color: "#ffffff",
         fontFamily: "'Inter', sans-serif", fontWeight: 600,
         fontSize: "0.85rem", letterSpacing: "0.18em",

@@ -67,9 +67,9 @@ export default function Navbar() {
     }
   };
 
-  const navBg = scrolled
-    ? isIvory ? "rgba(248,245,239,0.96)" : "rgba(4,0,14,0.88)"
-    : "var(--belvo-bg-nav)";
+  const navBg = isIvory
+    ? scrolled ? "rgba(216,239,255,0.97)" : "rgba(226,244,255,0.9)"
+    : "rgba(6,26,94,0.92)";
 
   const isLinkActive = (href: string) => location === href;
 
@@ -82,8 +82,8 @@ export default function Navbar() {
         WebkitBackdropFilter: "blur(22px)",
         boxShadow: scrolled
           ? isIvory
-            ? "0 1px 0 rgba(0,0,0,0.08), 0 4px 24px rgba(0,0,0,0.05)"
-            : "0 1px 0 rgba(130,40,200,0.12), 0 4px 24px rgba(4,0,14,0.5)"
+            ? "0 1px 0 rgba(8,37,113,0.14), 0 4px 24px rgba(31,86,164,0.1)"
+            : "0 1px 0 rgba(91,169,230,0.2), 0 4px 24px rgba(4,20,72,0.46)"
           : "none",
         transition: "background 0.3s ease, box-shadow 0.3s ease",
       }}
@@ -93,7 +93,7 @@ export default function Navbar() {
         <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5" data-testid="link-logo">
           <img
             src="/belvo-logo-transparent.png" alt="BELVO" className="h-8 w-auto"
-            style={{ filter: "drop-shadow(0 0 4px rgba(157,78,221,0.4))" }}
+            style={{ filter: "drop-shadow(0 0 4px rgba(11,59,156,0.35))" }}
           />
           <span
             className="font-semibold text-lg tracking-widest"
@@ -130,7 +130,7 @@ export default function Navbar() {
                   <motion.span
                     layoutId="nav-underline"
                     className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full"
-                    style={{ background: "#7B2FBE" }}
+                    style={{ background: "#0b3b9c" }}
                     transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                   />
                 )}
@@ -149,9 +149,9 @@ export default function Navbar() {
             style={{
               width: "36px", height: "36px", borderRadius: "50%",
               display: "flex", alignItems: "center", justifyContent: "center",
-              background: isIvory ? "rgba(123,47,190,0.08)" : "rgba(255,255,255,0.06)",
+              background: isIvory ? "rgba(11,59,156,0.09)" : "rgba(255,255,255,0.08)",
               border: `1px solid ${isIvory ? "rgba(123,47,190,0.2)" : "rgba(255,255,255,0.12)"}`,
-              color: isIvory ? "#7B2FBE" : "rgba(255,255,255,0.65)",
+              color: isIvory ? "#0b3b9c" : "rgba(255,255,255,0.78)",
               cursor: "pointer",
               transition: "background 0.25s, border-color 0.25s, color 0.25s",
               flexShrink: 0,
@@ -198,8 +198,8 @@ export default function Navbar() {
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "rgba(130,40,200,0.8)";
-              el.style.background = "rgba(130,40,200,0.12)";
+              el.style.borderColor = "rgba(11,59,156,0.8)";
+              el.style.background = "rgba(11,59,156,0.12)";
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement;
@@ -258,7 +258,7 @@ export default function Navbar() {
                       className="text-3xl font-light tracking-[0.2em] uppercase"
                       style={{
                         fontFamily: "'Inter', sans-serif",
-                        color: isLinkActive(link.href) ? "#9D4EDD" : "var(--belvo-text-1)",
+                        color: isLinkActive(link.href) ? "#0b3b9c" : "var(--belvo-text-1)",
                         opacity: isLinkActive(link.href) ? 1 : 0.8,
                       }}
                     >
@@ -304,9 +304,9 @@ export default function Navbar() {
                     data-testid="button-mobile-contact"
                     className="inline-flex items-center gap-2 px-8 py-3 text-sm font-medium tracking-[0.18em] uppercase"
                     style={{
-                      border: "1px solid rgba(130,40,200,0.7)",
+                      border: "1px solid rgba(11,59,156,0.7)",
                       borderRadius: "100px",
-                      color: "#9D4EDD",
+                      color: "#0b3b9c",
                       background: "transparent",
                       cursor: "pointer",
                       fontFamily: "'Inter', sans-serif",

@@ -29,6 +29,7 @@ import React, { useState } from "react";
 import DemoOne from "@/pages/DemoOne";
 import NotesPDFs from "@/pages/NotesPDFs";
 import LLMs from "@/pages/LLMs";
+import Videos from "@/pages/Videos";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ function Router() {
               <Route path="/blogs" component={Blogs} />
               <Route path="/services" component={Services} />
               <Route path="/works" component={Works} />
+              <Route path="/videos" component={Videos} />
               <Route path="/tools" component={Tools} />
               <Route path="/tools/register" component={ToolRegister} />
               <Route path="/event-register/:id" component={EventRegistration} />

@@ -22,7 +22,7 @@ const showcaseVideos = [
     src: "/videos/belvo-showcase-01.mp4",
     title: "Stories made to be watched.",
     copy: "Quick cuts, bold ideas, zero boring bits. Tap in for Belvo's latest video work.",
-    rotate: true,
+    rotate: false,
   },
   {
     src: "/videos/belvo-showcase-03.mp4",
@@ -146,7 +146,7 @@ function FeaturedVideo() {
           }}
         >
           <Clapperboard size={14} />
-          Video {String(activeVideoIndex + 1).padStart(2, "0")}
+          Video <span style={{ background: "linear-gradient(120deg, #a25b88, #5a1b4b)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{String(activeVideoIndex + 1).padStart(2, "0")}</span>
         </div>
 
         {!isPlaying && (
@@ -166,7 +166,7 @@ function FeaturedVideo() {
               borderRadius: "50%",
               border: "1px solid rgba(255,255,255,0.38)",
               color: "white",
-              background: "rgba(91,26,138,0.82)",
+              background: "linear-gradient(135deg, #32102d, #5a1b4b 62%, #a25b88)",
               boxShadow: "0 12px 36px rgba(4,0,14,0.34)",
               backdropFilter: "blur(16px)",
               cursor: "pointer",
@@ -217,7 +217,7 @@ function FeaturedVideo() {
       >
         <span
           style={{
-            color: "#9D4EDD",
+            color: "#5a1b4b",
             fontSize: "0.68rem",
             fontWeight: 700,
             letterSpacing: "0.18em",
@@ -274,11 +274,11 @@ function FeaturedVideo() {
                   padding: "0 14px",
                   borderRadius: "999px",
                   border: isActive
-                    ? "1px solid rgba(157,78,221,0.72)"
+                    ? "1px solid rgba(90,27,75,0.72)"
                     : "1px solid var(--belvo-border-card)",
                   color: isActive ? "#ffffff" : "var(--belvo-text-2)",
                   background: isActive
-                    ? "linear-gradient(135deg, #7B2FBE, #9D4EDD)"
+                    ? "linear-gradient(135deg, #32102d, #5a1b4b 62%, #a25b88)"
                     : "var(--belvo-bg-card-2)",
                   fontSize: "0.72rem",
                   fontWeight: 800,
@@ -355,7 +355,7 @@ export default function ExploreSection() {
           right: "-220px",
           top: "-220px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(157,78,221,0.11), transparent 68%)",
+          background: "radial-gradient(circle, rgba(72, 147, 235, 0.18), transparent 68%)",
           pointerEvents: "none",
         }}
       />
@@ -370,7 +370,7 @@ export default function ExploreSection() {
         >
           <span
             style={{
-              color: "#9D4EDD",
+              color: "#0b3b9c",
               fontSize: "0.68rem",
               fontWeight: 700,
               letterSpacing: "0.18em",

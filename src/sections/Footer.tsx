@@ -6,12 +6,12 @@ import { CONTACT_TARGETS } from "@/lib/contact";
 
 // ── DARK PINK COLOR PALETTE ──
 const PINK = {
-  primary: "#b1005a",
-  light: "#d63384",
-  dark: "#6d003d",
-  soft: "rgba(177,0,90,0.7)",
-  muted: "rgba(177,0,90,0.45)",
-  glow: "rgba(177,0,90,0.3)",
+  primary: "#5a1b4b",
+  light: "#a25b88",
+  dark: "#32102d",
+  soft: "rgba(90,27,75,0.7)",
+  muted: "rgba(90,27,75,0.45)",
+  glow: "rgba(90,27,75,0.32)",
 };
 
 const COLORS = {
@@ -185,11 +185,7 @@ function BrandMark() {
           fontSize: "1.1rem",
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          background: hovered
-            ? `linear-gradient(135deg, #000000 0%, #ffffff 50%, #000000 100%)`
-            : `linear-gradient(135deg, #ffffff 0%, #000000 50%, #ffffff 100%)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          color: hovered ? "#d8efff" : "#ffffff",
           display: "inline-block",
           transition: "background 0.3s ease",
         }}
@@ -212,7 +208,10 @@ export default function Footer() {
       ref={ref}
       id="footer"
       style={{
-        background: "linear-gradient(180deg, #4b0f3d 0%, #2b0a36 100%)",
+        background: "radial-gradient(circle at 84% 10%, rgba(90, 27, 75, 0.38), transparent 23%), linear-gradient(180deg, #d8efff 0%, #a9d9ff 8%, #0d3c97 30%, #061a5e 100%)",
+        alignSelf: "stretch",
+        margin: "0 -24px",
+        width: "calc(100% + 48px)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -223,7 +222,7 @@ export default function Footer() {
           inset: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(circle at top left, rgba(255,255,255,0.12), transparent 28%), radial-gradient(circle at bottom right, rgba(107,33,168,0.28), transparent 38%)",
+            "radial-gradient(circle at top left, rgba(255, 255, 255, 0.65), transparent 24%), radial-gradient(circle at bottom right, rgba(23, 83, 181, 0.42), transparent 42%)",
         }}
       />
       <div
@@ -265,15 +264,15 @@ export default function Footer() {
         preserveAspectRatio="none"
         style={{ position: "absolute", left: 0, right: 0, bottom: 0, width: "100%", height: "180px", zIndex: 0 }}
       >
-        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(109,0,61,0.38)" />
-        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(59,10,79,0.75)" />
+        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(7, 37, 113, 0.42)" />
+        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(2, 18, 72, 0.8)" />
       </svg>
       {/* Top border line */}
       <div
         style={{
           height: "1px",
           background:
-            "linear-gradient(90deg, transparent, var(--belvo-border-divider), rgba(245,67,151,0.25), transparent)",
+            "linear-gradient(90deg, transparent, var(--belvo-border-divider), rgba(91,169,230,0.42), transparent)",
         }}
       />
 
@@ -306,7 +305,7 @@ export default function Footer() {
         style={{
           position: "absolute", top: "45%", right: "15%",
           width: 4, height: 4, borderRadius: "50%",
-          background: "rgba(245,67,151,0.2)", filter: "blur(1px)",
+          background: "rgba(91,169,230,0.26)", filter: "blur(1px)",
         }}
         animate={{ y: [0, -15, 0], opacity: [0.2, 0.6, 0.2] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}

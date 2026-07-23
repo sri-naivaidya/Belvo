@@ -175,7 +175,7 @@ function FAQQuestionItem({ id, question, answer, isOpen, onToggle, index, inView
                 position: "absolute",
                 width: "9px",
                 height: "1.3px",
-                background: isOpen ? "#9D4EDD" : "var(--belvo-text-3)",
+                background: isOpen ? "#0b3b9c" : "var(--belvo-text-3)",
                 borderRadius: "2px",
                 transition: "background 0.3s ease",
               }}
@@ -185,7 +185,7 @@ function FAQQuestionItem({ id, question, answer, isOpen, onToggle, index, inView
                 position: "absolute",
                 width: "1.3px",
                 height: "9px",
-                background: isOpen ? "#9D4EDD" : "var(--belvo-text-3)",
+                background: isOpen ? "#0b3b9c" : "var(--belvo-text-3)",
                 borderRadius: "2px",
                 transform: isOpen ? "rotate(90deg) scaleY(0)" : "rotate(0deg) scaleY(1)",
                 transition: "transform 0.3s ease, background 0.3s ease",
@@ -378,7 +378,7 @@ export default function FAQ() {
               fontSize: "0.7rem",
               letterSpacing: "0.35em",
               textTransform: "uppercase",
-              color: "#9D4EDD",
+              color: "#0b3b9c",
               fontFamily: "'Inter', sans-serif",
               marginBottom: "16px",
             }}
@@ -397,7 +397,7 @@ export default function FAQ() {
             }}
           >
             Frequently Asked{" "}
-            <span style={{ color: "#9D4EDD" }}>Questions</span>
+            <span style={{ color: "#0b3b9c" }}>Questions</span>
           </h2>
 
           <p
@@ -418,7 +418,7 @@ export default function FAQ() {
                 background: "none",
                 border: "none",
                 padding: 0,
-                color: "#9D4EDD",
+                color: "#0b3b9c",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "inherit",
                 cursor: "pointer",

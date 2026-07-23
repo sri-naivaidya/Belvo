@@ -88,8 +88,8 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
   {
     id: "web",
     name: "Web Development",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: [
       "Lokesh", "Sri Satya", "Akhil",
       "Mohammad Anasuddin Zaid", "Ishwari",
@@ -103,57 +103,57 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
   {
     id: "app",
     name: "App Development",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Anand", "Anshika Srivastava", "Aaryan", "Suhani", "Aman", "Naveen Kumar", "Sushmitha", "Sinchana", "Hari Chandra Sekhar", "Dasari Ganesh"].map(name => ({ name })),
   },
   {
     id: "cyber",
     name: "Cyber Security",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Harsh", "Sourav", "Parv", "Ankit Sharma"].map(name => ({ name })),
   },
   {
     id: "software",
     name: "Software Development",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Aditya Siras", "Rudra Matta", "Ankush Gemnnani", "Aditya Singh", "Aryan", "Neha Gaikwad", "Vivek Kumar"].map(name => ({ name })),
   },
   {
     id: "analytics",
     name: "Business & Data Analytics",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Ishika", "Obed", "Sasikumar", "Sharfudeen", "Sibijan", "Tejaswini", "Sujeet Kumar"].map(name => ({ name })),
   },
   {
     id: "graphic",
     name: "Graphic Designing",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma", "Neha", "Yash", "Shaik Nihayath"].map(name => ({ name })),
   },
   {
     id: "social",
     name: "Social Media Management",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Yash Mewati", "Anisha Verma"].map(name => ({ name })),
   },
   {
     id: "content",
     name: "Content Writer",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Sheth Yamani"].map(name => ({ name })),
   },
   {
     id: "cinematography",
     name: "Cinematography",
-    color: "#7B2FBE",
-    lightColor: "#9D4EDD",
+    color: "#0b3b9c",
+    lightColor: "#5ba9e6",
     members: ["Adarsh"].map(name => ({ name })),
   },
 
@@ -206,7 +206,7 @@ const fadeUp = {
 
 function CeoCard({ inView }: { inView: boolean }) {
   const initials = getInitials(CEO.name);
-  const gold = "#C9A341";
+  const gold = "#0b3b9c";
   const ceoImg = getImageUrl(CEO.name);
 
   return (
@@ -246,7 +246,7 @@ function CeoCard({ inView }: { inView: boolean }) {
           <div style={{ position: "absolute", inset: -16, borderRadius: "50%", border: `0.5px dashed ${gold}44` }} />
           <div style={{
             width: 120, height: 120, borderRadius: "50%",
-            background: ceoImg ? "none" : "linear-gradient(135deg, #C9A341, #E0B84A)",
+            background: ceoImg ? "none" : "linear-gradient(135deg, #071a63, #5ba9e6)",
             border: `2px solid ${gold}66`,
             display: "flex", alignItems: "center", justifyContent: "center",
             position: "relative", zIndex: 1, overflow: "hidden",
@@ -264,7 +264,7 @@ function CeoCard({ inView }: { inView: boolean }) {
           <div style={{
             position: "absolute", bottom: 6, right: 6,
             width: 18, height: 18, borderRadius: "50%",
-            background: "linear-gradient(135deg, #C9A341, #E0B84A)",
+            background: "linear-gradient(135deg, #071a63, #5ba9e6)",
             border: "2.5px solid var(--belvo-bg)",
             boxShadow: `0 0 10px ${gold}66`,
             zIndex: 2,
@@ -511,7 +511,7 @@ export default function TeamSection() {
           <div ref={headerRef} style={{ textAlign: "center", marginBottom: "80px" }}>
             <motion.span
               custom={0} variants={fadeUp} initial="hidden" animate={headerInView ? "visible" : "hidden"}
-              style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#9D4EDD", marginBottom: 14 }}
+              style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#0b3b9c", marginBottom: 14 }}
             >
               Our Team
             </motion.span>
@@ -522,7 +522,7 @@ export default function TeamSection() {
               transition={{ duration: 0.6, delay: 0.15 }}
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: "clamp(2rem, 5vw, 3.8rem)", lineHeight: 1.05, color: "var(--belvo-text-1)", margin: "0 0 16px", letterSpacing: "-0.01em" }}
             >
-              The BELVO <span style={{ color: "#9D4EDD" }}>Collective</span>
+              The BELVO <span style={{ color: "#0b3b9c" }}>Collective</span>
             </motion.h2>
 
             <motion.p
