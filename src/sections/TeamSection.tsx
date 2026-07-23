@@ -215,14 +215,13 @@ function CeoCard({ inView }: { inView: boolean }) {
       variants={fadeUp}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
-      style={{ display: "flex", justifyContent: "center", marginBottom: "80px" }}
+      style={{ marginBottom: "80px" }}
     >
       <motion.div
         style={{
           display: "flex",
           alignItems: "center",
           gap: "48px",
-          maxWidth: "680px",
           width: "100%",
           padding: "48px 56px",
           background: "var(--belvo-bg-card)",
