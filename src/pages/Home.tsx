@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 
 
 
@@ -30,6 +31,7 @@ const heroStyles = `
 `;
 
 export default function Home() {
+  const [, navigate] = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
@@ -197,37 +199,25 @@ gl_FragColor=vec4(color,1.0);
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (!settledRef.current) return;
-      if (e.deltaY > 0) advance();
-      else if (e.deltaY < 0) retreat();
-    };
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (!settledRef.current) return;
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        advance();
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        retreat();
-      }
+      if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
+      if (e.deltaY > 20) advance();
+      else if (e.deltaY < -20) retreat();
     };
 
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("pointerup", onPointerUp);
     document.addEventListener("wheel", onWheel, { passive: false });
-    document.addEventListener("keydown", onKeyDown);
 
     let startTime = performance.now();
 
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
-      stateRef.current += (targetRef.current - stateRef.current) * 0.06;
-
-      if (Math.abs(targetRef.current - stateRef.current) < 0.001) {
+      const diff = targetRef.current - stateRef.current;
+      if (Math.abs(diff) < 0.01) {
         stateRef.current = targetRef.current;
         settledRef.current = true;
       } else {
-        settledRef.current = false;
+        stateRef.current += diff * 0.15;
       }
 
       const snap = Math.round(stateRef.current);
@@ -253,7 +243,6 @@ gl_FragColor=vec4(color,1.0);
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("pointerup", onPointerUp);
       document.removeEventListener("wheel", onWheel);
-      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
@@ -406,4 +395,15 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.color = "#1a1418";
                 (e.currentTarget as HTMLElement).style.transform = "scale(1)";
               }}
-            
+            >
+              explore videos
+            </div>
+          </div>
+        </div>
+
+        <style>{heroStyles}</style>
+      </div>
+
+    </>
+  );
+}
