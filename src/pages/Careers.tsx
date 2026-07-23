@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { ArrowUpRight, Briefcase, Mail, Upload, CheckCircle2 } from "lucide-react";
 import { useLocation } from "wouter";
 import Footer from "@/sections/Footer";
 import { saveSubmission } from "@/lib/contact";
+import ScrollBackground from "@/components/ScrollBackground";
 
 const ROLES = [
   {
@@ -190,6 +191,8 @@ export default function Careers() {
   const formRef = useRef<HTMLDivElement>(null);
   const positionsRef = useRef(null);
   const formSectionRef = useRef(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const positionsInView = useInView(positionsRef, {
     once: true,
     margin: "-80px",
@@ -220,7 +223,7 @@ export default function Careers() {
   return (
     <>
       {/* HERO */}
-      <section
+      <section ref={heroRef}
         style={{
           minHeight: "100vh",
           background: "var(--belvo-bg)",
@@ -234,6 +237,7 @@ export default function Careers() {
           textAlign: "center",
         }}
       >
+        <ScrollBackground scrollYProgress={scrollYProgress} />
         {/* Ambient glows */}
         <div
           style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
