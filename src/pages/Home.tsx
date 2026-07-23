@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import ExploreSection from "@/sections/ExploreSection";
+
 
 
 const TEXT_SETS = [
@@ -402,4 +402,8 @@ gl_FragColor=vec4(color,1.0);
         </div>
 
         <style>{heroStyles}</style>
-     
+      </div>
+
+    </>
+  );
+}
