@@ -26,6 +26,7 @@ import GrainOverlay from "@/components/GrainOverlay";
 import React, { useState } from "react";
 import DemoOne from "@/pages/DemoOne";
 import NotesPDFs from "@/pages/NotesPDFs";
+import LLMs from "@/pages/LLMs";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ function Router() {
               </Route>
               <Route path="/demo" component={DemoOne} />
               <Route path="/notes-pdfs" component={NotesPDFs} />
+              <Route path="/llms" component={LLMs} />
               <Route path="/resources" component={Blogs} />
               <Route component={NotFound} />
             </Switch>

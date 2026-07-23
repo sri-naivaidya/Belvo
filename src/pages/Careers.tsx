@@ -489,6 +489,39 @@ export default function Careers() {
               >
                 Explore Notes <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
+              <button
+                onClick={() => window.location.href = "/llms"}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "12px 28px",
+                  background: "linear-gradient(135deg,#7B2FBE,#9D4EDD)",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "#ffffff",
+                  fontFamily: "'Inter',sans-serif",
+                  fontWeight: 600,
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  boxShadow: "0 0 32px rgba(130,40,200,0.38)",
+                  transition: "box-shadow 0.3s, transform 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 52px rgba(157,78,221,0.55)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 0 32px rgba(130,40,200,0.38)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                Explore LLMs <ArrowUpRight size={13} strokeWidth={2.5} />
+              </button>
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: "6px",
                 padding: "8px 16px",
