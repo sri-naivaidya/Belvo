@@ -18,6 +18,18 @@ const TEXT_SETS = [
   },
 ];
 
+const heroStyles = `
+@media (max-width: 1000px) {
+  .hero-layout { padding: 2rem 2.5rem; }
+  .hero-subtitle { max-width: 65%; }
+}
+@media (max-width: 700px) {
+  .hero-layout { padding: 1.5rem; }
+  .hero-title { max-width: 100%; font-size: clamp(3rem, 12vw, 5rem); }
+  .hero-subtitle { max-width: 100%; font-size: 0.8rem; }
+}
+`;
+
 export default function Home() {
   const [, navigate] = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -389,7 +401,10 @@ gl_FragColor=vec4(color,1.0);
           </div>
         </div>
 
-        <style>{`
-          @media (max-width: 1000px) {
-            .hero-layout { padding: 2rem 2.5rem; }
-            .hero-subtitle { max-
+        <style>{heroStyles}</style>
+      </div>
+
+      <ExploreSection />
+    </>
+  );
+}
