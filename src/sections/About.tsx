@@ -99,7 +99,6 @@ export default function About() {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        overflow: "hidden",
         padding: "100px 24px",
       }}
     >
