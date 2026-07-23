@@ -1,7 +1,6 @@
-import { useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Sparkles } from "lucide-react";
-import ServiceDialog from "@/components/ServiceDialog";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { SERVICES as SERVICE_ITEMS, type ServiceItem } from "@/content/services";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -9,239 +8,141 @@ interface Props {
   id: string;
 }
 
-const SERVICES = [
-  { id: "seo-digital-marketing", category: "SEO Digital Marketing", keywords: ["SEO", "organic growth", "search ranking", "keyword strategy", "on-page/off-page"], desc: "We optimize your digital presence to rank higher on search engines. From keyword research to technical SEO and link building, we drive sustainable organic traffic that converts." },
-  { id: "brand-outreach-pr", category: "Brand Outreach & PR", keywords: ["public relations", "brand awareness", "media coverage", "press", "outreach"], desc: "We craft compelling narratives and pitch your brand to the right publications and media houses — building credibility and expanding your brand's reach in the right circles." },
-  { id: "branding", category: "Branding", keywords: ["brand identity", "logo", "brand guide", "visual language", "positioning"], desc: "From naming and logo design to a complete brand identity system, we build brands that are memorable, consistent, and strategically positioned for long-term growth." },
-  { id: "social-media", category: "Social Media", keywords: ["content creation", "social strategy", "community management", "Instagram", "LinkedIn"], desc: "We manage and grow your social media presence with a data-driven content strategy — combining creative storytelling with platform-specific tactics to build loyal communities." },
-  { id: "3d-cgi", category: "3D & CGI", keywords: ["3D rendering", "CGI", "product visualization", "architectural renders", "3D animation"], desc: "We create hyper-realistic 3D visuals and CGI content for products, architecture, ads, and campaigns — enabling stunning visuals before anything is physically built." },
-  { id: "animation-vfx", category: "Animation & VFX", keywords: ["motion graphics", "visual effects", "2D/3D animation", "explainer videos"], desc: "From sleek motion graphics to full visual effects pipelines, we bring your stories to life through animation and VFX that captivate and communicate at the highest level." },
-  { id: "graphics-designing", category: "Graphics Designing", keywords: ["graphic design", "visual content", "marketing creatives", "UI graphics", "print"], desc: "Our designers produce impactful visual content — from marketing creatives and social graphics to packaging and print — all aligned with your brand identity." },
-  { id: "web-development", category: "Web Development", keywords: ["website design", "frontend", "backend", "responsive", "CMS", "custom web apps"], desc: "We build fast, beautiful, and fully responsive websites and web applications using modern tech stacks — engineered for performance, SEO, and exceptional user experience." },
-  { id: "ecommerce-management", category: "E-Commerce Management", keywords: ["e-commerce", "Shopify", "WooCommerce", "product listings", "conversion rate", "store management"], desc: "End-to-end e-commerce solutions — from store setup and product management to CRO and scaling. We manage your online store so you can focus on growing your business." },
-  { id: "performance-marketing", category: "Performance Marketing", keywords: ["paid ads", "Google Ads", "Meta Ads", "ROI", "ROAS", "PPC", "conversion campaigns"], desc: "We run data-driven paid media campaigns across Google, Meta, and beyond — optimizing every rupee spent for maximum ROI with transparent reporting and rapid iteration." },
-  { id: "influencer-marketing", category: "Influencer Marketing", keywords: ["influencer outreach", "UGC", "creator campaigns", "brand collaborations", "micro-influencers"], desc: "We connect your brand with the right influencers — from macro to micro — to create authentic campaigns that reach your exact target audience and drive real results." },
-  { id: "app-development", category: "App Development", keywords: ["mobile app", "iOS", "Android", "Flutter", "React Native", "UI/UX", "app design"], desc: "We design and develop intuitive mobile applications for iOS and Android — from concept and wireframing to launch and post-launch support, built for performance and scale." },
-  { id: "software-development", category: "Software Development", keywords: ["custom software", "SaaS", "enterprise solutions", "API", "backend systems"], desc: "We engineer custom software solutions tailored to your business needs — scalable, secure, and built with clean architecture to solve complex problems efficiently." },
-  { id: "crm-automation", category: "CRM & Automation", keywords: ["CRM setup", "workflow automation", "Zapier", "HubSpot", "customer retention", "lead management"], desc: "We implement and optimize CRM systems and automation workflows that streamline your sales, marketing, and operations — reducing manual work and improving customer retention." },
-];
+const ACCENT = "#9D4EDD";
+const FADE_OPACITY = 0.28;
+const STICKY_TOP = 120;
+const IMAGE_HEIGHT = 650;
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+function markImageLoaded(img: HTMLImageElement | null) {
+  if (img?.complete) img.classList.add("loaded");
+}
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 48 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.15 + i * 0.08, ease: easeOut } }),
-};
+function handleImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+  e.currentTarget.classList.add("loaded");
+}
 
-const staggerCard = {
-  hidden: { opacity: 0, y: 60, scale: 0.9 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.6, delay: 0.1 + i * 0.04, ease: easeOut },
-  }),
-};
-
-function ServiceCard({ svc, i, isIvory, onOpen }: { svc: ServiceItem; i: number; isIvory: boolean; onOpen: (service: ServiceItem) => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-
+function ServiceImageCard({
+  service,
+  index,
+  active,
+  isIvory,
+  isDesktop,
+  imageTransition,
+  textTransition,
+  prefersReducedMotion,
+}: {
+  service: ServiceItem;
+  index: number;
+  active: boolean;
+  isIvory: boolean;
+  isDesktop: boolean;
+  imageTransition: { duration: number; ease?: readonly [number, number, number, number] };
+  textTransition: { duration: number; ease?: readonly [number, number, number, number] };
+  prefersReducedMotion: boolean | null;
+}) {
   return (
     <motion.div
-      ref={ref}
-      custom={i + 1}
-      variants={staggerCard}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      animate={{
+        opacity: active ? 1 : FADE_OPACITY,
+        scale: active ? 1 : 0.98,
+      }}
+      transition={imageTransition}
+      style={{
+        position: "relative",
+        height: isDesktop ? IMAGE_HEIGHT : undefined,
+        aspectRatio: isDesktop ? undefined : "16 / 10",
+        borderRadius: 28,
+        overflow: "hidden",
+        border: "1px solid var(--belvo-border-card)",
+        background: "var(--belvo-bg-card)",
+        boxShadow: isIvory
+          ? "0 24px 64px rgba(0, 0, 0, 0.1)"
+          : "0 24px 80px rgba(0, 0, 0, 0.38)",
+      }}
     >
-      <motion.div
-        whileHover={{
-          y: -10,
-          scale: 1.02,
-          borderColor: "#9D4EDD",
-          boxShadow: isIvory
-            ? "0 20px 50px rgba(123,47,190,0.15)"
-            : "0 20px 60px rgba(123,47,190,0.28)",
-          transition: {
-            duration: 0.3,
-            ease: easeOut,
-          },
-        }}
+      <img
+        ref={markImageLoaded}
+        src={service.image}
+        alt={service.title}
+        loading={index <= 1 ? "eager" : "lazy"}
+        onLoad={handleImageLoad}
         style={{
-          background: "var(--belvo-bg-card)",
-          border: "1px solid var(--belvo-border-card)",
-          borderRadius: "18px",
-          overflow: "hidden",
-          position: "relative",
-          padding: "24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "18px",
-          cursor: "pointer",
-          boxShadow: isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none",
-          transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+          opacity: 1,
         }}
-        onClick={() => onOpen(svc)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onOpen(svc);
-          }
+      />
+
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: isIvory
+            ? "radial-gradient(ellipse at 50% 30%, rgba(157,78,221,0.12) 0%, transparent 55%)"
+            : "radial-gradient(ellipse at 50% 30%, rgba(157,78,221,0.22) 0%, transparent 55%)",
+          pointerEvents: "none",
         }}
-        tabIndex={0}
-        role="button"
+      />
+
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: isIvory
+            ? "linear-gradient(to top, rgba(248,245,239,0.55) 0%, transparent 38%)"
+            : "linear-gradient(to top, rgba(4,0,14,0.55) 0%, transparent 38%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+        animate={{ opacity: active ? 1 : FADE_OPACITY, y: 0 }}
+        transition={textTransition}
+        style={{
+          position: "absolute",
+          left: 24,
+          right: 24,
+          bottom: 24,
+          padding: "14px 18px",
+          borderRadius: 16,
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          background: isIvory
+            ? "rgba(255,255,255,0.72)"
+            : "rgba(12,6,24,0.72)",
+          border: "1px solid rgba(157,78,221,0.22)",
+        }}
       >
         <div
           style={{
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: "12px",
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "0.68rem",
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: ACCENT,
+            marginBottom: 4,
           }}
         >
-          <motion.img
-            src={svc.image}
-            alt={svc.title}
-            whileHover={{ scale: 1.08 }}
-            transition={{ duration: 0.35 }}
-            style={{
-              width: "100%",
-              aspectRatio: "16 / 9",
-              objectFit: "cover",
-              borderRadius: "12px",
-              border: "1px solid var(--belvo-border-card)",
-              display: "block",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to top, rgba(123,47,190,0.22), transparent 60%)",
-              pointerEvents: "none",
-            }}
-          />
+          {String(index + 1).padStart(2, "0")} /{" "}
+          {String(SERVICE_ITEMS.length).padStart(2, "0")}
         </div>
-
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "14px",
-            padding: "10px 12px",
-            borderRadius: "12px",
-            background: isIvory
-              ? "rgba(123,47,190,0.05)"
-              : "rgba(123,47,190,0.08)",
-          }}
-        >
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: "10px",
-              background: "linear-gradient(135deg, rgba(157,78,221,0.2), rgba(123,47,190,0.1))",
-              border: "1px solid rgba(157,78,221,0.2)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "0.82rem",
-              fontWeight: 700,
-              color: "#9D4EDD",
-              fontFamily: "'Inter', sans-serif",
-              flexShrink: 0,
-            }}
-          >
-            {String(i + 1).padStart(2, "0")}
-          </div>
-
-          <motion.h3
-            whileHover={{ y: -2 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              fontFamily: "'Inter',sans-serif",
-              fontWeight: 700,
-              fontSize: "0.97rem",
-              color: "var(--belvo-text-1)",
-              margin: 0,
-              lineHeight: 1.3,
-            }}
-          >
-            {svc.title}
-          </motion.h3>
-        </div>
-
-        <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.85rem", lineHeight: 1.7, color: "var(--belvo-text-6)", margin: 0, flexGrow: 1 }}>
-          {svc.desc}
-        </p>
-
-        <motion.div
-          style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "4px" }}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {svc.keywords.map((kw, ki) => (
-            <motion.span
-              key={kw}
-              custom={ki}
-              variants={{
-                hidden: { opacity: 0, scale: 0.8 },
-                visible: (j: number) => ({
-                  opacity: 1,
-                  scale: 1,
-                  transition: { duration: 0.3, delay: 0.3 + j * 0.05 },
-                }),
-              }}
-              style={{
-                padding: "4px 10px",
-                background: "rgba(157,78,221,0.08)",
-                border: "1px solid rgba(157,78,221,0.15)",
-                borderRadius: "6px",
-                fontFamily: "'Inter',sans-serif",
-                fontSize: "0.65rem",
-                fontWeight: 500,
-                color: "rgba(157,78,221,0.7)",
-                letterSpacing: "0.02em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {kw}
-            </motion.span>
-          ))}
-        </motion.div>
-        <motion.div
-          whileHover={{
-            x: 6,
-            color: "#B06CFF",
-          }}
-          transition={{ duration: 0.2 }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginTop: "18px",
-            paddingTop: "14px",
-            borderTop: "1px solid var(--belvo-border-card)",
-            color: "#9D4EDD",
             fontFamily: "'Inter', sans-serif",
-            fontWeight: 600,
-            fontSize: "0.9rem",
+            fontSize: "1.05rem",
+            fontWeight: 800,
+            color: "var(--belvo-text-1)",
+            letterSpacing: "-0.02em",
           }}
         >
-          <span>Learn More</span>
-
-          <motion.div
-            whileHover={{
-              x: 4,
-              y: -2,
-              rotate: 8,
-            }}
-            transition={{ duration: 0.2 }}
-          >
-            <ArrowUpRight size={18} />
-          </motion.div>
-        </motion.div>
+          {service.title}
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -250,161 +151,394 @@ function ServiceCard({ svc, i, isIvory, onOpen }: { svc: ServiceItem; i: number;
 export default function ServicesSection({ id }: Props) {
   const { theme } = useTheme();
   const isIvory = theme === "ivory";
-  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
 
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const [activeService, setActiveService] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024
+  );
 
-  const iconPositions = [
-    { x: "10%", y: "15%", size: 20, delay: 0 },
-    { x: "85%", y: "20%", size: 16, delay: 1 },
-    { x: "15%", y: "70%", size: 14, delay: 0.5 },
-    { x: "50%", y: "10%", size: 18, delay: 1.5 },
-  ];
+  const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ratiosRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) =>
+      setIsDesktop(e.matches);
+    onChange(mq);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  const pickActive = useCallback(() => {
+    const ratios = ratiosRef.current;
+    let bestIndex = 0;
+    let bestRatio = -1;
+
+    ratios.forEach((ratio, index) => {
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        bestIndex = index;
+      }
+    });
+
+    if (bestRatio > 0) {
+      setActiveService(bestIndex);
+    }
+  }, []);
+
+  useEffect(() => {
+    ratiosRef.current = new Array(SERVICE_ITEMS.length).fill(0);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number(entry.target.getAttribute("data-index"));
+          if (!Number.isNaN(index)) {
+            ratiosRef.current[index] = entry.intersectionRatio;
+          }
+        });
+        pickActive();
+      },
+      {
+        threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+        rootMargin: "-18% 0px -18% 0px",
+      }
+    );
+
+    serviceRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [pickActive]);
+
+  const imageTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const };
+
+  const textTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
-    <section id={id} ref={sectionRef} style={{ background: "var(--belvo-bg)", overflow: "hidden" }}>
+    <section
+      id={id}
+      style={{
+        position: "relative",
+        background: "var(--belvo-bg)",
+        padding: isDesktop ? "120px 24px 140px" : "80px 20px 100px",
+        overflow: "hidden",
+      }}
+    >
       <div
-        ref={heroRef}
+        aria-hidden
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          position: "relative",
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
           overflow: "hidden",
-          padding: "24px 24px 16px",
-          textAlign: "center",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-          <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
-          <div style={{ position: "absolute", bottom: 0, left: "15%", width: "50vw", height: "40vh", background: "radial-gradient(ellipse at center, rgba(100,20,180,0.12) 0%, transparent 70%)", filter: "blur(80px)" }} />
-          <div style={{ position: "absolute", top: 0, right: "10%", width: "40vw", height: "35vh", background: "radial-gradient(ellipse at center, rgba(80,15,150,0.1) 0%, transparent 70%)", filter: "blur(70px)" }} />
-          <div style={{ position: "absolute", inset: "0", background: isIvory ? "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(248,245,239,0.85) 100%)" : "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 30%, rgba(4,0,14,0.6) 100%)" }} />
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "120px", background: isIvory ? "linear-gradient(to bottom, var(--belvo-bg), transparent)" : "linear-gradient(to bottom, rgba(4,0,14,0.9), transparent)" }} />
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "140px", background: isIvory ? "linear-gradient(to top, var(--belvo-bg), transparent)" : "linear-gradient(to top, rgba(4,0,14,0.95), transparent)" }} />
-        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: "12%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "min(90vw, 900px)",
+            height: "min(70vh, 620px)",
+            background: isIvory
+              ? "radial-gradient(ellipse at center, rgba(157,78,221,0.1) 0%, transparent 68%)"
+              : "radial-gradient(ellipse at center, rgba(157,78,221,0.16) 0%, transparent 68%)",
+            filter: "blur(40px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "8%",
+            right: "-5%",
+            width: "42vw",
+            height: "42vw",
+            maxWidth: 480,
+            maxHeight: 480,
+            background: isIvory
+              ? "radial-gradient(circle, rgba(123,47,190,0.08) 0%, transparent 70%)"
+              : "radial-gradient(circle, rgba(123,47,190,0.14) 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+        />
+      </div>
 
-        {/* Floating icons */}
-        {iconPositions.map((ic, i) => (
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: 1320,
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: isDesktop ? 90 : 56,
+          }}
+        >
           <motion.div
-            key={i}
-            style={{
-              position: "absolute",
-              left: ic.x,
-              top: ic.y,
-              width: ic.size,
-              height: ic.size,
-              borderRadius: "50%",
-              background: isIvory ? "rgba(157,78,221,0.08)" : "rgba(157,78,221,0.12)",
-              border: `1px solid ${isIvory ? "rgba(157,78,221,0.15)" : "rgba(157,78,221,0.2)"}`,
-              pointerEvents: "none",
-              zIndex: 0,
-            }}
-            animate={{
-              y: [0, -10, 0],
-            }}
-            transition={{
-              duration: 5 + i * 0.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: ic.delay,
-            }}
-          />
-        ))}
-
-        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-          {[[120, 160], [310, 80], [490, 220], [680, 100], [870, 250], [1050, 130], [1230, 200], [1380, 90], [200, 700], [450, 760], [700, 680], [950, 750], [1150, 700], [1340, 760]].map(([cx, cy], i) => (
-            <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.5 : 1} fill={i % 2 === 0 ? "rgba(200,140,255,0.6)" : isIvory ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.35)"}>
-              <animate attributeName="opacity" values="0.3;1;0.3" dur={`${3 + i % 4}s`} repeatCount="indefinite" />
-            </circle>
-          ))}
-        </svg>
-
-        <div style={{ position: "relative", zIndex: 1, maxWidth: "800px" }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }} style={{ marginBottom: "18px" }}>
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
             <span
               style={{
-                display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "6px 18px",
-                background: isIvory ? "rgba(123,47,190,0.08)" : "rgba(123,47,190,0.15)",
-                border: "1px solid rgba(157,78,221,0.3)",
-                borderRadius: "100px",
-                fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600,
-                letterSpacing: "0.3em", textTransform: "uppercase", color: "#9D4EDD",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 18px",
+                borderRadius: 999,
+                background: isIvory
+                  ? "rgba(157,78,221,0.08)"
+                  : "rgba(157,78,221,0.14)",
+                border: "1px solid rgba(157,78,221,0.25)",
+                color: ACCENT,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: "0.72rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
               }}
             >
-              <Sparkles size={11} />
+              <Sparkles size={12} />
               Our Services
             </span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
-            style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "var(--belvo-text-1)", margin: "0 0 10px", letterSpacing: "-0.01em" }}
+          <motion.h2
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.65, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
+              lineHeight: 1.05,
+              marginTop: 26,
+              marginBottom: 22,
+              color: "var(--belvo-text-1)",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+            }}
           >
-            Full-Service{" "}
-            <span style={{ color: "#9D4EDD" }}>
-              Creative
-            </span>{" "}
-            Agency
-          </motion.h1>
+            Everything Your
+            <span style={{ color: ACCENT }}> Business Needs</span>
+          </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
-            style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(0.9rem,1.6vw,1.05rem)", lineHeight: 1.75, color: "var(--belvo-text-2)", margin: "0 auto 36px", maxWidth: "560px", letterSpacing: "0.01em" }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.65, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              maxWidth: 720,
+              margin: "0 auto",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.95rem, 2vw, 1.05rem)",
+              lineHeight: 1.8,
+              color: "var(--belvo-text-2)",
+            }}
           >
-            From SEO and branding to web development and performance marketing — we offer
-            14 specialised services designed to take your brand from zero to dominate.
+            From branding and SEO to software development and performance
+            marketing, we provide complete digital solutions that help
+            businesses grow faster.
           </motion.p>
         </div>
-      </div>
 
-      <div
-        id="services-grid"
-        style={{
-          padding: "40px 24px 120px",
-          position: "relative",
-          overflow: "hidden",
-          background: "var(--belvo-bg)",
-        }}
-      >
-        <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
-        <motion.div
-          style={{
-            position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
-            width: "70vw", height: "400px",
-            background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)",
-            filter: "blur(60px)", pointerEvents: "none", y: bgY,
-          }}
-        />
-
-        <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <motion.div
-            custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}
-            style={{ textAlign: "center", marginTop: "8px", marginBottom: "24px" }}
+        {/* Progress rail — sticky between columns on desktop */}
+        {isDesktop && (
+          <div
+            aria-hidden
+            style={{
+              position: "sticky",
+              top: "50%",
+              height: 0,
+              zIndex: 2,
+              pointerEvents: "none",
+            }}
           >
-            <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
-              14 Services. <span style={{ color: "#9D4EDD" }}>One Mission.</span>
-            </h2>
-          </motion.div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: "20px" }}>
-            {SERVICE_ITEMS.map((svc, i) => (
-              <ServiceCard key={svc.id} svc={svc} i={i} isIvory={isIvory} onOpen={setSelectedService} />
-            ))}
+            <div
+              style={{
+                position: "absolute",
+                right: 556,
+                transform: "translateY(-50%)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              {SERVICE_ITEMS.map((_, index) => (
+                <motion.div
+                  key={index}
+                  animate={{
+                    height: index === activeService ? 28 : 8,
+                    opacity: index === activeService ? 1 : 0.35,
+                    background:
+                      index === activeService
+                        ? ACCENT
+                        : isIvory
+                          ? "rgba(157,78,221,0.25)"
+                          : "rgba(157,78,221,0.35)",
+                  }}
+                  transition={textTransition}
+                  style={{
+                    width: 3,
+                    borderRadius: 999,
+                  }}
+                />
+              ))}
+            </div>
           </div>
+        )}
+
+        {/* One row per service: text left, image right */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {SERVICE_ITEMS.map((service, index) => {
+            const active = index === activeService;
+
+            return (
+              <div
+                key={service.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isDesktop ? "minmax(0, 1fr) 520px" : "1fr",
+                  gap: isDesktop ? 90 : 0,
+                  minHeight: isDesktop ? "80vh" : "auto",
+                  alignItems: "center",
+                  paddingBottom: isDesktop ? 0 : 72,
+                }}
+              >
+                {/* Left — service text */}
+                <div
+                  ref={(el) => {
+                    serviceRefs.current[index] = el;
+                  }}
+                  data-index={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    paddingRight: isDesktop ? 24 : 0,
+                  }}
+                >
+                  <motion.span
+                    animate={{ opacity: active ? 1 : FADE_OPACITY }}
+                    transition={textTransition}
+                    style={{
+                      color: ACCENT,
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 700,
+                      letterSpacing: "0.2em",
+                      fontSize: "0.78rem",
+                      marginBottom: 16,
+                    }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </motion.span>
+
+                  <motion.h3
+                    animate={{ opacity: active ? 1 : FADE_OPACITY }}
+                    transition={textTransition}
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "clamp(2rem, 4vw, 4.2rem)",
+                      lineHeight: 1.06,
+                      margin: 0,
+                      color: "var(--belvo-text-1)",
+                      fontWeight: 900,
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {service.title}
+                  </motion.h3>
+
+                  <motion.p
+                    animate={{ opacity: active ? 1 : FADE_OPACITY * 1.15 }}
+                    transition={textTransition}
+                    style={{
+                      marginTop: 24,
+                      maxWidth: 520,
+                      fontFamily: "'Inter', sans-serif",
+                      color: "var(--belvo-text-2)",
+                      lineHeight: 1.85,
+                      fontSize: "clamp(0.95rem, 1.8vw, 1.05rem)",
+                    }}
+                  >
+                    {service.desc}
+                  </motion.p>
+
+                  <motion.div
+                    animate={{ opacity: active ? 1 : FADE_OPACITY }}
+                    transition={textTransition}
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 10,
+                      marginTop: 30,
+                    }}
+                  >
+                    {service.keywords.map((tag) => (
+                      <span
+                        key={tag}
+                        style={{
+                          padding: "8px 16px",
+                          borderRadius: 999,
+                          fontFamily: "'Inter', sans-serif",
+                          background: isIvory
+                            ? "rgba(157,78,221,0.08)"
+                            : "rgba(157,78,221,0.12)",
+                          color: ACCENT,
+                          border: "1px solid rgba(157,78,221,0.25)",
+                          fontSize: "0.78rem",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </motion.div>
+                </div>
+
+                {/* Right — this service's own image */}
+                <div
+                  style={{
+                    position: isDesktop ? "sticky" : "relative",
+                    top: isDesktop ? STICKY_TOP : undefined,
+                    alignSelf: isDesktop ? "start" : "stretch",
+                    marginTop: isDesktop ? 0 : 28,
+                  }}
+                >
+                  <ServiceImageCard
+                    service={service}
+                    index={index}
+                    active={active}
+                    isIvory={isIvory}
+                    isDesktop={isDesktop}
+                    imageTransition={imageTransition}
+                    textTransition={textTransition}
+                    prefersReducedMotion={prefersReducedMotion}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-      <ServiceDialog service={selectedService} onClose={() => setSelectedService(null)} />
     </section>
   );
 }
