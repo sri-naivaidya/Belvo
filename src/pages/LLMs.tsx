@@ -10,8 +10,8 @@ type AccessRecord = {
   requestedAt: string;
 };
 
-const STORAGE_KEY = "belvo-llm-access";
-const LLM_DRIVE_LINK = "https://drive.google.com/drive/folders/your-folder-id";
+const STORAGE_KEY = "belvo-lms-access";
+const LMS_DRIVE_LINK = "https://drive.google.com/drive/folders/your-folder-id";
 
 export default function LLMs() {
   const [name, setName] = useState("");
@@ -83,10 +83,10 @@ export default function LLMs() {
           </span>
         </div>
         <h1 style={{ fontSize: "2.2rem", fontWeight: 800, color: "#1a1a1a", margin: "0 0 8px", lineHeight: 1.15 }}>
-          Explore LLMs
+          Explore LMS
         </h1>
         <p style={{ fontSize: "0.95rem", color: "#666", margin: "0 0 28px", maxWidth: "700px" }}>
-          Request access to the curated LLM resources portal. Once your request is submitted, the resources unlock for this browser.
+          Request access to the curated LMS resources portal. Once your request is submitted, the resources unlock for this browser.
         </p>
 
         {!accessGranted ? (
@@ -102,7 +102,7 @@ export default function LLMs() {
               </div>
               <div>
                 <h2 style={{ margin: 0, fontSize: "1.04rem", fontWeight: 700, color: "#1a1a1a" }}>Request Access</h2>
-                <p style={{ margin: "2px 0 0", fontSize: "0.83rem", color: "#777" }}>Submit your details to unlock the LLM resources.</p>
+                <p style={{ margin: "2px 0 0", fontSize: "0.83rem", color: "#777" }}>Submit your details to unlock the LMS resources.</p>
               </div>
             </div>
 
@@ -155,25 +155,25 @@ export default function LLMs() {
               </div>
               <div>
                 <h2 style={{ margin: 0, fontSize: "1.04rem", fontWeight: 700, color: "#1a1a1a" }}>Access Granted</h2>
-                <p style={{ margin: "2px 0 0", fontSize: "0.83rem", color: "#777" }}>Welcome {submittedName || "there"}, the LLM portal is unlocked.</p>
+                <p style={{ margin: "2px 0 0", fontSize: "0.83rem", color: "#777" }}>Welcome {submittedName || "there"}, the LMS portal is unlocked.</p>
               </div>
             </div>
 
             <div style={{ border: "1px solid rgba(157,78,221,0.16)", borderRadius: "16px", padding: "20px", background: "linear-gradient(135deg, rgba(123,47,190,0.06), rgba(157,78,221,0.03))" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
                 <Sparkles size={16} color="#9D4EDD" />
-                <span style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#7B2FBE" }}>LLM Resource Link</span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#7B2FBE" }}>LMS Resource Link</span>
               </div>
               <p style={{ margin: "0 0 14px", fontSize: "0.92rem", color: "#555" }}>
-                Use the link below to access the curated LLM drive folder.
+                Use the link below to access the curated LMS drive folder.
               </p>
               <a
-                href={LLM_DRIVE_LINK}
+                href={LMS_DRIVE_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 16px", borderRadius: "10px", background: "#fff", border: "1px solid rgba(157,78,221,0.2)", color: "#7B2FBE", fontWeight: 700, textDecoration: "none" }}
               >
-                Open LLM Drive <ExternalLink size={14} />
+                Open LMS Drive <ExternalLink size={14} />
               </a>
             </div>
 

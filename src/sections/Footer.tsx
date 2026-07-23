@@ -3,14 +3,14 @@ import { useRef, useState, type ReactNode } from "react";
 import { Mail, Download, Phone, ArrowUpRight } from "lucide-react";
 import { CONTACT_TARGETS } from "@/lib/contact";
 
-// ── PINK COLOR PALETTE (extracted from your image) ──
+// ── DARK PURPLE COLOR PALETTE ──
 const PINK = {
-  primary: "#f54397",    // main vibrant pink (center of image)
-  light: "#ff6bb5",      // lighter pink for hover states
-  dark: "#c42a78",       // darker pink for active/pressed
-  soft: "rgba(245,67,151,0.7)",   // 70% opacity
-  muted: "rgba(245,67,151,0.45)", // 45% opacity
-  glow: "rgba(245,67,151,0.3)",   // 30% opacity for glows
+  primary: "#6b21a8",
+  light: "#8b5cf6",
+  dark: "#3b0764",
+  soft: "rgba(107,33,168,0.7)",
+  muted: "rgba(107,33,168,0.45)",
+  glow: "rgba(107,33,168,0.3)",
 };
 
 const COLORS = {
@@ -209,11 +209,62 @@ export default function Footer() {
       ref={ref}
       id="footer"
       style={{
-        background: "linear-gradient(180deg, #09090b 0%, #110724 100%)",
+        background: "linear-gradient(180deg, #09010f 0%, #220b43 100%)",
         position: "relative",
         overflow: "hidden",
       }}
     >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(circle at top left, rgba(139,92,246,0.22), transparent 28%), radial-gradient(circle at bottom right, rgba(59,7,100,0.4), transparent 38%)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "84px",
+          zIndex: 0,
+          pointerEvents: "none",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.05), transparent)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "120px",
+          zIndex: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.16), transparent 36%), radial-gradient(ellipse at 80% 0%, rgba(255,255,255,0.1), transparent 32%)",
+        }}
+      />
+      <svg
+        viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", left: 0, right: 0, top: 0, width: "100%", height: "140px", zIndex: 0 }}
+      >
+        <path d="M0,92 C120,70 240,64 360,78 C480,92 600,122 720,120 C840,118 960,90 1080,82 C1240,72 1360,72 1440,70 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.10)" />
+        <path d="M0,112 C140,86 270,80 420,98 C560,116 700,146 840,142 C980,138 1120,106 1260,102 C1350,100 1408,100 1440,100" stroke="rgba(255,255,255,0.22)" strokeWidth="2" fill="none" />
+        <path d="M0,124 C160,96 320,92 480,112 C640,132 800,164 960,156 C1120,148 1280,120 1440,112" stroke="rgba(139,92,246,0.42)" strokeWidth="3" fill="none" />
+      </svg>
+      <svg
+        viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", left: 0, right: 0, bottom: 0, width: "100%", height: "180px", zIndex: 0 }}
+      >
+        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(72,18,129,0.38)" />
+        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(34,11,67,0.7)" />
+      </svg>
       {/* Top border line */}
       <div
         style={{
@@ -476,7 +527,7 @@ export default function Footer() {
             <span
               style={{
                 fontFamily: "'Inter', sans-serif", fontSize: "0.78rem",
-                color: PINK.muted, letterSpacing: "0.04em",
+                color: "#f5d8ff", letterSpacing: "0.04em", fontWeight: 600,
               }}
             >
               Growth Core

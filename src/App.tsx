@@ -85,7 +85,7 @@ function Router() {
               </Route>
               <Route path="/demo" component={DemoOne} />
               <Route path="/notes-pdfs" component={NotesPDFs} />
-              <Route path="/llms" component={LLMs} />
+              <Route path="/lms" component={LLMs} />
               <Route path="/resources" component={Blogs} />
               <Route component={NotFound} />
             </Switch>

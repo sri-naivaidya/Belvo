@@ -490,7 +490,7 @@ export default function Careers() {
                 Explore Notes <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => window.location.href = "/llms"}
+                onClick={() => window.location.href = "/lms"}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -520,7 +520,7 @@ export default function Careers() {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                Explore LLMs <ArrowUpRight size={13} strokeWidth={2.5} />
+                Explore LMS <ArrowUpRight size={13} strokeWidth={2.5} />
               </button>
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: "6px",
