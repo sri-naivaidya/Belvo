@@ -4,14 +4,14 @@ import { useLocation } from "wouter";
 import { Mail, Download, Phone, ArrowUpRight } from "lucide-react";
 import { CONTACT_TARGETS } from "@/lib/contact";
 
-// ── DARK PINK COLOR PALETTE ──
+// ── VIBRANT PINK COLOR PALETTE ──
 const PINK = {
-  primary: "#5a1b4b",
-  light: "#a25b88",
-  dark: "#32102d",
-  soft: "rgba(90,27,75,0.7)",
-  muted: "rgba(90,27,75,0.45)",
-  glow: "rgba(90,27,75,0.32)",
+  primary: "#F45B96",
+  light: "#FA98C2",
+  dark: "#8E1C4B",
+  soft: "rgba(244,91,150,0.7)",
+  muted: "rgba(244,91,150,0.45)",
+  glow: "rgba(244,91,150,0.35)",
 };
 
 const COLORS = {
@@ -266,7 +266,7 @@ export default function Footer() {
       ref={ref}
       id="footer"
       style={{
-        background: "radial-gradient(circle at 84% 10%, rgba(90, 27, 75, 0.38), transparent 23%), linear-gradient(180deg, #d8efff 0%, #a9d9ff 8%, #0d3c97 30%, #061a5e 100%)",
+        background: "radial-gradient(ellipse at 50% 0%, rgba(244, 91, 150, 0.22) 0%, transparent 65%), linear-gradient(180deg, var(--belvo-bg) 0%, #1e0616 35%, #0d020a 100%)",
         alignSelf: "stretch",
         margin: "0 -24px",
         width: "calc(100% + 48px)",
@@ -280,7 +280,7 @@ export default function Footer() {
           inset: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(circle at top left, rgba(255, 255, 255, 0.65), transparent 24%), radial-gradient(circle at bottom right, rgba(23, 83, 181, 0.42), transparent 42%)",
+            "radial-gradient(circle at top left, rgba(244, 91, 150, 0.15), transparent 24%), radial-gradient(circle at bottom right, rgba(250, 152, 194, 0.12), transparent 42%)",
         }}
       />
       <div
@@ -292,7 +292,7 @@ export default function Footer() {
           height: "84px",
           zIndex: 0,
           pointerEvents: "none",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.05), transparent)",
+          background: "linear-gradient(180deg, rgba(244,91,150,0.06), transparent)",
         }}
       />
       <div
@@ -305,7 +305,7 @@ export default function Footer() {
           zIndex: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.16), transparent 36%), radial-gradient(ellipse at 80% 0%, rgba(255,255,255,0.1), transparent 32%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(244,91,150,0.12), transparent 36%), radial-gradient(ellipse at 80% 0%, rgba(250,152,194,0.1), transparent 32%)",
         }}
       />
       <svg
@@ -313,8 +313,8 @@ export default function Footer() {
         preserveAspectRatio="none"
         style={{ position: "absolute", left: 0, right: 0, top: 0, width: "100%", height: "140px", zIndex: 0 }}
       >
-        <path d="M0,92 C120,70 240,64 360,78 C480,92 600,122 720,120 C840,118 960,90 1080,82 C1240,72 1360,72 1440,70 L1440,0 L0,0 Z" fill="rgba(255,255,255,0.10)" />
-        <path d="M0,112 C140,86 270,80 420,98 C560,116 700,146 840,142 C980,138 1120,106 1260,102 C1350,100 1408,100 1440,100" stroke="rgba(255,255,255,0.22)" strokeWidth="2" fill="none" />
+        <path d="M0,92 C120,70 240,64 360,78 C480,92 600,122 720,120 C840,118 960,90 1080,82 C1240,72 1360,72 1440,70 L1440,0 L0,0 Z" fill="rgba(244,91,150,0.08)" />
+        <path d="M0,112 C140,86 270,80 420,98 C560,116 700,146 840,142 C980,138 1120,106 1260,102 C1350,100 1408,100 1440,100" stroke="rgba(244,91,150,0.22)" strokeWidth="2" fill="none" />
         <path d="M0,124 C160,96 320,92 480,112 C640,132 800,164 960,156 C1120,148 1280,120 1440,112" stroke="rgba(0,0,0,0.35)" strokeWidth="3" fill="none" />
       </svg>
       <svg
@@ -322,15 +322,15 @@ export default function Footer() {
         preserveAspectRatio="none"
         style={{ position: "absolute", left: 0, right: 0, bottom: 0, width: "100%", height: "180px", zIndex: 0 }}
       >
-        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(7, 37, 113, 0.42)" />
-        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(2, 18, 72, 0.8)" />
+        <path d="M0,180 C160,130 320,110 480,138 C640,166 800,220 960,210 C1120,200 1280,150 1440,140 L1440,320 L0,320 Z" fill="rgba(70, 12, 42, 0.45)" />
+        <path d="M0,208 C180,172 340,158 520,182 C700,206 860,252 1040,234 C1180,220 1320,184 1440,170 L1440,320 L0,320 Z" fill="rgba(30, 4, 18, 0.85)" />
       </svg>
       {/* Top border line */}
       <div
         style={{
           height: "1px",
           background:
-            "linear-gradient(90deg, transparent, var(--belvo-border-divider), rgba(91,169,230,0.42), transparent)",
+            "linear-gradient(90deg, transparent, rgba(244,91,150,0.4), rgba(250,152,194,0.4), transparent)",
         }}
       />
 
@@ -343,7 +343,7 @@ export default function Footer() {
           transform: "translateX(-50%)",
           width: "60vw",
           height: "300px",
-          background: "radial-gradient(ellipse at center bottom, var(--belvo-glow-blob) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at center bottom, rgba(244,91,150,0.25) 0%, transparent 70%)",
           filter: "blur(50px)",
           pointerEvents: "none",
           y: bgY,

@@ -9,7 +9,7 @@ interface Props {
   onServiceClick?: (service: ServiceItem) => void;
 }
 
-const ACCENT = "#b84a6a";
+const ACCENT = "#F45B96";
 const IMAGE_HEIGHT = 620;
 
 function markImageLoaded(img: HTMLImageElement | null) {
@@ -88,8 +88,8 @@ function FeatureTextCard({
             gap: 8,
             padding: "6px 14px",
             borderRadius: 999,
-            background: isIvory ? "rgba(184,74,106,0.08)" : "rgba(184,74,106,0.14)",
-            border: "1px solid rgba(184,74,106,0.25)",
+            background: isIvory ? "rgba(244,91,150,0.08)" : "rgba(244,91,150,0.14)",
+            border: "1px solid rgba(244,91,150,0.25)",
             color: ACCENT,
             fontFamily: "'Inter', sans-serif",
             fontWeight: 700,
@@ -144,9 +144,9 @@ function FeatureTextCard({
               padding: "8px 16px",
               borderRadius: 999,
               fontFamily: "'Inter', sans-serif",
-              background: isIvory ? "rgba(184,74,106,0.08)" : "rgba(184,74,106,0.12)",
+              background: isIvory ? "rgba(244,91,150,0.08)" : "rgba(244,91,150,0.12)",
               color: ACCENT,
-              border: "1px solid rgba(184,74,106,0.25)",
+              border: "1px solid rgba(244,91,150,0.25)",
               fontSize: "0.78rem",
               fontWeight: 600,
             }}
@@ -166,24 +166,22 @@ function FeatureTextCard({
               gap: 8,
               padding: "12px 26px",
               borderRadius: 10,
-              border: "1px solid rgba(184,74,106,0.35)",
-              background: isIvory ? "rgba(184,74,106,0.06)" : "rgba(184,74,106,0.14)",
-              color: "var(--belvo-text-1)",
+              border: "none",
+              background: "linear-gradient(135deg, #F45B96, #FA98C2)",
+              color: "#ffffff",
               fontFamily: "'Inter', sans-serif",
-              fontWeight: 600,
+              fontWeight: 700,
               fontSize: "0.85rem",
               cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(184,74,106,0.15)",
-              transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
+              boxShadow: "0 4px 24px rgba(244,91,150,0.4)",
+              transition: "transform 0.2s, box-shadow 0.2s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = ACCENT;
-              e.currentTarget.style.boxShadow = "0 8px 30px rgba(184,74,106,0.3)";
+              e.currentTarget.style.boxShadow = "0 8px 36px rgba(244,91,150,0.65)";
               e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(184,74,106,0.35)";
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(184,74,106,0.15)";
+              e.currentTarget.style.boxShadow = "0 4px 24px rgba(244,91,150,0.4)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
@@ -274,8 +272,8 @@ function FeatureImageCard({
           position: "absolute",
           inset: 0,
           background: isIvory
-            ? "radial-gradient(ellipse at 50% 30%, rgba(184,74,106,0.1) 0%, transparent 60%)"
-            : "radial-gradient(ellipse at 50% 30%, rgba(184,74,106,0.2) 0%, transparent 60%)",
+            ? "radial-gradient(ellipse at 50% 30%, rgba(244,91,150,0.12) 0%, transparent 60%)"
+            : "radial-gradient(ellipse at 50% 30%, rgba(244,91,150,0.22) 0%, transparent 60%)",
           pointerEvents: "none",
         }}
       />
@@ -303,7 +301,7 @@ function FeatureImageCard({
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           background: isIvory ? "rgba(255,255,255,0.75)" : "rgba(12,6,24,0.75)",
-          border: "1px solid rgba(184,74,106,0.25)",
+          border: "1px solid rgba(244,91,150,0.3)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -361,7 +359,7 @@ function ProgressDot({
         height,
         opacity,
         borderRadius: 999,
-        background: isIvory ? "rgba(184,74,106,0.8)" : ACCENT,
+        background: isIvory ? "rgba(244,91,150,0.8)" : ACCENT,
       }}
     />
   );
@@ -427,8 +425,8 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
             width: "min(90vw, 900px)",
             height: "min(70vh, 620px)",
             background: isIvory
-              ? "radial-gradient(ellipse at center, rgba(184,74,106,0.08) 0%, transparent 68%)"
-              : "radial-gradient(ellipse at center, rgba(184,74,106,0.15) 0%, transparent 68%)",
+              ? "radial-gradient(ellipse at center, rgba(244,91,150,0.12) 0%, transparent 68%)"
+              : "radial-gradient(ellipse at center, rgba(244,91,150,0.2) 0%, transparent 68%)",
             filter: "blur(50px)",
           }}
         />
@@ -442,8 +440,8 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
             maxWidth: 480,
             maxHeight: 480,
             background: isIvory
-              ? "radial-gradient(circle, rgba(184,74,106,0.06) 0%, transparent 70%)"
-              : "radial-gradient(circle, rgba(184,74,106,0.12) 0%, transparent 70%)",
+              ? "radial-gradient(circle, rgba(250,152,194,0.1) 0%, transparent 70%)"
+              : "radial-gradient(circle, rgba(250,152,194,0.16) 0%, transparent 70%)",
             filter: "blur(60px)",
           }}
         />
