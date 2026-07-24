@@ -10,7 +10,11 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { TOOLS_CATALOG } from "./data/tools.js";
-import { authenticateToken, getJWTSecret } from "./middleware/auth.js";
+import {
+  authenticateToken,
+  authorizeRoles,
+  getJWTSecret,
+} from "./middleware/auth.js";
 import { supabase, isDbReady } from "./db.js";
 
 const app = express();
@@ -84,6 +88,19 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+// ── Temporary Role Test Route ──────────────────────────
+app.get(
+  "/api/admin-test",
+  authenticateToken,
+  authorizeRoles("admin"),
+  (req, res) => {
+    res.json({
+      success: true,
+      message: "Admin access granted",
+      user: req.user,
+    });
+  }
+);
 
 // ── Team Routes ────────────────────────────────────────
 

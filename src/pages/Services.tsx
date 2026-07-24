@@ -3,111 +3,27 @@ import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { smoothScrollToElement } from "@/lib/smoothScroll";
 import ServiceDialog from "@/components/ServiceDialog";
-import { SERVICES as SERVICE_ITEMS, type ServiceItem } from "@/content/services";
+import { type ServiceItem } from "@/content/services";
 import Footer from "@/sections/Footer";
 import BookACall from "@/sections/BookACall";
 import Testimonials from "@/sections/Testimonials";
 
 import { useTheme } from "@/contexts/ThemeContext";
-
-const SERVICES = [
-  {
-    id: "seo-digital-marketing",
-    category: "SEO Digital Marketing",
-    keywords: ["SEO", "organic growth", "search ranking", "keyword strategy", "on-page/off-page"],
-    desc: "We optimize your digital presence to rank higher on search engines. From keyword research to technical SEO and link building, we drive sustainable organic traffic that converts.",
-  },
-  {
-    id: "brand-outreach-pr",
-    category: "Brand Outreach & PR",
-    keywords: ["public relations", "brand awareness", "media coverage", "press", "outreach"],
-    desc: "We craft compelling narratives and pitch your brand to the right publications and media houses — building credibility and expanding your brand's reach in the right circles.",
-  },
-  {
-    id: "branding",
-    category: "Branding",
-    keywords: ["brand identity", "logo", "brand guide", "visual language", "positioning"],
-    desc: "From naming and logo design to a complete brand identity system, we build brands that are memorable, consistent, and strategically positioned for long-term growth.",
-  },
-  {
-    id: "social-media",
-    category: "Social Media",
-    keywords: ["content creation", "social strategy", "community management", "Instagram", "LinkedIn"],
-    desc: "We manage and grow your social media presence with a data-driven content strategy — combining creative storytelling with platform-specific tactics to build loyal communities.",
-  },
-  {
-    id: "3d-cgi",
-    category: "3D & CGI",
-    keywords: ["3D rendering", "CGI", "product visualization", "architectural renders", "3D animation"],
-    desc: "We create hyper-realistic 3D visuals and CGI content for products, architecture, ads, and campaigns — enabling stunning visuals before anything is physically built.",
-  },
-  {
-    id: "animation-vfx",
-    category: "Animation & VFX",
-    keywords: ["motion graphics", "visual effects", "2D/3D animation", "explainer videos"],
-    desc: "From sleek motion graphics to full visual effects pipelines, we bring your stories to life through animation and VFX that captivate and communicate at the highest level.",
-  },
-  {
-    id: "graphics-designing",
-    category: "Graphics Designing",
-    keywords: ["graphic design", "visual content", "marketing creatives", "UI graphics", "print"],
-    desc: "Our designers produce impactful visual content — from marketing creatives and social graphics to packaging and print — all aligned with your brand identity.",
-  },
-  {
-    id: "web-development",
-    category: "Web Development",
-    keywords: ["website design", "frontend", "backend", "responsive", "CMS", "custom web apps"],
-    desc: "We build fast, beautiful, and fully responsive websites and web applications using modern tech stacks — engineered for performance, SEO, and exceptional user experience.",
-  },
-  {
-    id: "ecommerce-management",
-    category: "E-Commerce Management",
-    keywords: ["e-commerce", "Shopify", "WooCommerce", "product listings", "conversion rate", "store management"],
-    desc: "End-to-end e-commerce solutions — from store setup and product management to CRO and scaling. We manage your online store so you can focus on growing your business.",
-  },
-  {
-    id: "performance-marketing",
-    category: "Performance Marketing",
-    keywords: ["paid ads", "Google Ads", "Meta Ads", "ROI", "ROAS", "PPC", "conversion campaigns"],
-    desc: "We run data-driven paid media campaigns across Google, Meta, and beyond — optimizing every rupee spent for maximum ROI with transparent reporting and rapid iteration.",
-  },
-  {
-    id: "influencer-marketing",
-    category: "Influencer Marketing",
-    keywords: ["influencer outreach", "UGC", "creator campaigns", "brand collaborations", "micro-influencers"],
-    desc: "We connect your brand with the right influencers — from macro to micro — to create authentic campaigns that reach your exact target audience and drive real results.",
-  },
-  {
-    id: "app-development",
-    category: "App Development",
-    keywords: ["mobile app", "iOS", "Android", "Flutter", "React Native", "UI/UX", "app design"],
-    desc: "We design and develop intuitive mobile applications for iOS and Android — from concept and wireframing to launch and post-launch support, built for performance and scale.",
-  },
-  {
-    id: "software-development",
-    category: "Software Development",
-    keywords: ["custom software", "SaaS", "enterprise solutions", "API", "backend systems"],
-    desc: "We engineer custom software solutions tailored to your business needs — scalable, secure, and built with clean architecture to solve complex problems efficiently.",
-  },
-  {
-    id: "crm-automation",
-    category: "CRM & Automation",
-    keywords: ["CRM setup", "workflow automation", "Zapier", "HubSpot", "customer retention", "lead management"],
-    desc: "We implement and optimize CRM systems and automation workflows that streamline your sales, marketing, and operations — reducing manual work and improving customer retention.",
-  },
-];
+import ServicesSection from "@/sections/ServicesSection";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] as const } }),
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] as const },
+  }),
 };
 
 export default function Services() {
   const { theme } = useTheme();
   const isIvory = theme === "ivory";
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const gridRef = useRef(null);
-  const gridInView = useInView(gridRef, { once: true, margin: "-80px" });
   const ctaRef = useRef(null);
   const ctaInView = useInView(ctaRef, { once: true, margin: "-80px" });
 
@@ -195,80 +111,8 @@ export default function Services() {
         </motion.div>
       </section>
 
-      {/* ── SERVICES GRID ─────────────────────────────────────────── */}
-      <section
-        id="services-grid"
-        ref={gridRef}
-        style={{ background: "var(--belvo-bg)", padding: "20px 24px 120px", position: "relative", overflow: "hidden" }}
-      >
-        <div style={{ height: "1px", background: "linear-gradient(90deg,transparent,rgba(130,40,200,0.4),rgba(201,163,65,0.18),transparent)", marginBottom: "0" }} />
-        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "70vw", height: "400px", background: "radial-gradient(ellipse at center, rgba(80,15,140,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
-
-        <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <motion.div custom={0} variants={fadeUp} initial="hidden" animate={gridInView ? "visible" : "hidden"} style={{ textAlign: "center", marginBottom: "64px" }}>
-            <span style={{ display: "block", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "#9D4EDD", fontFamily: "'Inter',sans-serif", marginBottom: "14px" }}>What We Do</span>
-            <h2 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(1.9rem,4.5vw,3.4rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: 0 }}>
-              14 Services. <span style={{ color: "#9D4EDD" }}>One Mission.</span>
-            </h2>
-          </motion.div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: "20px" }}>
-            {SERVICE_ITEMS.map((svc, i) => (
-              <motion.div
-                key={svc.id}
-                custom={i + 1}
-                variants={fadeUp}
-                initial="hidden"
-                animate={gridInView ? "visible" : "hidden"}
-                data-testid={`card-service-${svc.id}`}
-                style={{ background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "14px", padding: "28px", display: "flex", flexDirection: "column", gap: "14px", transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s", cursor: "pointer", boxShadow: isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none" }}
-                whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(157,78,221,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 8px 32px rgba(100,20,180,0.10)" : "0 8px 40px rgba(100,20,180,0.18)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--belvo-border-card)"; (e.currentTarget as HTMLElement).style.boxShadow = isIvory ? "0 2px 12px rgba(0,0,0,0.04)" : "none"; }}
-                onClick={() => setSelectedService(svc)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setSelectedService(svc);
-                  }
-                }}
-                tabIndex={0}
-                role="button"
-              >
-                <img
-                  src={svc.image}
-                  alt={svc.title}
-                  style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", borderRadius: "10px", border: "1px solid var(--belvo-border-card)", display: "block" }}
-                />
-
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg,rgba(123,47,190,0.22),rgba(157,78,221,0.08))", border: "1px solid rgba(157,78,221,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.85rem", color: "#9D4EDD", flexShrink: 0 }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </div>
-                  <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: "0.97rem", color: "var(--belvo-text-1)", margin: 0, lineHeight: 1.3 }}>
-                    {svc.title}
-                  </h3>
-                </div>
-
-                <p style={{ fontFamily: "'Inter',sans-serif", fontSize: "0.85rem", lineHeight: 1.7, color: "var(--belvo-text-6)", margin: 0, flexGrow: 1 }}>
-                  {svc.desc}
-                </p>
-
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "4px" }}>
-                  {svc.keywords.map((kw) => (
-                    <span
-                      key={kw}
-                      style={{ padding: "4px 10px", background: "rgba(157,78,221,0.08)", border: "1px solid rgba(157,78,221,0.15)", borderRadius: "6px", fontFamily: "'Inter',sans-serif", fontSize: "0.65rem", fontWeight: 500, color: "rgba(157,78,221,0.7)", letterSpacing: "0.02em", whiteSpace: "nowrap" }}
-                    >
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── SERVICES GRID / STICKY SCROLL SECTION ─────────────────── */}
+      <ServicesSection id="services-grid" onServiceClick={setSelectedService} />
 
       <Testimonials />
 
