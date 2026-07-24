@@ -2,7 +2,6 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import ExploreSection from "./ExploreSection";
 import TeamSection from "./TeamSection";
-import TeamStory from "./TeamStory";
 
 import BookACall from "./BookACall";
 import FAQ from "./FAQ";
@@ -349,7 +348,6 @@ export default function About() {
           </motion.div>
         </div>
       </div>
-      <TeamStory />
       <ExploreSection />
       <TeamSection />
       <BookACall />
