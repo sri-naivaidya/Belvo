@@ -147,7 +147,7 @@ export default function About() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "1rem",
                 lineHeight: "1.85",
-                color: "#aac4ff",
+                color: "#ffffff",
                 display: "flex",
                 flexDirection: "column",
                 gap: "20px",
