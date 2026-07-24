@@ -198,6 +198,11 @@ gl_FragColor=vec4(color,1.0);
       else if (e.deltaY < -20) fire(-1);
     };
 
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") { e.preventDefault(); fire(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); fire(-1); }
+    };
+
     function fire(dir: number) {
       if (locked) return;
       locked = true;
@@ -209,6 +214,7 @@ gl_FragColor=vec4(color,1.0);
     document.addEventListener("pointermove", onPointerMove);
     document.addEventListener("pointerup", onPointerUp);
     document.addEventListener("wheel", onWheel, { passive: false });
+    document.addEventListener("keydown", onKeyDown);
 
     let startTime = performance.now();
 
@@ -250,6 +256,7 @@ gl_FragColor=vec4(color,1.0);
       document.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerup", onPointerUp);
       document.removeEventListener("wheel", onWheel);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
