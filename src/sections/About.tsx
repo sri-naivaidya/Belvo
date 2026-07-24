@@ -2,12 +2,17 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import ExploreSection from "./ExploreSection";
 import TeamSection from "./TeamSection";
-
 import BookACall from "./BookACall";
 import FAQ from "./FAQ";
 import Footer from "./Footer";
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const RED_GRADIENT = "linear-gradient(120deg, #32102d 0%, #5a1b4b 52%, #a25b88 100%)";
+const RED_TEXT = {
+  background: RED_GRADIENT,
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+} as const;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -15,14 +20,6 @@ const fadeUp = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.8, delay: i * 0.1, ease: easeOut },
-  }),
-};
-
-const staggerItem = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.6, delay: i * 0.08, ease: easeOut },
   }),
 };
 
@@ -49,47 +46,11 @@ function Counter({ from = 0, to, duration = 2, suffix = "" }: { from?: number; t
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-function ImageCard({ src, index, inView }: { src: string; index: number; inView: boolean }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [30 * (index + 1), -30 * (index + 1)]);
-
-  return (
-    <motion.div
-      ref={ref}
-      custom={index}
-      variants={staggerItem}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      style={{
-        borderRadius: "12px",
-        overflow: "hidden",
-        aspectRatio: "16/9",
-        position: "relative",
-        y,
-      }}
-      whileHover={{ scale: 1.03, transition: { duration: 0.4, ease: easeOut } }}
-    >
-      <img
-        src={src}
-        alt="Office"
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-      />
-      <motion.div
-        style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, rgba(157,78,221,0.2), transparent)",
-          opacity: 0,
-        }}
-        whileHover={{ opacity: 1 }}
-      />
-    </motion.div>
-  );
-}
-
 export default function About() {
   const sectionRef = useRef(null);
+  const statsRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const statsInView = useInView(statsRef, { once: true, margin: "-120px" });
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, -30]);
 
@@ -98,15 +59,37 @@ export default function About() {
       id="about"
       ref={sectionRef}
       style={{
-        background: "var(--belvo-bg)",
+        background: "radial-gradient(ellipse at 8% 8%, rgba(45, 72, 133, 0.46), transparent 38%), radial-gradient(circle at 88% 16%, rgba(90, 27, 75, 0.2), transparent 26%), radial-gradient(ellipse at 57% 13%, rgba(224, 252, 255, 0.94), transparent 28%), radial-gradient(ellipse at 48% 88%, rgba(186, 248, 255, 0.72), transparent 52%), #d8efff",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        padding: "100px 0 0",
+        overflow: "visible",
+        padding: "clamp(64px, 8vw, 104px) 24px 0",
       }}
     >
+      <style>{`
+        .about-blue-content {
+          --belvo-bg: #d8efff;
+          --belvo-bg-card: linear-gradient(145deg, rgba(240, 250, 255, 0.92), rgba(164, 214, 255, 0.62));
+          --belvo-bg-card-2: rgba(226, 246, 255, 0.86);
+          --belvo-bg-input: rgba(245, 253, 255, 0.88);
+          --belvo-border-card: rgba(8, 37, 113, 0.16);
+          --belvo-border-bottom: rgba(8, 37, 113, 0.12);
+          --belvo-border-divider: rgba(8, 37, 113, 0.24);
+          --belvo-border-input: rgba(8, 37, 113, 0.2);
+          --belvo-text-1: #071a63;
+          --belvo-text-2: #182248;
+          --belvo-text-3: #31456f;
+          --belvo-text-4: #5270a6;
+          --belvo-glow-blob: rgba(81, 163, 244, 0.3);
+          --belvo-red: #5a1b4b;
+          background: linear-gradient(180deg, #d8efff 0%, #e9f8ff 100%);
+          width: 100%;
+        }
+      `}</style>
       <div
         style={{
           position: "absolute",
@@ -114,7 +97,7 @@ export default function About() {
           left: 0,
           right: 0,
           height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(130,40,200,0.3), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(13, 45, 120, 0.44), transparent)",
         }}
       />
 
@@ -128,42 +111,19 @@ export default function About() {
           height: "55vw",
           maxWidth: "700px",
           maxHeight: "700px",
-          background: "radial-gradient(ellipse at center, var(--belvo-glow-blob) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse at center, rgba(68, 139, 232, 0.34) 0%, transparent 65%)",
           filter: "blur(70px)",
           pointerEvents: "none",
           y: bgY,
         }}
       />
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1.2, delay: 0.1 }}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          fontSize: "clamp(8rem, 22vw, 20rem)",
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 900,
-          color: "var(--belvo-ghost-num)",
-          letterSpacing: "-0.06em",
-          userSelect: "none",
-          pointerEvents: "none",
-          lineHeight: 1,
-          whiteSpace: "nowrap",
-        }}
-      >
-        01
-      </motion.div>
-
       <div
         style={{
           position: "relative",
           zIndex: 1,
+          maxWidth: "1240px",
           width: "100%",
-          padding: "0 24px",
         }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-10 lg:gap-16">
@@ -179,19 +139,19 @@ export default function About() {
                 fontWeight: 900,
                 fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
                 lineHeight: 1.08,
-                color: "var(--belvo-text-1)",
+                color: "#100f1b",
                 margin: "0 0 24px",
                 letterSpacing: "-0.02em",
                 textTransform: "uppercase",
               }}
             >
               <span style={{ display: "inline" }}>
-                100+ Clients.
+                <span style={RED_TEXT}>100+ Clients.</span>
               </span>
               <br />
-              <span style={{ color: "#9D4EDD" }}>
+              <span style={{ color: "#071a63" }}>
                 <span style={{ display: "inline" }}>
-                  Countless Stories.
+                  Stories made to be watched.
                 </span>
               </span>
             </motion.h2>
@@ -205,7 +165,7 @@ export default function About() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "1rem",
                 lineHeight: "1.85",
-                color: "var(--belvo-text-2)",
+                color: "#182248",
                 display: "flex",
                 flexDirection: "column",
                 gap: "20px",
@@ -232,24 +192,26 @@ export default function About() {
           </div>
 
           <motion.div
+            ref={statsRef}
             custom={4}
             variants={fadeUp}
             initial="hidden"
-            animate={inView ? "visible" : "hidden"}
+            animate={statsInView ? "visible" : "hidden"}
             style={{
-              background: "var(--belvo-bg-card)",
-              border: "1px solid var(--belvo-border-card)",
-              borderRadius: "16px",
+              background: "linear-gradient(145deg, rgba(255, 248, 250, 0.92), rgba(183, 222, 255, 0.64))",
+              border: "1px solid rgba(90, 27, 75, 0.24)",
+              borderRadius: "24px",
               padding: "clamp(20px, 3vw, 32px)",
               backdropFilter: "blur(12px)",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between",
+              justifyContent: "center",
+              gap: "28px",
               height: "100%",
             }}
             whileHover={{
-              borderColor: "rgba(157,78,221,0.3)",
-              boxShadow: "0 0 40px rgba(130,40,200,0.1)",
+              borderColor: "rgba(90, 27, 75, 0.46)",
+              boxShadow: "0 24px 60px rgba(47, 12, 41, 0.18)",
               transition: { duration: 0.4, ease: easeOut },
             }}
           >
@@ -257,29 +219,33 @@ export default function About() {
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
+                gap: 0,
+                background: "linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 223, 229, 0.76))",
+                border: "1px solid rgba(90, 27, 75, 0.2)",
+                borderRadius: "12px",
+                overflow: "hidden",
               }}
             >
               {[
-                { label: "Global Clients", value: 100, suffix: "+", color: "#9D4EDD" },
-                { label: "Commitment", value: 100, suffix: "%", color: "var(--belvo-text-1)" },
+                { label: "Global Clients", value: 100, suffix: "+" },
+                { label: "Commitment", value: 100, suffix: "%" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, scale: 0.8 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  animate={statsInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.5, delay: 0.8 + i * 0.1, ease: easeOut }}
                   style={{
-                    background: "var(--belvo-bg)",
-                    border: "1px solid var(--belvo-border-bottom)",
-                    borderRadius: "12px",
-                    padding: "16px",
+                    background: "transparent",
+                    border: "none",
+                    borderLeft: i === 0 ? "none" : "1px solid rgba(90, 27, 75, 0.2)",
+                    borderRadius: 0,
+                    padding: "clamp(18px, 2.4vw, 28px)",
                     position: "relative",
                     overflow: "hidden",
                   }}
                   whileHover={{
-                    borderColor: "rgba(157,78,221,0.3)",
-                    scale: 1.02,
+                    backgroundColor: "rgba(245, 226, 239, 0.66)",
                     transition: { duration: 0.3 },
                   }}
                 >
@@ -287,7 +253,7 @@ export default function About() {
                     style={{
                       position: "absolute", top: -20, right: -20,
                       width: 60, height: 60, borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(157,78,221,0.1), transparent)",
+                      background: "radial-gradient(circle, rgba(90, 27, 75, 0.28), transparent)",
                       pointerEvents: "none",
                     }}
                     animate={{ scale: [1, 1.3, 1] }}
@@ -297,7 +263,7 @@ export default function About() {
                     style={{
                       fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
                       fontWeight: 900,
-                      color: stat.color,
+                      ...RED_TEXT,
                       fontFamily: "'Inter', sans-serif",
                       lineHeight: 1,
                     }}
@@ -309,7 +275,7 @@ export default function About() {
                       fontSize: "0.8rem",
                       textTransform: "uppercase",
                       letterSpacing: "0.1em",
-                      color: "var(--belvo-text-2)",
+                      color: "#182248",
                       marginTop: "4px",
                     }}
                   >
@@ -321,13 +287,13 @@ export default function About() {
 
             <motion.p
               initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
+              animate={statsInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: 1.2 }}
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "0.85rem",
                 lineHeight: "1.7",
-                color: "var(--belvo-text-2)",
+                color: "#182248",
                 margin: "20px 0 0 0",
               }}
             >
@@ -342,18 +308,32 @@ export default function About() {
                 marginTop: "16px",
               }}
             >
-              {["Office1", "Office2", "Office3"].map((img, i) => (
-                <ImageCard key={img} src={`/OfficeImages/${img}.jpeg`} index={i} inView={inView} />
-              ))}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "18px" }}>
+                  {["Office1", "Office2", "Office3"].map((image, index) => (
+                    <motion.img
+                      key={image}
+                      src={`/OfficeImages/${image}.jpeg`}
+                      alt={`Belvo studio ${index + 1}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={statsInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.45, delay: 1.25 + index * 0.1, ease: easeOut }}
+                      style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", borderRadius: "16px" }}
+                    />
+                  ))}
+              </div>
             </div>
           </motion.div>
         </div>
       </div>
-      <ExploreSection />
-      <TeamSection />
-      <BookACall />
-      <FAQ />
-      <Footer />
+      <div className="about-blue-content">
+        <ExploreSection />
+        <TeamSection />
+        <BookACall />
+        <FAQ />
+      </div>
+      <div style={{ width: "calc(100% + 48px)", marginLeft: "-24px", marginRight: "-24px" }}>
+        <Footer />
+      </div>
     </section>
   );
 }
