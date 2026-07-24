@@ -6,7 +6,7 @@ import { useLocation } from "wouter";
 const TEXT_SETS = [
   {
     title: '<span style="color:#581a8a">Gen-Z</span> taste<br>with<br><span style="color:#581a8a">millennial</span> experience',
-    sub: "We are a team of 50+ creative Gen Zs ruling over millennials",
+    sub: "We are a team of 50+ Gen-Z's ruling over millennials",
   },
   {
     title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
@@ -163,54 +163,46 @@ gl_FragColor=vec4(color,1.0);
       u_state: gl.getUniformLocation(program, "u_state"),
     };
 
-    function advance() {
-      targetRef.current = (targetRef.current + 1) % 3;
-    }
-
-    function retreat() {
-      if (targetRef.current > 0) {
-        targetRef.current -= 1;
-      }
-    }
-
+    let locked = false;
     let pointerStartY = 0;
     let pointerDown = false;
-    let pointerTriggered = false;
+    let pointerFired = false;
 
     const onPointerDown = (e: PointerEvent) => {
       pointerStartY = e.clientY;
       pointerDown = true;
-      pointerTriggered = false;
+      pointerFired = false;
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!pointerDown || pointerTriggered) return;
+      if (!pointerDown || pointerFired) return;
       const dy = e.clientY - pointerStartY;
-      if (dy > 20) { advance(); pointerTriggered = true; pointerStartY = e.clientY; }
-      else if (dy < -20) { retreat(); pointerTriggered = true; pointerStartY = e.clientY; }
+      if (dy > 20) { pointerFired = true; fire(1); }
+      else if (dy < -20) { pointerFired = true; fire(-1); }
     };
 
     const onPointerUp = (e: PointerEvent) => {
       if (!pointerDown) return;
       pointerDown = false;
-      if (!pointerTriggered) {
+      if (!pointerFired) {
         const dy = e.clientY - pointerStartY;
-        if (dy > 20) advance();
-        else if (dy < -20) retreat();
+        if (dy > 20) fire(1);
+        else if (dy < -20) fire(-1);
       }
     };
 
-    let wheelFired = false;
-    let wheelSessionEnd = 0;
-
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      const now = performance.now();
-      if (now > wheelSessionEnd) { wheelFired = false; wheelSessionEnd = now + 400; }
-      if (wheelFired) return;
-      if (e.deltaY > 20) { advance(); wheelFired = true; }
-      else if (e.deltaY < -20) { retreat(); wheelFired = true; }
+      if (e.deltaY > 20) fire(1);
+      else if (e.deltaY < -20) fire(-1);
     };
+
+    function fire(dir: number) {
+      if (locked) return;
+      locked = true;
+      targetRef.current = ((targetRef.current + dir) % 3 + 3) % 3;
+      setTimeout(() => { locked = false; }, 1500);
+    }
 
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("pointermove", onPointerMove);
@@ -222,7 +214,7 @@ gl_FragColor=vec4(color,1.0);
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
       const diff = targetRef.current - stateRef.current;
-      stateRef.current += diff * 0.12;
+      stateRef.current = targetRef.current;
 
       const snap = Math.round(stateRef.current);
       if (snap !== lastSnapRef.current) {
@@ -396,4 +388,19 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.color = "#581a8a";
                 (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
               }}
-              onMouseLeave={(e) =
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "#1a1418";
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+              }}
+            >
+              explore videos
+            </div>
+          </div>
+        </div>
+
+        <style>{heroStyles}</style>
+      </div>
+
+    </>
+  );
+}
