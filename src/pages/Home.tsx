@@ -219,8 +219,18 @@ gl_FragColor=vec4(color,1.0);
       const snap = Math.round(stateRef.current);
       if (snap !== lastSnapRef.current) {
         lastSnapRef.current = snap;
-        if (titleRef.current) titleRef.current.innerHTML = TEXT_SETS[snap].title;
-        if (subRef.current) subRef.current.textContent = TEXT_SETS[snap].sub;
+        if (titleRef.current) {
+          titleRef.current.style.opacity = "0";
+          void titleRef.current.offsetHeight;
+          titleRef.current.innerHTML = TEXT_SETS[snap].title;
+          titleRef.current.style.opacity = "1";
+        }
+        if (subRef.current) {
+          subRef.current.style.opacity = "0";
+          void subRef.current.offsetHeight;
+          subRef.current.textContent = TEXT_SETS[snap].sub;
+          subRef.current.style.opacity = "1";
+        }
       }
 
       gl.useProgram(program);
@@ -319,44 +329,48 @@ gl_FragColor=vec4(color,1.0);
               textAlign: "left",
             }}
           >
-            <h1
-              ref={titleRef}
-              style={{
-                fontSize: "clamp(3.5rem, 10vw, 7rem)",
-                fontWeight: 900,
-                letterSpacing: "-0.045em",
-                lineHeight: 0.88,
-                fontFamily: "'Inter', 'Helvetica Neue', 'GT America', sans-serif",
-                color: "#161014",
-                textShadow: "0 4px 30px rgba(0,0,0,0.02)",
-                background: "rgba(255,245,240,0.04)",
-                backdropFilter: "blur(2px)",
-                WebkitBackdropFilter: "blur(2px)",
-                padding: "0.2rem 1rem 0.2rem 0",
-                borderRadius: "16px",
-                display: "inline-block",
-              }}
-              dangerouslySetInnerHTML={{ __html: TEXT_SETS[0].title }}
-            />
-            <div
-              ref={subRef}
-              style={{
-                marginTop: "0.5rem",
-                fontSize: "clamp(0.85rem, 1.3vw, 1.25rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "#1f181c",
-                maxWidth: "48%",
-                lineHeight: 1.5,
-                opacity: 0.85,
-                background: "rgba(255,245,240,0.04)",
-                backdropFilter: "blur(2px)",
-                WebkitBackdropFilter: "blur(2px)",
-                padding: "0.15rem 1rem",
-                borderRadius: "40px",
-              }}
-            >
-              {TEXT_SETS[0].sub}
+            <div style={{ display: "flex", flexDirection: "column", minHeight: "44vh", justifyContent: "center" }}>
+              <h1
+                ref={titleRef}
+                style={{
+                  fontSize: "clamp(3.5rem, 10vw, 7rem)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.045em",
+                  lineHeight: 0.88,
+                  fontFamily: "'Inter', 'Helvetica Neue', 'GT America', sans-serif",
+                  color: "#161014",
+                  textShadow: "0 4px 30px rgba(0,0,0,0.02)",
+                  transition: "opacity 0.35s ease",
+                  willChange: "opacity",
+                  background: "rgba(255,245,240,0.04)",
+                  backdropFilter: "blur(2px)",
+                  WebkitBackdropFilter: "blur(2px)",
+                  padding: "0.2rem 1rem 0.2rem 0",
+                  borderRadius: "16px",
+                }}
+                dangerouslySetInnerHTML={{ __html: TEXT_SETS[0].title }}
+              />
+              <div
+                ref={subRef}
+                style={{
+                  marginTop: "0.5rem",
+                  fontSize: "clamp(0.85rem, 1.3vw, 1.25rem)",
+                  fontWeight: 400,
+                  letterSpacing: "-0.01em",
+                  color: "#1f181c",
+                  lineHeight: 1.5,
+                  transition: "opacity 0.35s ease",
+                  willChange: "opacity",
+                  opacity: 0.85,
+                  background: "rgba(255,245,240,0.04)",
+                  backdropFilter: "blur(2px)",
+                  WebkitBackdropFilter: "blur(2px)",
+                  padding: "0.15rem 1rem",
+                  borderRadius: "40px",
+                }}
+              >
+                {TEXT_SETS[0].sub}
+              </div>
             </div>
           </div>
 
