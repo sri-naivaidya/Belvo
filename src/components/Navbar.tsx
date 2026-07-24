@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ArrowUpRight, Moon, Sun, ArrowDownLeft } from "lucide-react";
+import { Menu, X, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const NAV_LINKS = [
   { name: "Home",     href: "/" },
@@ -18,8 +17,7 @@ export default function Navbar() {
   const [location, navigate] = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
-  const { theme, toggleTheme } = useTheme();
-  const isIvory = theme === "ivory";
+  const [activeSection, setActiveSection] = React.useState("");
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 18);
@@ -67,9 +65,9 @@ export default function Navbar() {
     }
   };
 
-  const navBg = isIvory
-    ? scrolled ? "rgba(216,239,255,0.97)" : "rgba(226,244,255,0.9)"
-    : "rgba(6,26,94,0.92)";
+  const navBg = scrolled
+    ? "rgba(4,0,14,0.88)"
+    : "var(--belvo-bg-nav)";
 
   const isLinkActive = (href: string) => location === href;
 
@@ -81,9 +79,7 @@ export default function Navbar() {
         backdropFilter: "blur(22px)",
         WebkitBackdropFilter: "blur(22px)",
         boxShadow: scrolled
-          ? isIvory
-            ? "0 1px 0 rgba(8,37,113,0.14), 0 4px 24px rgba(31,86,164,0.1)"
-            : "0 1px 0 rgba(91,169,230,0.2), 0 4px 24px rgba(4,20,72,0.46)"
+          ? "0 1px 0 rgba(130,40,200,0.12), 0 4px 24px rgba(4,0,14,0.5)"
           : "none",
         transition: "background 0.3s ease, box-shadow 0.3s ease",
       }}
@@ -93,7 +89,7 @@ export default function Navbar() {
         <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5" data-testid="link-logo">
           <img
             src="/belvo-logo-transparent.png" alt="BELVO" className="h-8 w-auto"
-            style={{ filter: "drop-shadow(0 0 4px rgba(11,59,156,0.35))" }}
+            style={{ filter: "drop-shadow(0 0 4px rgba(157,78,221,0.4))" }}
           />
           <span
             className="font-semibold text-lg tracking-widest"
@@ -130,7 +126,7 @@ export default function Navbar() {
                   <motion.span
                     layoutId="nav-underline"
                     className="absolute -bottom-1 left-0 right-0 h-[2px] rounded-full"
-                    style={{ background: "#0b3b9c" }}
+                    style={{ background: "#7B2FBE" }}
                     transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                   />
                 )}
@@ -140,47 +136,6 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2">
-          <motion.button
-            onClick={toggleTheme}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.94 }}
-            aria-label="Toggle theme"
-            title={isIvory ? "Switch to Midnight" : "Switch to Ivory"}
-            style={{
-              width: "36px", height: "36px", borderRadius: "50%",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              background: isIvory ? "rgba(11,59,156,0.09)" : "rgba(255,255,255,0.08)",
-              border: `1px solid ${isIvory ? "rgba(123,47,190,0.2)" : "rgba(255,255,255,0.12)"}`,
-              color: isIvory ? "#0b3b9c" : "rgba(255,255,255,0.78)",
-              cursor: "pointer",
-              transition: "background 0.25s, border-color 0.25s, color 0.25s",
-              flexShrink: 0,
-            }}
-            onMouseEnter={e => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.background = isIvory ? "rgba(123,47,190,0.14)" : "rgba(255,255,255,0.10)";
-              el.style.color = isIvory ? "#7B2FBE" : "#ffffff";
-            }}
-            onMouseLeave={e => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.background = isIvory ? "rgba(123,47,190,0.08)" : "rgba(255,255,255,0.06)";
-              el.style.color = isIvory ? "#7B2FBE" : "rgba(255,255,255,0.65)";
-            }}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={theme}
-                initial={{ rotate: -30, opacity: 0, scale: 0.7 }}
-                animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                exit={{ rotate: 30, opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.22 }}
-                style={{ display: "flex" }}
-              >
-                {isIvory ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
-              </motion.span>
-            </AnimatePresence>
-          </motion.button>
-
           <motion.button
             onClick={handleBookCall}
             whileHover={{ y: -1 }}
@@ -198,8 +153,8 @@ export default function Navbar() {
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "rgba(11,59,156,0.8)";
-              el.style.background = "rgba(11,59,156,0.12)";
+              el.style.borderColor = "rgba(130,40,200,0.8)";
+              el.style.background = "rgba(130,40,200,0.12)";
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement;
@@ -258,7 +213,7 @@ export default function Navbar() {
                       className="text-3xl font-light tracking-[0.2em] uppercase"
                       style={{
                         fontFamily: "'Inter', sans-serif",
-                        color: isLinkActive(link.href) ? "#0b3b9c" : "var(--belvo-text-1)",
+                        color: isLinkActive(link.href) ? "#9D4EDD" : "var(--belvo-text-1)",
                         opacity: isLinkActive(link.href) ? 1 : 0.8,
                       }}
                     >
@@ -270,33 +225,6 @@ export default function Navbar() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.48 }}
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  <button
-                    onClick={toggleTheme}
-                    style={{
-                      display: "flex", alignItems: "center", gap: "8px",
-                      padding: "8px 18px",
-                      background: isIvory ? "rgba(123,47,190,0.1)" : "rgba(255,255,255,0.06)",
-                      border: `1px solid ${isIvory ? "rgba(123,47,190,0.25)" : "rgba(255,255,255,0.15)"}`,
-                      borderRadius: "100px",
-                      color: "var(--belvo-text-2)",
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "0.75rem",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {isIvory ? <Sun size={15} /> : <Moon size={15} />}
-                    {isIvory ? "Midnight" : "Ivory"}
-                  </button>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.58 }}
                 >
                   <button
@@ -304,9 +232,9 @@ export default function Navbar() {
                     data-testid="button-mobile-contact"
                     className="inline-flex items-center gap-2 px-8 py-3 text-sm font-medium tracking-[0.18em] uppercase"
                     style={{
-                      border: "1px solid rgba(11,59,156,0.7)",
+                      border: "1px solid rgba(130,40,200,0.7)",
                       borderRadius: "100px",
-                      color: "#0b3b9c",
+                      color: "#9D4EDD",
                       background: "transparent",
                       cursor: "pointer",
                       fontFamily: "'Inter', sans-serif",
