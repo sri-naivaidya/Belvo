@@ -104,7 +104,7 @@ export default function About() {
         flexDirection: "column",
         justifyContent: "center",
         position: "relative",
-        padding: "100px 24px",
+        padding: "100px 0 0",
       }}
     >
       <div
