@@ -31,15 +31,15 @@ function parseTitle(html: string): ParsedTitle {
 
 const TEXT_SETS: TextSet[] = [
   {
-    title: '<span style="color:#581a8a">Gen-Z</span> taste<br>with<br><span style="color:#581a8a">millennial</span> experience',
+    title: '<span style="color:#581a8a">Gen-Z&nbsp;</span>taste<br>with<br><span style="color:#581a8a">millennial&nbsp;</span>experience',
     sub: "We are a team of 50+ Gen-Z's ruling over millennials",
   },
   {
-    title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility</span> <span style="color:#1a1418">Ours</span>',
+    title: 'Business/ Startup<br>Yours<br><span style="color:#b84a6a">Responsibility&nbsp;</span><span style="color:#1a1418">Ours</span>',
     sub: "You don't need to worry. We do everything in a creative manner",
   },
   {
-    title: 'Your <span style="color:#020c47">Brand</span> is<br>in Right Hand<br><span style="color:#020c47">Diva!</span>',
+    title: 'Your&nbsp;<span style="color:#020c47">Brand</span>&nbsp;is<br>in Right Hand<br><span style="color:#020c47">Diva!</span>',
     sub: "We will scroll reels, You scroll website and explore Belvo",
   },
 ];
