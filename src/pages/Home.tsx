@@ -38,7 +38,6 @@ export default function Home() {
   const stateRef = useRef(0);
   const targetRef = useRef(0);
   const lastSnapRef = useRef(-1);
-  const settledRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -165,46 +164,56 @@ gl_FragColor=vec4(color,1.0);
     };
 
     function advance() {
-      if (!settledRef.current) return;
-      settledRef.current = false;
       targetRef.current = (targetRef.current + 1) % 3;
     }
 
     function retreat() {
-      if (!settledRef.current) return;
       if (targetRef.current > 0) {
-        settledRef.current = false;
         targetRef.current -= 1;
       }
     }
 
-    let pointerStartX = 0;
     let pointerStartY = 0;
     let pointerDown = false;
+    let pointerTriggered = false;
 
     const onPointerDown = (e: PointerEvent) => {
-      pointerStartX = e.clientX;
       pointerStartY = e.clientY;
       pointerDown = true;
+      pointerTriggered = false;
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!pointerDown || pointerTriggered) return;
+      const dy = e.clientY - pointerStartY;
+      if (dy > 20) { advance(); pointerTriggered = true; pointerStartY = e.clientY; }
+      else if (dy < -20) { retreat(); pointerTriggered = true; pointerStartY = e.clientY; }
     };
 
     const onPointerUp = (e: PointerEvent) => {
       if (!pointerDown) return;
       pointerDown = false;
-      const dy = e.clientY - pointerStartY;
-      if (dy > 40) advance();
-      else if (dy < -40) retreat();
+      if (!pointerTriggered) {
+        const dy = e.clientY - pointerStartY;
+        if (dy > 20) advance();
+        else if (dy < -20) retreat();
+      }
     };
+
+    let wheelFired = false;
+    let wheelSessionEnd = 0;
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (!settledRef.current) return;
-      if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
-      if (e.deltaY > 20) advance();
-      else if (e.deltaY < -20) retreat();
+      const now = performance.now();
+      if (now > wheelSessionEnd) { wheelFired = false; wheelSessionEnd = now + 400; }
+      if (wheelFired) return;
+      if (e.deltaY > 20) { advance(); wheelFired = true; }
+      else if (e.deltaY < -20) { retreat(); wheelFired = true; }
     };
 
     document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointermove", onPointerMove);
     document.addEventListener("pointerup", onPointerUp);
     document.addEventListener("wheel", onWheel, { passive: false });
 
@@ -213,12 +222,7 @@ gl_FragColor=vec4(color,1.0);
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
       const diff = targetRef.current - stateRef.current;
-      if (Math.abs(diff) < 0.01) {
-        stateRef.current = targetRef.current;
-        settledRef.current = true;
-      } else {
-        stateRef.current += diff * 0.15;
-      }
+      stateRef.current += diff * 0.12;
 
       const snap = Math.round(stateRef.current);
       if (snap !== lastSnapRef.current) {
@@ -241,6 +245,7 @@ gl_FragColor=vec4(color,1.0);
     return () => {
       window.removeEventListener("resize", resize);
       document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerup", onPointerUp);
       document.removeEventListener("wheel", onWheel);
     };
@@ -365,10 +370,10 @@ gl_FragColor=vec4(color,1.0);
 
           <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
             <div
-              onClick={() => { window.location.href = "/videos"; }}
+              onClick={() => { window.location.href = "/about#explore"; }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter") { window.location.href = "/videos"; } }}
+              onKeyDown={(e) => { if (e.key === "Enter") { window.location.href = "/about#explore"; } }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -391,19 +396,4 @@ gl_FragColor=vec4(color,1.0);
                 (e.currentTarget as HTMLElement).style.color = "#581a8a";
                 (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
               }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#1a1418";
-                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-              }}
-            >
-              explore videos
-            </div>
-          </div>
-        </div>
-
-        <style>{heroStyles}</style>
-      </div>
-
-    </>
-  );
-}
+              onMouseLeave={(e) =
