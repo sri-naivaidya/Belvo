@@ -383,10 +383,10 @@ gl_FragColor=vec4(color,1.0);
 
           <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
             <div
-              onClick={() => { window.location.href = "/about#explore"; }}
+              onClick={() => { window.location.href = "/videos"; }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter") { window.location.href = "/about#explore"; } }}
+              onKeyDown={(e) => { if (e.key === "Enter") { window.location.href = "/videos"; } }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
