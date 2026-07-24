@@ -41,8 +41,8 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             style={{
               display: "inline-flex", alignItems: "center", gap: "6px",
               padding: "4px 12px",
-              background: "rgba(157,78,221,0.14)",
-              border: "1px solid rgba(157,78,221,0.28)",
+              background: "rgba(57,88,134,0.14)",
+              border: "1px solid rgba(57,88,134,0.28)",
               borderRadius: "100px",
               fontFamily: "'Inter', sans-serif",
               fontSize: "0.65rem", fontWeight: 700,
@@ -97,21 +97,21 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
         <div
           style={{
             padding: "16px 18px",
-            background: "rgba(123,47,190,0.08)",
-            border: "1px solid rgba(157,78,221,0.18)",
+            background: "rgba(57,88,134,0.08)",
+            border: "1px solid rgba(57,88,134,0.18)",
             borderRadius: "10px",
             marginBottom: "16px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
-            <Mail size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
-            <a href="mailto:contact.belvo@gmail.com" style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: "#9D4EDD", letterSpacing: "0.02em", textDecoration: "none" }}>
+            <Mail size={13} style={{ color: "#395886", flexShrink: 0 }} strokeWidth={2} />
+            <a href="mailto:contact.belvo@gmail.com" style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: "#395886", letterSpacing: "0.02em", textDecoration: "none" }}>
               contact.belvo@gmail.com
             </a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
-            <Phone size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
-            <a href="tel:+918928466820" style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: "#9D4EDD", letterSpacing: "0.02em", textDecoration: "none" }}>
+            <Phone size={13} style={{ color: "#395886", flexShrink: 0 }} strokeWidth={2} />
+            <a href="tel:+918928466820" style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: "#395886", letterSpacing: "0.02em", textDecoration: "none" }}>
               +91 89284 66820
             </a>
           </div>
@@ -128,7 +128,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             justifyContent: "center",
             width: "100%",
             padding: "12px 16px",
-            background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+            background: "#395886",
             color: "#fff",
             textDecoration: "none",
             borderRadius: "12px",
@@ -173,12 +173,12 @@ export default function Events() {
         }}
       >
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-          <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(90,20,160,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
+          <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: "80vw", height: "60vh", background: "radial-gradient(ellipse at center, rgba(57,88,134,0.22) 0%, transparent 65%)", filter: "blur(60px)" }} />
         </div>
 
         <div style={{ position: "relative", zIndex: 1, maxWidth: "800px" }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ marginBottom: "18px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(123,47,190,0.15)", border: "1px solid rgba(157,78,221,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9D4EDD" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(57,88,134,0.15)", border: "1px solid rgba(57,88,134,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#395886" }}>
               <Sparkles size={11} />
               Events
             </span>
@@ -190,7 +190,7 @@ export default function Events() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
             style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "var(--belvo-text-1)", margin: "0 0 10px", letterSpacing: "-0.01em" }}
           >
-            Upcoming <span style={{ color: "#9D4EDD" }}>Events</span>
+            Upcoming <span style={{ color: "#395886" }}>Events</span>
           </motion.h1>
 
           <motion.p

@@ -56,8 +56,8 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             style={{
               display: "inline-flex", alignItems: "center", gap: "6px",
               padding: "4px 12px",
-              background: "rgba(157,78,221,0.14)",
-              border: "1px solid rgba(157,78,221,0.28)",
+              background: "rgba(57,88,134,0.14)",
+              border: "1px solid rgba(57,88,134,0.28)",
               borderRadius: "100px",
               fontFamily: "'Inter', sans-serif",
               fontSize: "0.65rem", fontWeight: 700,
@@ -114,21 +114,21 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
         <div
           style={{
             padding: "16px 18px",
-            background: "rgba(123,47,190,0.08)",
-            border: "1px solid rgba(157,78,221,0.18)",
+            background: "rgba(57,88,134,0.08)",
+            border: "1px solid rgba(57,88,134,0.18)",
             borderRadius: "10px",
             marginBottom: "16px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
-            <Mail size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
+            <Mail size={13} style={{ color: "#395886", flexShrink: 0 }} strokeWidth={2} />
             <a
               href="mailto:contact.belvo@gmail.com"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "0.8rem",
                 fontWeight: 600,
-                color: "#9D4EDD",
+                color: "#395886",
                 letterSpacing: "0.02em",
                 textDecoration: "none",
               }}
@@ -139,14 +139,14 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             </a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "8px" }}>
-            <Phone size={13} style={{ color: "#9D4EDD", flexShrink: 0 }} strokeWidth={2} />
+            <Phone size={13} style={{ color: "#395886", flexShrink: 0 }} strokeWidth={2} />
             <a
               href="tel:+918928466820"
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "0.8rem",
                 fontWeight: 600,
-                color: "#9D4EDD",
+                color: "#395886",
                 letterSpacing: "0.02em",
                 textDecoration: "none",
               }}
@@ -178,7 +178,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
             justifyContent: "center",
             width: "100%",
             padding: "12px 16px",
-            background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+            background: "#395886",
             color: "#fff",
             textDecoration: "none",
             borderRadius: "12px",
@@ -230,7 +230,7 @@ export default function UpcomingEvents() {
     >
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, var(--belvo-border-divider), transparent)" }} />
 
-      <div style={{ position: "absolute", top: "35%", left: "50%", transform: "translate(-50%, -50%)", width: "60vw", height: "60vw", maxWidth: "750px", maxHeight: "750px", background: "radial-gradient(ellipse at center, var(--belvo-glow-blob) 0%, transparent 65%)", filter: "blur(70px)", pointerEvents: "none" }} />
+            style={{ position: "absolute", top: "35%", left: "50%", transform: "translate(-50%, -50%)", width: "60vw", height: "60vw", maxWidth: "750px", maxHeight: "750px", background: "radial-gradient(ellipse at center, rgba(57,88,134,0.22) 0%, transparent 65%)", filter: "blur(70px)", pointerEvents: "none" }} />
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -245,7 +245,7 @@ export default function UpcomingEvents() {
         <div style={{ textAlign: "center", marginBottom: "clamp(40px, 6vw, 64px)" }}>
           <motion.p
             custom={0} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
-            style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(157,78,221,0.6)", marginBottom: "14px" }}
+            style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.68rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "rgba(57,88,134,0.6)", marginBottom: "14px" }}
           >
             Section 05
           </motion.p>
@@ -254,7 +254,7 @@ export default function UpcomingEvents() {
             custom={1} variants={fadeUp} initial="hidden" animate={inView ? "visible" : "hidden"}
             style={{ fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: "clamp(2rem, 5vw, 3.6rem)", lineHeight: 1.06, color: "var(--belvo-text-1)", margin: "0 0 18px", letterSpacing: "-0.01em", textTransform: "uppercase" }}
           >
-            Upcoming <span style={{ color: "#9D4EDD" }}>Events</span>
+            Upcoming <span style={{ color: "#395886" }}>Events</span>
           </motion.h2>
 
           <motion.p

@@ -30,7 +30,7 @@ export default function EventRegistration() {
           <button
             onClick={() => navigate("/")}
             style={{
-              background: "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+              background: "#395886",
               color: "#fff",
               border: "none",
               borderRadius: "12px",
@@ -83,7 +83,7 @@ export default function EventRegistration() {
       <div style={{ maxWidth: "720px", margin: "0 auto", background: "var(--belvo-bg-card)", border: "1px solid var(--belvo-border-card)", borderRadius: "24px", padding: "32px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px", marginBottom: "32px", flexWrap: "wrap" }}>
           <div>
-            <p style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: "0.78rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "#9D4EDD" }}>
+            <p style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: "0.78rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "#395886" }}>
               Register Now
             </p>
             <h1 style={{ margin: "12px 0 0", fontFamily: "'Inter', sans-serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", lineHeight: 1.05, color: "var(--belvo-text-1)" }}>
@@ -110,8 +110,8 @@ export default function EventRegistration() {
         </div>
 
         {success ? (
-          <div style={{ textAlign: "center", padding: "40px 24px", borderRadius: "20px", background: "rgba(123,47,190,0.08)", border: "1px solid rgba(157,78,221,0.18)" }}>
-            <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: "2rem", color: "#9D4EDD" }}>Registration Successful</h2>
+          <div style={{ textAlign: "center", padding: "40px 24px", borderRadius: "20px", background: "rgba(57,88,134,0.08)", border: "1px solid rgba(57,88,134,0.18)" }}>
+            <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: "2rem", color: "#395886" }}>Registration Successful</h2>
             <p style={{ marginTop: "16px", color: "var(--belvo-text-3)", lineHeight: 1.8 }}>
               Thank you, {success.name}! Your registration for <strong>{success.eventTitle}</strong> is confirmed. We will contact you soon.
             </p>
@@ -160,7 +160,7 @@ export default function EventRegistration() {
               type="submit"
               disabled={loading}
               style={{
-                background: loading ? "rgba(123,47,190,0.5)" : "linear-gradient(135deg, #7B2FBE, #9D4EDD)",
+                background: loading ? "rgba(57,88,134,0.5)" : "#395886",
                 color: "#fff",
                 border: "none",
                 borderRadius: "14px",
