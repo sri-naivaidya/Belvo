@@ -84,6 +84,17 @@ const LINK_COLUMNS = [
       { label: "Book A Call", id: "book-a-call" },
     ],
   },
+  {
+    title: "Join & Support",
+    links: [
+      { label: "Join as a Belvo Client", href: "/client" },
+      { label: "Referral Programs", href: "#" },
+      { label: "Help & Support", href: "#" },
+      { label: "Collaboration With Us", href: "#" },
+      { label: "Press & Media", href: "#" },
+      { label: "Refund & Cancellation Policy", href: "#" },
+    ],
+  },
 ];
 
 const LEGAL_LINKS = [
@@ -211,7 +222,6 @@ export default function Footer() {
       style={{
         background: "linear-gradient(180deg, #09090b 0%, #110724 100%)",
         position: "relative",
-        overflow: "hidden",
       }}
     >
       {/* Top border line */}
@@ -258,7 +268,7 @@ export default function Footer() {
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "72px 24px 0", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: 0, position: "relative", zIndex: 1 }}>
         {/* ── TOP GRID: brand + link columns + offices ── */}
         <div
           style={{
@@ -324,21 +334,40 @@ export default function Footer() {
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 {col.links.map(link => (
-                  <button
-                    key={link.id}
-                    onClick={() => scrollToId(link.id)}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: "8px",
-                      background: "none", border: "none", padding: 0, cursor: "pointer",
-                      color: COLORS.textPrimary,
-                      fontFamily: "'Inter', sans-serif", fontSize: "0.875rem",
-                      letterSpacing: "0.01em", textAlign: "left", transition: "color 0.2s",
-                    }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = COLORS.pink; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = COLORS.textPrimary; }}
-                  >
-                    {link.label}
-                  </button>
+                  "href" in link ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: "8px",
+                        background: "none", border: "none", padding: 0, cursor: "pointer",
+                        color: COLORS.textPrimary,
+                        fontFamily: "'Inter', sans-serif", fontSize: "0.875rem",
+                        letterSpacing: "0.01em", textAlign: "left", transition: "color 0.2s",
+                        textDecoration: "none",
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = COLORS.pink; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = COLORS.textPrimary; }}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <button
+                      key={link.id}
+                      onClick={() => scrollToId(link.id)}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: "8px",
+                        background: "none", border: "none", padding: 0, cursor: "pointer",
+                        color: COLORS.textPrimary,
+                        fontFamily: "'Inter', sans-serif", fontSize: "0.875rem",
+                        letterSpacing: "0.01em", textAlign: "left", transition: "color 0.2s",
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = COLORS.pink; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = COLORS.textPrimary; }}
+                    >
+                      {link.label}
+                    </button>
+                  )
                 ))}
               </div>
             </motion.div>
