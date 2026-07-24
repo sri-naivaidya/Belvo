@@ -6,7 +6,7 @@ import ServiceDialog from "@/components/ServiceDialog";
 import { SERVICES as SERVICE_ITEMS, type ServiceItem } from "@/content/services";
 import Footer from "@/sections/Footer";
 import BookACall from "@/sections/BookACall";
-import ToolsPricing from "@/sections/ToolsPricing";
+
 import { useTheme } from "@/contexts/ThemeContext";
 
 const SERVICES = [
@@ -300,7 +300,6 @@ export default function Services() {
         </motion.div>
       </section>
 
-      <ToolsPricing />
       <BookACall />
       <ServiceDialog service={selectedService} onClose={() => setSelectedService(null)} />
       <Footer />
