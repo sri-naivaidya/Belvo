@@ -102,18 +102,19 @@ vec3 purple=purplePalette(colorPos*4.0+t*0.015);
 vec3 pink=pinkPalette(colorPos*4.0+t*0.015);
 vec3 blue=bluePalette(colorPos*4.0+t*0.015);
 vec3 color;
-if(u_state<1.0)color=mix(purple,pink,u_state);
-else color=mix(pink,blue,u_state-1.0);
+float sm=mod(u_state,3.0);
+if(sm<1.0)color=mix(purple,pink,sm);
+else if(sm<2.0)color=mix(pink,blue,sm-1.0);
+else color=mix(blue,purple,sm-2.0);
 color+=(dither(gl_FragCoord.xy,t)*2.0-1.0)/255.0;
 float vignette=1.0-length(p*0.55)*0.3;
 color*=mix(vignette,1.0,0.3);
 vec3 auraP1=vec3(0.85,0.72,0.92);vec3 auraP2=vec3(0.75,0.60,0.85);vec3 auraP3=vec3(0.65,0.50,0.78);
 vec3 auraK1=vec3(0.98,0.65,0.78);vec3 auraK2=vec3(0.90,0.45,0.60);vec3 auraK3=vec3(0.80,0.35,0.55);
 vec3 auraB1=vec3(0.65,0.78,0.95);vec3 auraB2=vec3(0.50,0.65,0.88);vec3 auraB3=vec3(0.38,0.52,0.78);
-float s=u_state;
-vec3 a1=s<1.0?mix(auraP1,auraK1,s):mix(auraK1,auraB1,s-1.0);
-vec3 a2=s<1.0?mix(auraP2,auraK2,s):mix(auraK2,auraB2,s-1.0);
-vec3 a3=s<1.0?mix(auraP3,auraK3,s):mix(auraK3,auraB3,s-1.0);
+vec3 a1=sm<1.0?mix(auraP1,auraK1,sm):sm<2.0?mix(auraK1,auraB1,sm-1.0):mix(auraB1,auraP1,sm-2.0);
+vec3 a2=sm<1.0?mix(auraP2,auraK2,sm):sm<2.0?mix(auraK2,auraB2,sm-1.0):mix(auraB2,auraP2,sm-2.0);
+vec3 a3=sm<1.0?mix(auraP3,auraK3,sm):sm<2.0?mix(auraK3,auraB3,sm-1.0):mix(auraB3,auraP3,sm-2.0);
 float aura1=exp(-length(p*0.65-vec2(0.08,0.04))*1.8)*0.40;
 color+=a1*aura1;
 float aura2=exp(-length(p*0.45+vec2(0.18,-0.08))*1.6)*0.28;
@@ -200,7 +201,7 @@ gl_FragColor=vec4(color,1.0);
     function fire(dir: number) {
       if (locked) return;
       locked = true;
-      targetRef.current = ((targetRef.current + dir) % 3 + 3) % 3;
+      targetRef.current = targetRef.current + dir;
       setTimeout(() => { locked = false; }, 1500);
     }
 
@@ -213,10 +214,9 @@ gl_FragColor=vec4(color,1.0);
 
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
-      const diff = targetRef.current - stateRef.current;
-      stateRef.current = targetRef.current;
+      stateRef.current += (targetRef.current - stateRef.current) * 0.06;
 
-      const snap = Math.round(stateRef.current);
+      const snap = Math.round(stateRef.current) % 3;
       if (snap !== lastSnapRef.current) {
         lastSnapRef.current = snap;
         if (titleRef.current) {
