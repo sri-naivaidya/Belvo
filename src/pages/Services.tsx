@@ -62,7 +62,7 @@ export default function Services() {
 
         <div style={{ position: "relative", zIndex: 1, maxWidth: "800px" }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} style={{ marginBottom: "18px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(123,47,190,0.15)", border: "1px solid rgba(157,78,221,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9D4EDD" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 18px", background: "rgba(184,74,106,0.15)", border: "1px solid rgba(184,74,106,0.3)", borderRadius: "100px", fontFamily: "'Inter',sans-serif", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.3em", textTransform: "uppercase", color: "#b84a6a" }}>
               <Sparkles size={11} />
               Our Services
             </span>
@@ -75,7 +75,7 @@ export default function Services() {
             style={{ fontFamily: "'Inter',sans-serif", fontWeight: 900, fontSize: "clamp(2.4rem,6vw,5.5rem)", lineHeight: 1.04, color: "var(--belvo-text-1)", margin: "0 0 10px", letterSpacing: "-0.01em" }}
           >
             Full-Service{" "}
-            <span style={{ color: "#9D4EDD" }}>Creative</span>{" "}
+            <span style={{ color: "#b84a6a" }}>Creative</span>{" "}
             Agency
           </motion.h1>
 
@@ -86,7 +86,7 @@ export default function Services() {
             style={{ fontFamily: "'Inter',sans-serif", fontSize: "clamp(0.9rem,1.6vw,1.05rem)", lineHeight: 1.75, color: "var(--belvo-text-2)", margin: "0 auto 36px", maxWidth: "560px", letterSpacing: "0.01em" }}
           >
             From SEO and branding to web development and performance marketing — we offer
-            14 specialised services designed to take your brand from zero to dominate.
+            15 specialised services designed to take your brand from zero to dominate.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>

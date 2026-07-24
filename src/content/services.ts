@@ -106,6 +106,13 @@ const serviceDefinitions = [
     keywords: ["CRM setup", "workflow automation", "Zapier", "HubSpot", "customer retention", "lead management"],
     desc: "We implement and optimize CRM systems and automation workflows that streamline your sales, marketing, and operations - reducing manual work and improving customer retention.",
   },
+  {
+    id: "ugc-content-creation",
+    category: "UGC Content Creation",
+    image: "/ServicesImages/ugc.png",
+    keywords: ["authentic content", "creator videos", "product storytelling", "social engagement"],
+    desc: "We create authentic, engaging user-generated content that builds trust and drives conversions. From product demonstrations to lifestyle videos and testimonials, we produce content that resonates with your audience across social platforms.",
+  },
 ];
 
 export const SERVICES: ServiceItem[] = serviceDefinitions.map((service) => ({

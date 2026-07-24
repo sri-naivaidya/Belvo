@@ -9,7 +9,7 @@ interface Props {
   onServiceClick?: (service: ServiceItem) => void;
 }
 
-const ACCENT = "#9D4EDD";
+const ACCENT = "#b84a6a";
 const IMAGE_HEIGHT = 620;
 
 function markImageLoaded(img: HTMLImageElement | null) {
@@ -88,8 +88,8 @@ function FeatureTextCard({
             gap: 8,
             padding: "6px 14px",
             borderRadius: 999,
-            background: isIvory ? "rgba(157,78,221,0.08)" : "rgba(157,78,221,0.14)",
-            border: "1px solid rgba(157,78,221,0.25)",
+            background: isIvory ? "rgba(184,74,106,0.08)" : "rgba(184,74,106,0.14)",
+            border: "1px solid rgba(184,74,106,0.25)",
             color: ACCENT,
             fontFamily: "'Inter', sans-serif",
             fontWeight: 700,
@@ -144,9 +144,9 @@ function FeatureTextCard({
               padding: "8px 16px",
               borderRadius: 999,
               fontFamily: "'Inter', sans-serif",
-              background: isIvory ? "rgba(157,78,221,0.08)" : "rgba(157,78,221,0.12)",
+              background: isIvory ? "rgba(184,74,106,0.08)" : "rgba(184,74,106,0.12)",
               color: ACCENT,
-              border: "1px solid rgba(157,78,221,0.25)",
+              border: "1px solid rgba(184,74,106,0.25)",
               fontSize: "0.78rem",
               fontWeight: 600,
             }}
@@ -166,24 +166,24 @@ function FeatureTextCard({
               gap: 8,
               padding: "12px 26px",
               borderRadius: 10,
-              border: "1px solid rgba(157,78,221,0.35)",
-              background: isIvory ? "rgba(157,78,221,0.06)" : "rgba(157,78,221,0.14)",
+              border: "1px solid rgba(184,74,106,0.35)",
+              background: isIvory ? "rgba(184,74,106,0.06)" : "rgba(184,74,106,0.14)",
               color: "var(--belvo-text-1)",
               fontFamily: "'Inter', sans-serif",
               fontWeight: 600,
               fontSize: "0.85rem",
               cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(157,78,221,0.15)",
+              boxShadow: "0 4px 20px rgba(184,74,106,0.15)",
               transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = ACCENT;
-              e.currentTarget.style.boxShadow = "0 8px 30px rgba(157,78,221,0.3)";
+              e.currentTarget.style.boxShadow = "0 8px 30px rgba(184,74,106,0.3)";
               e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(157,78,221,0.35)";
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(157,78,221,0.15)";
+              e.currentTarget.style.borderColor = "rgba(184,74,106,0.35)";
+              e.currentTarget.style.boxShadow = "0 4px 20px rgba(184,74,106,0.15)";
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
@@ -274,8 +274,8 @@ function FeatureImageCard({
           position: "absolute",
           inset: 0,
           background: isIvory
-            ? "radial-gradient(ellipse at 50% 30%, rgba(157,78,221,0.1) 0%, transparent 60%)"
-            : "radial-gradient(ellipse at 50% 30%, rgba(157,78,221,0.2) 0%, transparent 60%)",
+            ? "radial-gradient(ellipse at 50% 30%, rgba(184,74,106,0.1) 0%, transparent 60%)"
+            : "radial-gradient(ellipse at 50% 30%, rgba(184,74,106,0.2) 0%, transparent 60%)",
           pointerEvents: "none",
         }}
       />
@@ -303,7 +303,7 @@ function FeatureImageCard({
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           background: isIvory ? "rgba(255,255,255,0.75)" : "rgba(12,6,24,0.75)",
-          border: "1px solid rgba(157,78,221,0.25)",
+          border: "1px solid rgba(184,74,106,0.25)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -361,7 +361,7 @@ function ProgressDot({
         height,
         opacity,
         borderRadius: 999,
-        background: isIvory ? "rgba(157,78,221,0.8)" : ACCENT,
+        background: isIvory ? "rgba(184,74,106,0.8)" : ACCENT,
       }}
     />
   );
@@ -393,8 +393,8 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 24,
+    stiffness: 220,
+    damping: 28,
     restDelta: 0.0001,
   });
 
@@ -427,8 +427,8 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
             width: "min(90vw, 900px)",
             height: "min(70vh, 620px)",
             background: isIvory
-              ? "radial-gradient(ellipse at center, rgba(157,78,221,0.08) 0%, transparent 68%)"
-              : "radial-gradient(ellipse at center, rgba(157,78,221,0.15) 0%, transparent 68%)",
+              ? "radial-gradient(ellipse at center, rgba(184,74,106,0.08) 0%, transparent 68%)"
+              : "radial-gradient(ellipse at center, rgba(184,74,106,0.15) 0%, transparent 68%)",
             filter: "blur(50px)",
           }}
         />
@@ -442,20 +442,20 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
             maxWidth: 480,
             maxHeight: 480,
             background: isIvory
-              ? "radial-gradient(circle, rgba(123,47,190,0.06) 0%, transparent 70%)"
-              : "radial-gradient(circle, rgba(123,47,190,0.12) 0%, transparent 70%)",
+              ? "radial-gradient(circle, rgba(184,74,106,0.06) 0%, transparent 70%)"
+              : "radial-gradient(circle, rgba(184,74,106,0.12) 0%, transparent 70%)",
             filter: "blur(60px)",
           }}
         />
       </div>
 
       {isDesktop && !prefersReducedMotion ? (
-        /* Pinned Scroll Track Container (Height = (Total + 1) * 100vh) */
+        /* Pinned Scroll Track Container (Height = (Total + 1) * 50vh for faster scrolling) */
         <div
           ref={containerRef}
           style={{
             position: "relative",
-            height: `${(total + 1) * 100}vh`,
+            height: `${(total + 1) * 50}vh`,
           }}
         >
           {/* Sticky Viewport Container */}
@@ -479,7 +479,7 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
                 left: 0,
                 right: 0,
                 height: 3,
-                background: isIvory ? "rgba(157,78,221,0.15)" : "rgba(157,78,221,0.2)",
+                background: isIvory ? "rgba(184,74,106,0.15)" : "rgba(184,74,106,0.2)",
                 zIndex: 30,
               }}
             >
@@ -489,7 +489,7 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
                   background: ACCENT,
                   scaleX: smoothProgress,
                   transformOrigin: "left center",
-                  boxShadow: "0 0 10px #9D4EDD",
+                  boxShadow: "0 0 10px #b84a6a",
                 }}
               />
             </div>
@@ -598,8 +598,8 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
                 gap: 8,
                 padding: "8px 18px",
                 borderRadius: 999,
-                background: isIvory ? "rgba(157,78,221,0.08)" : "rgba(157,78,221,0.14)",
-                border: "1px solid rgba(157,78,221,0.25)",
+                background: isIvory ? "rgba(184,74,106,0.08)" : "rgba(184,74,106,0.14)",
+                border: "1px solid rgba(184,74,106,0.25)",
                 color: ACCENT,
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 600,
@@ -696,10 +696,10 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
                         borderRadius: 999,
                         fontFamily: "'Inter', sans-serif",
                         background: isIvory
-                          ? "rgba(157,78,221,0.08)"
-                          : "rgba(157,78,221,0.12)",
+                          ? "rgba(184,74,106,0.08)"
+                          : "rgba(184,74,106,0.12)",
                         color: ACCENT,
-                        border: "1px solid rgba(157,78,221,0.2)",
+                        border: "1px solid rgba(184,74,106,0.2)",
                         fontSize: "0.72rem",
                         fontWeight: 600,
                       }}
@@ -719,10 +719,10 @@ export default function ServicesSection({ id, onServiceClick }: Props) {
                         gap: 6,
                         padding: "10px 18px",
                         borderRadius: 8,
-                        border: "1px solid rgba(157,78,221,0.3)",
+                        border: "1px solid rgba(184,74,106,0.3)",
                         background: isIvory
-                          ? "rgba(157,78,221,0.05)"
-                          : "rgba(157,78,221,0.1)",
+                          ? "rgba(184,74,106,0.05)"
+                          : "rgba(184,74,106,0.1)",
                         color: "var(--belvo-text-1)",
                         fontFamily: "'Inter', sans-serif",
                         fontWeight: 600,
