@@ -1,9 +1,35 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 
+type TextSet = { title: string; sub: string };
 
+type SegNode = { html: string };
+type SegLine = SegNode[];
+type ParsedTitle = SegLine[];
+function parseTitle(html: string): ParsedTitle {
+  const lines = html.split(/<br\s*\/?>/i);
+  return lines.map((line) => {
+    const out: SegLine = [];
+    const re = /(<span[^>]*>.*?<\/span>)/gi;
+    let lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(line)) !== null) {
+      if (m.index > lastIndex) {
+        const text = line.slice(lastIndex, m.index);
+        if (text) out.push({ html: text });
+      }
+      out.push({ html: m[0] });
+      lastIndex = m.index + m[0].length;
+    }
+    if (lastIndex < line.length) {
+      const text = line.slice(lastIndex);
+      if (text) out.push({ html: text });
+    }
+    return out;
+  });
+}
 
-const TEXT_SETS = [
+const TEXT_SETS: TextSet[] = [
   {
     title: '<span style="color:#581a8a">Gen-Z</span> taste<br>with<br><span style="color:#581a8a">millennial</span> experience',
     sub: "We are a team of 50+ Gen-Z's ruling over millennials",
@@ -19,6 +45,36 @@ const TEXT_SETS = [
 ];
 
 const heroStyles = `
+@keyframes heroSegIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroLineIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes heroSubIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 0.85; transform: translateY(0); }
+}
+.hero-title__line {
+  display: block;
+  opacity: 0;
+  animation: heroLineIn 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.hero-title__seg {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroSegIn 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: opacity, transform;
+}
+.hero-subtitle-anim {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: heroSubIn 700ms cubic-bezier(0.4, 0, 0.2, 1) 120ms forwards;
+  will-change: opacity, transform;
+}
 @media (max-width: 1000px) {
   .hero-layout { padding: 2rem 2.5rem; }
   .hero-subtitle { max-width: 65%; }
@@ -33,11 +89,10 @@ const heroStyles = `
 export default function Home() {
   const [, navigate] = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subRef = useRef<HTMLDivElement>(null);
   const stateRef = useRef(0);
   const targetRef = useRef(0);
   const lastSnapRef = useRef(-1);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -220,23 +275,12 @@ gl_FragColor=vec4(color,1.0);
 
     function render() {
       const elapsed = (performance.now() - startTime) / 1000;
-      stateRef.current += (targetRef.current - stateRef.current) * 0.06;
+      stateRef.current += (targetRef.current - stateRef.current) * 0.035;
 
       const snap = Math.round(stateRef.current) % 3;
       if (snap !== lastSnapRef.current) {
         lastSnapRef.current = snap;
-        if (titleRef.current) {
-          titleRef.current.style.opacity = "0";
-          void titleRef.current.offsetHeight;
-          titleRef.current.innerHTML = TEXT_SETS[snap].title;
-          titleRef.current.style.opacity = "1";
-        }
-        if (subRef.current) {
-          subRef.current.style.opacity = "0";
-          void subRef.current.offsetHeight;
-          subRef.current.textContent = TEXT_SETS[snap].sub;
-          subRef.current.style.opacity = "1";
-        }
+        setIndex(snap);
       }
 
       gl.useProgram(program);
@@ -338,7 +382,8 @@ gl_FragColor=vec4(color,1.0);
           >
             <div style={{ display: "flex", flexDirection: "column", minHeight: "44vh", justifyContent: "center" }}>
               <h1
-                ref={titleRef}
+                key={`title-${index}`}
+                className="hero-title"
                 style={{
                   fontSize: "clamp(3.5rem, 10vw, 7rem)",
                   fontWeight: 900,
@@ -347,18 +392,33 @@ gl_FragColor=vec4(color,1.0);
                   fontFamily: "'Inter', 'Helvetica Neue', 'GT America', sans-serif",
                   color: "#161014",
                   textShadow: "0 4px 30px rgba(0,0,0,0.02)",
-                  transition: "opacity 0.35s ease",
-                  willChange: "opacity",
                   background: "rgba(255,245,240,0.04)",
                   backdropFilter: "blur(2px)",
                   WebkitBackdropFilter: "blur(2px)",
                   padding: "0.2rem 1rem 0.2rem 0",
                   borderRadius: "16px",
                 }}
-                dangerouslySetInnerHTML={{ __html: TEXT_SETS[0].title }}
-              />
+              >
+                {parseTitle(TEXT_SETS[index].title).map((line, lineIdx) => (
+                  <div
+                    key={lineIdx}
+                    className="hero-title__line"
+                    style={{ animationDelay: `${lineIdx * 90}ms` }}
+                  >
+                    {line.map((seg, segIdx) => (
+                      <span
+                        key={segIdx}
+                        className="hero-title__seg"
+                        style={{ animationDelay: `${lineIdx * 90 + segIdx * 70}ms` }}
+                        dangerouslySetInnerHTML={{ __html: seg.html }}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </h1>
               <div
-                ref={subRef}
+                key={`sub-${index}`}
+                className="hero-subtitle-anim"
                 style={{
                   marginTop: "0.5rem",
                   fontSize: "clamp(0.85rem, 1.3vw, 1.25rem)",
@@ -366,8 +426,6 @@ gl_FragColor=vec4(color,1.0);
                   letterSpacing: "-0.01em",
                   color: "#1f181c",
                   lineHeight: 1.5,
-                  transition: "opacity 0.35s ease",
-                  willChange: "opacity",
                   opacity: 0.85,
                   background: "rgba(255,245,240,0.04)",
                   backdropFilter: "blur(2px)",
@@ -376,7 +434,7 @@ gl_FragColor=vec4(color,1.0);
                   borderRadius: "40px",
                 }}
               >
-                {TEXT_SETS[0].sub}
+                {TEXT_SETS[index].sub}
               </div>
             </div>
           </div>
