@@ -7,11 +7,8 @@ import FAQ from "./FAQ";
 import Footer from "./Footer";
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number];
-const RED_GRADIENT = "linear-gradient(120deg, #32102d 0%, #5a1b4b 52%, #a25b88 100%)";
 const RED_TEXT = {
-  background: RED_GRADIENT,
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
+  color: "#391232",
 } as const;
 
 const fadeUp = {
@@ -43,7 +40,7 @@ function Counter({ from = 0, to, duration = 2, suffix = "" }: { from?: number; t
     return () => cancelAnimationFrame(animId);
   }, [inView, from, to, duration]);
 
-  return <span ref={ref}>{count}{suffix}</span>;
+  return <span ref={ref} style={RED_TEXT}>{count}{suffix}</span>;
 }
 
 export default function About() {
@@ -59,7 +56,7 @@ export default function About() {
       id="about"
       ref={sectionRef}
       style={{
-        background: "radial-gradient(ellipse at 8% 8%, rgba(45, 72, 133, 0.46), transparent 38%), radial-gradient(circle at 88% 16%, rgba(90, 27, 75, 0.2), transparent 26%), radial-gradient(ellipse at 57% 13%, rgba(224, 252, 255, 0.94), transparent 28%), radial-gradient(ellipse at 48% 88%, rgba(186, 248, 255, 0.72), transparent 52%), #d8efff",
+        background: "#000000",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -72,21 +69,6 @@ export default function About() {
     >
       <style>{`
         .about-blue-content {
-          --belvo-bg: #d8efff;
-          --belvo-bg-card: linear-gradient(145deg, rgba(240, 250, 255, 0.92), rgba(164, 214, 255, 0.62));
-          --belvo-bg-card-2: rgba(226, 246, 255, 0.86);
-          --belvo-bg-input: rgba(245, 253, 255, 0.88);
-          --belvo-border-card: rgba(8, 37, 113, 0.16);
-          --belvo-border-bottom: rgba(8, 37, 113, 0.12);
-          --belvo-border-divider: rgba(8, 37, 113, 0.24);
-          --belvo-border-input: rgba(8, 37, 113, 0.2);
-          --belvo-text-1: #071a63;
-          --belvo-text-2: #182248;
-          --belvo-text-3: #31456f;
-          --belvo-text-4: #5270a6;
-          --belvo-glow-blob: rgba(81, 163, 244, 0.3);
-          --belvo-red: #5a1b4b;
-          background: linear-gradient(180deg, #d8efff 0%, #e9f8ff 100%);
           width: 100%;
         }
       `}</style>
@@ -97,7 +79,7 @@ export default function About() {
           left: 0,
           right: 0,
           height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(13, 45, 120, 0.44), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(130,40,200,0.44), transparent)",
         }}
       />
 
@@ -111,7 +93,7 @@ export default function About() {
           height: "55vw",
           maxWidth: "700px",
           maxHeight: "700px",
-          background: "radial-gradient(ellipse at center, rgba(68, 139, 232, 0.34) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse at center, rgba(123,47,190,0.2) 0%, transparent 65%)",
           filter: "blur(70px)",
           pointerEvents: "none",
           y: bgY,
@@ -139,20 +121,20 @@ export default function About() {
                 fontWeight: 900,
                 fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
                 lineHeight: 1.08,
-                color: "#100f1b",
+                color: "#a5c9ff",
                 margin: "0 0 24px",
                 letterSpacing: "-0.02em",
                 textTransform: "uppercase",
               }}
             >
-              <span style={{ display: "inline" }}>
-                <span style={RED_TEXT}>100+ Clients.</span>
-              </span>
+              <span style={{
+                background: "linear-gradient(90deg, rgb(199, 148, 255), rgb(255, 180, 213))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}>100+ Clients.</span>
               <br />
-              <span style={{ color: "#071a63" }}>
-                <span style={{ display: "inline" }}>
-                  Stories made to be watched.
-                </span>
+              <span style={{ color: "#7cb4ff" }}>
+                Stories made to be watched.
               </span>
             </motion.h2>
 
@@ -165,7 +147,7 @@ export default function About() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "1rem",
                 lineHeight: "1.85",
-                color: "#182248",
+                color: "#aac4ff",
                 display: "flex",
                 flexDirection: "column",
                 gap: "20px",
@@ -263,7 +245,6 @@ export default function About() {
                     style={{
                       fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
                       fontWeight: 900,
-                      ...RED_TEXT,
                       fontFamily: "'Inter', sans-serif",
                       lineHeight: 1,
                     }}
@@ -275,7 +256,7 @@ export default function About() {
                       fontSize: "0.8rem",
                       textTransform: "uppercase",
                       letterSpacing: "0.1em",
-                      color: "#182248",
+                color: "#aac4ff",
                       marginTop: "4px",
                     }}
                   >
