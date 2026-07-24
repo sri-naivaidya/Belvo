@@ -163,6 +163,7 @@ export default function About() {
           position: "relative",
           zIndex: 1,
           width: "100%",
+          padding: "0 24px",
         }}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-10 lg:gap-16">
