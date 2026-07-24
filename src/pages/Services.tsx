@@ -6,6 +6,7 @@ import ServiceDialog from "@/components/ServiceDialog";
 import { SERVICES as SERVICE_ITEMS, type ServiceItem } from "@/content/services";
 import Footer from "@/sections/Footer";
 import BookACall from "@/sections/BookACall";
+import Testimonials from "@/sections/Testimonials";
 
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -268,6 +269,8 @@ export default function Services() {
           </div>
         </div>
       </section>
+
+      <Testimonials />
 
       {/* ── CTA ───────────────────────────────────────────────────── */}
       <section
