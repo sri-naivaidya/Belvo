@@ -15,17 +15,7 @@ function Card({ company, index, totalCards, scrollYProgress }: { company: typeof
   const rangeStart = index * (1 / totalCards);
   const rangeEnd = (index + 1) * (1 / totalCards);
 
-  const scale = useTransform(
-    scrollYProgress,
-    [rangeStart, rangeEnd],
-    [1, 0.95]
-  );
-
-  const opacity = useTransform(
-    scrollYProgress,
-    [rangeStart, rangeEnd],
-    [1, 0.5]
-  );
+  const scale = useTransform(scrollYProgress, [rangeStart, rangeEnd], [1, 0.95]);
 
   const isLast = index === totalCards - 1;
 
@@ -44,7 +34,6 @@ function Card({ company, index, totalCards, scrollYProgress }: { company: typeof
       <motion.div
         style={{
           scale: isLast ? 1 : scale,
-          opacity: isLast ? 1 : opacity,
           width: "100%",
           maxWidth: "800px",
           height: "100%",
