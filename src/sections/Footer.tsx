@@ -120,17 +120,17 @@ const LINK_COLUMNS: Array<{ title: string; links: FooterLink[] }> = [
   {
     title: "Company",
     links: [
-      { label: "About", id: "about" },
-      { label: "Services", id: "services" },
-      { label: "Portfolio", id: "portfolio" },
+      { label: "About", path: "/about", id: "about" },
+      { label: "Services", path: "/services" },
+      { label: "Portfolio", path: "/works", id: "portfolio" },
     ],
   },
   {
     title: "Resources",
     links: [
       { label: "Tools & Pricing", path: "/tools" },
-      { label: "FAQ", id: "faq" },
-      { label: "Book A Call", id: "book-a-call" },
+      { label: "FAQ", path: "/", id: "faq" },
+      { label: "Book A Call", path: "/", id: "book-a-call" },
     ],
   },
   {
@@ -256,10 +256,36 @@ function BrandMark() {
 
 export default function Footer() {
   const ref = useRef(null);
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], [0, -20]);
+
+  const handleFooterLinkClick = (link: FooterLink) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (link.href) return;
+
+    e.preventDefault();
+
+    if (link.path && link.path !== location) {
+      navigate(link.path);
+
+      if (link.id) {
+        window.setTimeout(() => {
+          scrollToId(link.id!);
+        }, 180);
+      }
+      return;
+    }
+
+    if (link.id) {
+      scrollToId(link.id);
+      return;
+    }
+
+    if (link.path) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <footer
@@ -443,15 +469,7 @@ export default function Footer() {
                       href={link.href ?? (link.path ?? (link.id ? `#${link.id}` : "#"))}
                       target={isExternal && link.href?.startsWith("http") ? "_blank" : undefined}
                       rel={isExternal && link.href?.startsWith("http") ? "noopener noreferrer" : undefined}
-                      onClick={e => {
-                        if (link.path) {
-                          e.preventDefault();
-                          navigate(link.path);
-                        } else if (link.id) {
-                          e.preventDefault();
-                          scrollToId(link.id);
-                        }
-                      }}
+                      onClick={handleFooterLinkClick(link)}
                       style={{
                         display: "inline-flex", alignItems: "center", gap: "8px",
                         background: "none", border: "none", padding: 0, cursor: "pointer",
