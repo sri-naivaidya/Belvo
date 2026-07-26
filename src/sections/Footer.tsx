@@ -136,7 +136,9 @@ const LINK_COLUMNS: Array<{ title: string; links: FooterLink[] }> = [
   {
     title: "Join & Support",
     links: [
-      { label: "Join as a Belvo Client", href: "mailto:contact.belvo@gmail.com?subject=Join%20as%20Belvo%20Client" },
+      { label: "Join as Belvo Family Member", href: "mailto:contact.belvo@gmail.com?subject=Join%20as%20Belvo%20Family%20Member" },
+      { label: "Intern Portal", path: "/intern/login" },
+      { label: "Join as a Belvo Client", path: "/client" },
       { label: "Referral Programs", href: "mailto:contact.belvo@gmail.com?subject=Referral%20Programs" },
       { label: "Help & Support", href: "mailto:contact.belvo@gmail.com?subject=Help%20and%20Support" },
       { label: "Collaboration With Us", href: "mailto:contact.belvo@gmail.com?subject=Collaboration%20With%20Us" },
