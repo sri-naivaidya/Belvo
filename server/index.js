@@ -9,12 +9,9 @@ import express from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import multer from "multer";
+import nodemailer from "nodemailer";
 import { TOOLS_CATALOG } from "./data/tools.js";
-import {
-  authenticateToken,
-  authorizeRoles,
-  getJWTSecret,
-} from "./middleware/auth.js";
+import { authenticateToken, getJWTSecret } from "./middleware/auth.js";
 import { supabase, isDbReady } from "./db.js";
 
 const app = express();
@@ -54,6 +51,22 @@ const upload = multer({
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "belvo@2024";
 
+// ── In-memory stores for intern OTP + checklist ───────
+const otpStore = new Map();       // email → { otp, expiresAt }
+const checklistStore = new Map(); // email → { watchedLms, offerLetter, idCard }
+
+// ── Nodemailer config (reused from api/register.js) ───
+const SMTP_USER = process.env.SMTP_USER || "spam.belvo@gmail.com";
+const SMTP_PASS = process.env.SMTP_PASS || "nyzo edfk irqp zzkz";
+const HR_EMAIL = process.env.HR_EMAIL || "belvo.hr@gmail.com";
+
+const emailTransporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: { user: SMTP_USER, pass: SMTP_PASS },
+});
+
 // ── Auth Routes ────────────────────────────────────────
 app.post("/admin/login", async (req, res) => {
   try {
@@ -80,6 +93,407 @@ app.post("/admin/login", async (req, res) => {
   }
 });
 
+// ── Intern OTP Auth Routes ───────────────────────────
+
+const ALLOWED_INTERN_EMAIL = "intern.belvo@gmail.com";
+
+// POST /intern/send-otp — Generate and send OTP to email
+app.post("/intern/send-otp", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ success: false, message: "Valid email is required" });
+    }
+
+    if (email.toLowerCase() !== ALLOWED_INTERN_EMAIL) {
+      return res.status(403).json({ success: false, message: "This email is not authorized for intern access" });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 60000; // 60 seconds
+
+    // Store OTP
+    otpStore.set(email.toLowerCase(), { otp, expiresAt });
+
+    // Send OTP email
+    await emailTransporter.sendMail({
+      from: `"BELVO Intern Portal" <${SMTP_USER}>`,
+      to: email,
+      subject: "Your BELVO Verification Code",
+      html: `
+        <div style="font-family: Inter, Arial, sans-serif; max-width: 480px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+          <div style="background: linear-gradient(135deg, #7B2FBE, #9D4EDD); padding: 32px 28px; text-align: center;">
+            <h1 style="margin: 0; color: #fff; font-size: 22px;">Verification Code</h1>
+            <p style="margin: 6px 0 0; color: rgba(255,255,255,0.75); font-size: 13px;">BELVO Intern Portal</p>
+          </div>
+          <div style="padding: 32px; text-align: center;">
+            <p style="color: #555; font-size: 14px; margin: 0 0 16px;">Your 6-digit verification code is:</p>
+            <div style="font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #7B2FBE; padding: 16px; background: #f5f0ff; border-radius: 12px; margin: 0 0 16px;">${otp}</div>
+            <p style="color: #999; font-size: 12px; margin: 0;">This code expires in 1 minute.</p>
+            <p style="color: #999; font-size: 12px; margin: 8px 0 0;">If you didn't request this, please ignore this email.</p>
+          </div>
+          <div style="text-align: center; padding: 16px; background: #fafafa; font-size: 12px; color: #aaa;">BELVO — belvo.buzz</div>
+        </div>
+      `,
+    });
+
+    res.json({ success: true, message: "OTP sent successfully" });
+  } catch (err) {
+    console.error("Send OTP error:", err);
+    res.status(500).json({ success: false, message: "Failed to send OTP. Please try again." });
+  }
+});
+
+// POST /intern/verify-otp — Verify OTP and return JWT
+app.post("/intern/verify-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: "Email and OTP are required" });
+    }
+
+    const stored = otpStore.get(email.toLowerCase());
+
+    if (!stored) {
+      return res.status(400).json({ success: false, message: "No OTP found. Please request a new one." });
+    }
+
+    if (Date.now() > stored.expiresAt) {
+      otpStore.delete(email.toLowerCase());
+      return res.status(400).json({ success: false, message: "OTP has expired. Please request a new one." });
+    }
+
+    if (stored.otp !== otp.toString()) {
+      return res.status(400).json({ success: false, message: "Invalid OTP. Please try again." });
+    }
+
+    // OTP valid — delete from store and issue JWT
+    otpStore.delete(email.toLowerCase());
+    checklistStore.delete(email.toLowerCase());
+
+    const token = jwt.sign(
+      { email: email.toLowerCase(), role: "intern" },
+      getJWTSecret(),
+      { expiresIn: "7d" }
+    );
+
+    res.json({ success: true, token, email: email.toLowerCase() });
+  } catch (err) {
+    console.error("Verify OTP error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// POST /intern/submit-offer-letter — Send offer letter request to HR
+app.post("/intern/submit-offer-letter", async (req, res) => {
+  try {
+    const { email, name, age, aadharNumber, designation, tenure, address } = req.body;
+
+    if (!email || !name || !age || !aadharNumber || !designation || !tenure || !address) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    // Send to HR
+    await emailTransporter.sendMail({
+      from: `"BELVO Intern Portal" <${SMTP_USER}>`,
+      to: HR_EMAIL,
+      subject: `New Offer Letter Request — ${name}`,
+      html: `
+        <div style="font-family: Inter, Arial, sans-serif; max-width: 560px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+          <div style="background: linear-gradient(135deg, #7B2FBE, #9D4EDD); padding: 32px 28px; text-align: center;">
+            <h1 style="margin: 0; color: #fff; font-size: 22px;">New Offer Letter Request</h1>
+            <p style="margin: 6px 0 0; color: rgba(255,255,255,0.75); font-size: 13px;">BELVO Intern Portal</p>
+          </div>
+          <div style="padding: 28px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em;">Name</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${name}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Email</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${email}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Age</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${age}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Aadhar Number</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${aadharNumber}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Designation</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${designation}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Tenure</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${tenure}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Address</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${address}</td></tr>
+            </table>
+          </div>
+          <div style="text-align: center; padding: 16px; background: #fafafa; font-size: 12px; color: #aaa;">BELVO — belvo.buzz</div>
+        </div>
+      `,
+    });
+
+    // Mark checklist item complete
+    const key = email.toLowerCase();
+    const current = checklistStore.get(key) || { watchedLms: false, offerLetter: false, idCard: false, instagram: false, linkedin: false, whatsapp: false, nda: false };
+    current.offerLetter = true;
+    checklistStore.set(key, current);
+
+    res.json({ success: true, message: "Offer letter request submitted successfully" });
+  } catch (err) {
+    console.error("Submit offer letter error:", err);
+    res.status(500).json({ success: false, message: "Failed to submit request. Please try again." });
+  }
+});
+
+// POST /intern/submit-id-card — Send ID card request to HR
+app.post("/intern/submit-id-card", async (req, res) => {
+  try {
+    const { email, name, department, photoBase64 } = req.body;
+
+    if (!email || !name || !department) {
+      return res.status(400).json({ success: false, message: "Name and department are required" });
+    }
+
+    // Build email options
+    const mailOptions = {
+      from: `"BELVO Intern Portal" <${SMTP_USER}>`,
+      to: HR_EMAIL,
+      subject: `New ID Card Request — ${name}`,
+      html: `
+        <div style="font-family: Inter, Arial, sans-serif; max-width: 560px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+          <div style="background: linear-gradient(135deg, #7B2FBE, #9D4EDD); padding: 32px 28px; text-align: center;">
+            <h1 style="margin: 0; color: #fff; font-size: 22px;">New ID Card Request</h1>
+            <p style="margin: 6px 0 0; color: rgba(255,255,255,0.75); font-size: 13px;">BELVO Intern Portal</p>
+          </div>
+          <div style="padding: 28px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em;">Name</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${name}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Email</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${email}</td></tr>
+              <tr><td style="padding: 10px 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Department</td></tr>
+              <tr><td style="padding: 0 0 16px; font-size: 16px; font-weight: 600; color: #222;">${department}</td></tr>
+            </table>
+          </div>
+          <div style="text-align: center; padding: 16px; background: #fafafa; font-size: 12px; color: #aaa;">BELVO — belvo.buzz</div>
+        </div>
+      `,
+      attachments: [],
+    };
+
+    // Attach photo if provided
+    if (photoBase64) {
+      const matches = photoBase64.match(/^data:(.+);base64,(.+)$/);
+      if (matches) {
+        const mimeType = matches[1];
+        const buffer = Buffer.from(matches[2], "base64");
+        const ext = mimeType.split("/")[1] || "jpg";
+        mailOptions.attachments.push({
+          filename: `photo-${name.replace(/\s+/g, "-")}.${ext}`,
+          content: buffer,
+          contentType: mimeType,
+        });
+      }
+    }
+
+    await emailTransporter.sendMail(mailOptions);
+
+    // Mark checklist item complete
+    const key = email.toLowerCase();
+    const current = checklistStore.get(key) || { watchedLms: false, offerLetter: false, idCard: false, instagram: false, linkedin: false, whatsapp: false, nda: false };
+    current.idCard = true;
+    checklistStore.set(key, current);
+
+    res.json({ success: true, message: "ID card request submitted successfully" });
+  } catch (err) {
+    console.error("Submit ID card error:", err);
+    res.status(500).json({ success: false, message: "Failed to submit request. Please try again." });
+  }
+});
+
+// GET /intern/checklist-status — Get checklist completion status
+app.get("/intern/checklist-status", (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    const status = checklistStore.get(email.toLowerCase()) || {
+      watchedLms: false,
+      offerLetter: false,
+      idCard: false,
+      instagram: false,
+      linkedin: false,
+      whatsapp: false,
+      nda: false,
+    };
+
+    res.json({ success: true, status });
+  } catch (err) {
+    console.error("Checklist status error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// POST /intern/submit-nda — Upload signed NDA PDF
+app.post("/intern/submit-nda", async (req, res) => {
+  try {
+    const { email, name, pdfBase64 } = req.body;
+
+    if (!email || !pdfBase64) {
+      return res.status(400).json({ success: false, message: "Email and PDF file are required" });
+    }
+
+    const pdfBuffer = Buffer.from(pdfBase64, "base64");
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
+    });
+
+    await transporter.sendMail({
+      from: `"BELVO Intern Portal" <${SMTP_USER}>`,
+      to: HR_EMAIL,
+      subject: `NDA Signed — ${name || email}`,
+      html: `<h2>NDA Submission</h2><p><strong>Name:</strong> ${name || "N/A"}</p><p><strong>Email:</strong> ${email}</p>`,
+      attachments: [{ filename: `NDA_${(name || email).replace(/[^a-zA-Z0-9]/g, "_")}.pdf`, content: pdfBuffer, contentType: "application/pdf" }],
+    });
+
+    const key = email.toLowerCase();
+    const current = checklistStore.get(key) || { watchedLms: false, offerLetter: false, idCard: false, instagram: false, linkedin: false, whatsapp: false, nda: false };
+    current.nda = true;
+    checklistStore.set(key, current);
+
+    res.json({ success: true, message: "NDA submitted successfully" });
+  } catch (err) {
+    console.error("Submit NDA error:", err);
+    res.status(500).json({ success: false, message: "Failed to submit NDA. Please try again." });
+  }
+});
+
+// POST /intern/mark-checklist — Toggle a checklist item (LMS, Offer Letter, ID Card)
+app.post("/intern/mark-checklist", (req, res) => {
+  try {
+    const { email, item } = req.body;
+
+    if (!email || !item) {
+      return res.status(400).json({ success: false, message: "Email and item are required" });
+    }
+
+    const validItems = ["watchedLms", "offerLetter", "idCard"];
+    if (!validItems.includes(item)) {
+      return res.status(400).json({ success: false, message: "Invalid checklist item" });
+    }
+
+    const key = email.toLowerCase();
+    const current = checklistStore.get(key) || { watchedLms: false, offerLetter: false, idCard: false, instagram: false, linkedin: false, whatsapp: false, nda: false };
+    current[item] = !current[item];
+    checklistStore.set(key, current);
+
+    res.json({ success: true, message: "Item updated", value: current[item] });
+  } catch (err) {
+    console.error("Mark checklist error:", err);
+    res.status(500).json({ success: false, message: "Failed to update status" });
+  }
+});
+
+// POST /intern/mark-social — Mark a social checklist item as done
+app.post("/intern/mark-social", (req, res) => {
+  try {
+    const { email, item } = req.body;
+
+    if (!email || !item) {
+      return res.status(400).json({ success: false, message: "Email and item are required" });
+    }
+
+    const validItems = ["instagram", "linkedin", "whatsapp"];
+    if (!validItems.includes(item)) {
+      return res.status(400).json({ success: false, message: "Invalid social item" });
+    }
+
+    const key = email.toLowerCase();
+    const current = checklistStore.get(key) || { watchedLms: false, offerLetter: false, idCard: false, instagram: false, linkedin: false, whatsapp: false, nda: false };
+    current[item] = true;
+    checklistStore.set(key, current);
+
+    res.json({ success: true, message: "Item marked as complete" });
+  } catch (err) {
+    console.error("Mark social error:", err);
+    res.status(500).json({ success: false, message: "Failed to update status" });
+  }
+});
+
+// POST /intern/submit-onboarding — Send comprehensive summary to HR
+app.post("/intern/submit-onboarding", async (req, res) => {
+  try {
+    const { email, offerLetter, idCard, nda, social } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    const socialChecked = [];
+    if (social?.instagram) socialChecked.push("Instagram");
+    if (social?.linkedin) socialChecked.push("LinkedIn");
+    if (social?.whatsapp) socialChecked.push("WhatsApp Community");
+
+    const checklistItems = [];
+    if (offerLetter) checklistItems.push("Offer Letter Request");
+    if (idCard) checklistItems.push("ID Card Request");
+    if (nda) checklistItems.push("NDA Signed");
+
+    await emailTransporter.sendMail({
+      from: `"BELVO Intern Portal" <${SMTP_USER}>`,
+      to: HR_EMAIL,
+      subject: `Onboarding Complete — ${offerLetter?.name || email}`,
+      html: `
+        <div style="font-family: Inter, Arial, sans-serif; max-width: 560px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+          <div style="background: linear-gradient(135deg, #7B2FBE, #9D4EDD); padding: 32px 28px; text-align: center;">
+            <h1 style="margin: 0; color: #fff; font-size: 22px;">Onboarding Completed</h1>
+            <p style="margin: 6px 0 0; color: rgba(255,255,255,0.75); font-size: 13px;">BELVO Intern Portal</p>
+          </div>
+          <div style="padding: 28px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              ${offerLetter ? `
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Email</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${email}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Full Name</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.name}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Age</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.age}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Aadhar Number</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.aadharNumber}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Designation</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.designation}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Tenure</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.tenure}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Address</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${offerLetter.address}</td></tr>
+              ` : ''}
+              ${idCard ? `
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">ID Card Name</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${idCard.name}</td></tr>
+                <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">ID Card Department</td></tr>
+                <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${idCard.department}</td></tr>
+              ` : ''}
+              <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Checklist Completed</td></tr>
+              <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${checklistItems.length > 0 ? checklistItems.join(" ✅<br>") + " ✅" : "None"}</td></tr>
+              <tr><td style="padding: 10px 0 6px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px solid #eee;">Social Media Followed</td></tr>
+              <tr><td style="padding: 0 0 12px; font-size: 15px; color: #222;">${socialChecked.length > 0 ? socialChecked.join(" ✅<br>") + " ✅" : "None"}</td></tr>
+            </table>
+          </div>
+          <div style="text-align: center; padding: 16px; background: #fafafa; font-size: 12px; color: #aaa;">BELVO — belvo.buzz</div>
+        </div>
+      `,
+    });
+
+    res.json({ success: true, message: "Onboarding summary sent to HR" });
+  } catch (err) {
+    console.error("Submit onboarding error:", err);
+    res.status(500).json({ success: false, message: "Failed to send summary" });
+  }
+});
+
 // ── Health Check ───────────────────────────────────────
 app.get("/api/health", (req, res) => {
   res.json({
@@ -88,19 +502,6 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-// ── Temporary Role Test Route ──────────────────────────
-app.get(
-  "/api/admin-test",
-  authenticateToken,
-  authorizeRoles("admin"),
-  (req, res) => {
-    res.json({
-      success: true,
-      message: "Admin access granted",
-      user: req.user,
-    });
-  }
-);
 
 // ── Team Routes ────────────────────────────────────────
 
