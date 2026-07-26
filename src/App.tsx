@@ -19,6 +19,11 @@ import Tools from "@/pages/Tools";
 import ToolRegister from "@/pages/ToolRegister";
 import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
+import { isAuthenticated as isInternAuthenticated } from "@/lib/intern-auth";
+import InternLogin from "@/pages/intern/Login";
+import InternDashboard from "@/pages/intern/Dashboard";
+import InternChecklist from "@/pages/intern/Checklist";
+import ClientComingSoon from "@/pages/client/ClientComingSoon";
 import { isAuthenticated } from "@/lib/admin-api";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -30,6 +35,7 @@ import DemoOne from "@/pages/DemoOne";
 import NotesPDFs from "@/pages/NotesPDFs";
 import LLMs from "@/pages/LLMs";
 import Videos from "@/pages/Videos";
+import TeamStoryPage from "@/pages/TeamStoryPage";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +71,34 @@ function Router() {
     );
   }
 
+  if (location.startsWith("/intern")) {
+    return (
+      <div
+        style={{ background: "#0a0a0f", minHeight: "100dvh", color: "var(--belvo-text-1)" }}
+      >
+        <Switch>
+          <Route path="/intern/login" component={InternLogin} />
+          <Route path="/intern/checklist" component={InternChecklist} />
+          <Route path="/intern">
+            {isInternAuthenticated() ? <InternDashboard /> : <Redirect to="/intern/login" />}
+          </Route>
+        </Switch>
+      </div>
+    );
+  }
+
+  if (location.startsWith("/client")) {
+    return (
+      <div
+        style={{ background: "#0a0a0f", minHeight: "100dvh", color: "var(--belvo-text-1)" }}
+      >
+        <Switch>
+          <Route path="/client" component={ClientComingSoon} />
+        </Switch>
+      </div>
+    );
+  }
+
   return (
     <div
       className="min-h-[100dvh] flex flex-col"
@@ -81,7 +115,6 @@ function Router() {
               <Route path="/blogs" component={Blogs} />
               <Route path="/services" component={Services} />
               <Route path="/works" component={Works} />
-              <Route path="/videos" component={Videos} />
               <Route path="/tools" component={Tools} />
               <Route path="/tools/register" component={ToolRegister} />
               <Route path="/event-register/:id" component={EventRegistration} />
@@ -93,6 +126,8 @@ function Router() {
               <Route path="/notes-pdfs" component={NotesPDFs} />
               <Route path="/llms" component={LLMs} />
               <Route path="/lms" component={LLMs} />
+              <Route path="/videos" component={Videos} />
+              <Route path="/team-story" component={TeamStoryPage} />
               <Route path="/resources" component={Blogs} />
               <Route component={NotFound} />
             </Switch>
