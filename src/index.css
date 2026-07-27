@@ -297,13 +297,6 @@ section {
 img {
   transition: opacity 0.3s ease;
 }
-img[loading] {
-  opacity: 0;
-}
-img[loading].loaded,
-img[loading][complete] {
-  opacity: 1;
-}
 .chat-scroll::-webkit-scrollbar {
   width: 6px;
 }
