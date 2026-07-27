@@ -1,10 +1,13 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ArrowLeft, SearchX } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div style={{
+    <>
+      <SEO title="Page Not Found" description="The page you're looking for doesn't exist or has been moved." path="/404" />
+      <div style={{
       minHeight: "100vh",
       background: "var(--belvo-bg)",
       display: "flex",
@@ -85,5 +88,6 @@ export default function NotFound() {
         </Link>
       </motion.div>
     </div>
+    </>
   );
 }

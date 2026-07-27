@@ -230,7 +230,7 @@ export default function UpcomingEvents() {
     >
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, var(--belvo-border-divider), transparent)" }} />
 
-            style={{ position: "absolute", top: "35%", left: "50%", transform: "translate(-50%, -50%)", width: "60vw", height: "60vw", maxWidth: "750px", maxHeight: "750px", background: "radial-gradient(ellipse at center, rgba(57,88,134,0.22) 0%, transparent 65%)", filter: "blur(70px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "35%", left: "50%", transform: "translate(-50%, -50%)", width: "60vw", height: "60vw", maxWidth: "750px", maxHeight: "750px", background: "radial-gradient(ellipse at center, rgba(57,88,134,0.22) 0%, transparent 65%)", filter: "blur(70px)", pointerEvents: "none" }} />
 
       <motion.div
         initial={{ opacity: 0 }}

@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import ExploreSection from "./ExploreSection";
@@ -52,20 +53,22 @@ export default function About() {
   const bgY = useTransform(scrollYProgress, [0, 1], [0, -30]);
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      style={{
-        background: "#000000",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        overflow: "visible",
-        padding: "clamp(64px, 8vw, 104px) 24px 0",
-      }}
+    <>
+      <SEO title="About Us" description="Learn about Belvo — a creative agency with 100+ clients, building brands from scratch and scaling businesses globally." path="/about" />
+      <section
+        id="about"
+        ref={sectionRef}
+        style={{
+          background: "#000000",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          overflow: "visible",
+          padding: "clamp(64px, 8vw, 104px) 24px 0",
+        }}
     >
       <style>{`
         .about-blue-content {
@@ -108,7 +111,7 @@ export default function About() {
           width: "100%",
         }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-8 lg:gap-16">
 
           <div>
             <motion.h2
@@ -295,6 +298,7 @@ export default function About() {
                       key={image}
                       src={`/OfficeImages/${image}.jpeg`}
                       alt={`Belvo studio ${index + 1}`}
+                      loading="lazy"
                       initial={{ opacity: 0, y: 12 }}
                       animate={statsInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.45, delay: 1.25 + index * 0.1, ease: easeOut }}
@@ -312,9 +316,10 @@ export default function About() {
         <BookACall />
         <FAQ />
       </div>
-      <div style={{ width: "calc(100% + 48px)", marginLeft: "-24px", marginRight: "-24px" }}>
+      <div style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}>
         <Footer />
       </div>
     </section>
+    </>
   );
 }

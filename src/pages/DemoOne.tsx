@@ -1,8 +1,11 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 
 export default function DemoOne() {
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <>
+      <SEO title="Book a Demo" description="Schedule a demo with Belvo to see how our creative agency can help scale your brand." path="/demo" />
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -30,5 +33,6 @@ export default function DemoOne() {
         </motion.p>
       </div>
     </div>
+    </>
   );
 }

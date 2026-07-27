@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import SEO from "@/components/SEO";
 
 type TextSet = { title: string; sub: string };
 
@@ -81,8 +82,9 @@ const heroStyles = `
 }
 @media (max-width: 700px) {
   .hero-layout { padding: 1.5rem; }
-  .hero-title { max-width: 100%; font-size: clamp(3rem, 12vw, 5rem); }
+  .hero-title { max-width: 100%; font-size: clamp(2.5rem, 12vw, 5rem); }
   .hero-subtitle { max-width: 100%; font-size: 0.8rem; }
+  .hero-bottom-cta { align-self: center !important; }
 }
 `;
 
@@ -306,11 +308,16 @@ gl_FragColor=vec4(color,1.0);
 
   return (
     <>
+      <SEO
+        title="A Perfect Agency For Your Brand"
+        description="Belvo is a high-end creative agency that builds brands from scratch. We help ideas come into reality and scale your business globally."
+        path="/"
+      />
       <div
         style={{
           position: "relative",
-          width: "100vw",
-          height: "100vh",
+          width: "100%",
+          height: "100dvh",
           overflow: "hidden",
           background: "#0a0810",
           fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
@@ -362,7 +369,7 @@ gl_FragColor=vec4(color,1.0);
             zIndex: 10,
             width: "100%",
             height: "100%",
-            padding: "3.5rem 4.5rem",
+            padding: "clamp(1rem, 4vw, 3.5rem) clamp(1rem, 4vw, 4.5rem)",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
@@ -439,7 +446,7 @@ gl_FragColor=vec4(color,1.0);
             </div>
           </div>
 
-          <div style={{ marginTop: "auto", alignSelf: "flex-end" }}>
+          <div className="hero-bottom-cta" style={{ marginTop: "auto", alignSelf: "flex-end" }}>
             <div
               onClick={() => { window.location.href = "/videos"; }}
               role="button"
@@ -453,10 +460,10 @@ gl_FragColor=vec4(color,1.0);
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
                 border: "2px solid #1a1418",
-                padding: "0.9rem 2.2rem",
+                padding: "clamp(0.6rem, 2vw, 0.9rem) clamp(1.2rem, 4vw, 2.2rem)",
                 borderRadius: "60px",
                 fontWeight: 600,
-                fontSize: "1rem",
+                fontSize: "clamp(0.8rem, 2.5vw, 1rem)",
                 letterSpacing: "0.02em",
                 color: "#1a1418",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,0.12)",

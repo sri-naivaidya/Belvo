@@ -228,6 +228,7 @@ function BrandMark() {
       <img
         src="/belvo-logo-transparent.png"
         alt="BELVO"
+        loading="lazy"
         style={{
           height: "32px",
           width: "auto",
@@ -296,8 +297,7 @@ export default function Footer() {
       style={{
         background: "radial-gradient(ellipse at 50% 0%, rgba(244, 91, 150, 0.22) 0%, transparent 65%), linear-gradient(180deg, var(--belvo-bg) 0%, #1e0616 35%, #0d020a 100%)",
         alignSelf: "stretch",
-        margin: "0 -24px",
-        width: "calc(100% + 48px)",
+        width: "100%",
         position: "relative",
         overflow: "hidden",
       }}

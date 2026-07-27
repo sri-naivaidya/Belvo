@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, ArrowLeft, FileText, Clock, BookOpen, Code, Cpu, Layers, ArrowUpRight } from "lucide-react";
@@ -170,9 +171,11 @@ export default function NotesPDFs() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8f6fc", fontFamily: "'Inter',sans-serif" }}>
-      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "48px 24px 80px" }}>
-        <Link href="/careers">
+    <>
+      <SEO title="Notes & PDFs" description="Access Belvo's curated notes, PDFs, and learning resources for developers and designers." path="/notes-pdfs" />
+      <div style={{ minHeight: "100vh", background: "#f8f6fc", fontFamily: "'Inter',sans-serif" }}>
+        <div style={{ maxWidth: "960px", margin: "0 auto", padding: "48px 24px 80px" }}>
+          <Link href="/careers">
           <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#7B2FBE", fontSize: "0.85rem", fontWeight: 500, marginBottom: "24px" }}>
             <ArrowLeft size={16} /> Back to Careers
           </span>
@@ -299,5 +302,6 @@ export default function NotesPDFs() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useRef, useState, type ElementType } from "react";
 import { motion, useInView } from "framer-motion";
 import {
@@ -1204,6 +1205,7 @@ export default function Blogs() {
 
   return (
     <>
+      <SEO title="Blogs & Resources" description="Read Belvo's blogs on branding, web development, design trends, startup growth, and digital strategy." path="/blogs" />
       {/* HERO */}
 
       <section

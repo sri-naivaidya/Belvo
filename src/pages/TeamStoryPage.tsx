@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import Footer from "@/sections/Footer";
 
@@ -45,6 +46,7 @@ const sections = [
 export default function TeamStoryPage() {
   return (
     <>
+      <SEO title="Team Story" description="Meet the people behind Belvo — our team's journey, culture, and the stories that define us." path="/team-story" />
       <section
         style={{
           background: "var(--belvo-bg)",

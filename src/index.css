@@ -235,17 +235,25 @@ body {
   }
 }
 
+/* ─── Mobile menu safety ────────────────────────────────────────────── */
+body.menu-open {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+}
+
 /* ─── Responsive & Smooth UX ────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr !important;
-  }
-  section {
+  section:not(.hero-section) {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
   h1, h2 {
     word-break: break-word;
+  }
+  /* Only collapse auto-fill grids on mobile, not explicit grid layouts */
+  .grid-adaptive {
+    grid-template-columns: 1fr !important;
   }
 }
 

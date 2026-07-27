@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import React, { useRef, useState } from "react";
 import { motion, useInView, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -228,6 +229,7 @@ export default function Careers() {
 
   return (
     <>
+      <SEO title="Careers" description="Join the Belvo team — we're hiring creative minds to build brands, products, and experiences that matter." path="/careers" />
       {/* HERO */}
       <section ref={heroRef}
         style={{

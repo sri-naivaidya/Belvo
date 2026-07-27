@@ -253,7 +253,7 @@ function CeoCard({ inView }: { inView: boolean }) {
             boxShadow: `0 0 30px ${gold}33`,
           }}>
             {ceoImg ? (
-              <img src={ceoImg} alt={CEO.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+              <img src={ceoImg} alt={CEO.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
             ) : (
               <>
                 <div style={{ position: "absolute", inset: 4, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.3)" }} />
@@ -346,7 +346,7 @@ function MemberCard({
           position: "relative", overflow: "hidden",
         }}>
           {img ? (
-            <img src={img} alt={name} style={{
+            <img src={img} alt={name} loading="lazy" style={{
               width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%",
               objectPosition: name === "Mohammad Anasuddin Zaid" ? "50% 30%" : "50% 50%",
             }} />

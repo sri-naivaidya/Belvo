@@ -1,9 +1,12 @@
+import SEO from "@/components/SEO";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 
 export default function ComingSoon({ title }: { title: string }) {
   return (
-    <div className="min-h-screen pt-24 pb-12 flex flex-col items-center justify-center bg-background px-6">
+    <>
+      <SEO title={title} description={`${title} — Coming soon from Belvo.`} path={`/${title.toLowerCase().replace(/\s+/g, "-")}`} />
+      <div className="min-h-screen pt-24 pb-12 flex flex-col items-center justify-center bg-background px-6">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -22,5 +25,6 @@ export default function ComingSoon({ title }: { title: string }) {
         </Link>
       </motion.div>
     </div>
+    </>
   );
 }

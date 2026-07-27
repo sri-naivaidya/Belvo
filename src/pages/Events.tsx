@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { EVENTS } from "@/lib/events";
@@ -160,6 +161,7 @@ function EventCard({ event, index }: { event: typeof EVENTS[0]; index: number })
 export default function Events() {
   return (
     <>
+      <SEO title="Events" description="Join Belvo at our upcoming events — workshops, meetups, and creative showcases." path="/events" />
       <section
         style={{
           background: "var(--belvo-bg)",

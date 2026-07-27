@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import ExploreSection from "@/sections/ExploreSection";
 import Footer from "@/sections/Footer";
 import { motion } from "framer-motion";
@@ -5,6 +6,7 @@ import { motion } from "framer-motion";
 export default function Videos() {
   return (
     <>
+      <SEO title="Videos" description="Watch Belvo's creative work in motion — campaign moments, case studies, and brand stories." path="/videos" />
       <section
         style={{
           background: "var(--belvo-bg)",

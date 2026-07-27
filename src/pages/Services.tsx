@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
@@ -29,6 +30,7 @@ export default function Services() {
 
   return (
     <>
+      <SEO title="Services" description="Belvo offers branding, web development, social media, content creation, and design services to scale your business." path="/services" />
       {/* ── HERO ──────────────────────────────────────────────────── */}
       <section
         style={{

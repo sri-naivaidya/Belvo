@@ -31,12 +31,12 @@ export default function Navbar() {
 
   React.useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("menu-open");
     } else {
-      document.body.style.overflow = "";
+      document.body.classList.remove("menu-open");
     }
     return () => {
-      document.body.style.overflow = "";
+      document.body.classList.remove("menu-open");
     };
   }, [isOpen]);
 
@@ -88,7 +88,7 @@ export default function Navbar() {
 
         <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5" data-testid="link-logo">
           <img
-            src="/belvo-logo-transparent.png" alt="BELVO" className="h-8 w-auto"
+            src="/belvo-logo-transparent.png" alt="BELVO" className="h-8 w-auto" loading="lazy"
             style={{ filter: "drop-shadow(0 0 4px rgba(157,78,221,0.4))" }}
           />
           <span
@@ -168,7 +168,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="lg:hidden p-2 relative z-50"
+          className="lg:hidden p-2 relative z-[60]"
           style={{ color: "var(--belvo-text-1)" }}
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
@@ -186,68 +186,82 @@ export default function Navbar() {
             </motion.span>
           </AnimatePresence>
         </button>
+      </div>
 
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.28 }}
-              className="fixed inset-0 z-40 flex flex-col items-center justify-center"
-              style={{ background: "var(--belvo-bg)" }}
-            >
-              <div className="flex flex-col items-center gap-9">
-                {NAV_LINKS.map((link, i) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: i * 0.06 + 0.04 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={(e) => handleNavClick(e, link.href)}
-                      data-testid={`link-mobile-${link.name.toLowerCase()}`}
-                      className="text-3xl font-light tracking-[0.2em] uppercase"
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        color: isLinkActive(link.href) ? "#9D4EDD" : "var(--belvo-text-1)",
-                        opacity: isLinkActive(link.href) ? 1 : 0.8,
-                      }}
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
-
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+            style={{
+              background: "var(--belvo-bg-nav-mobile)",
+              top: 0, left: 0, right: 0, bottom: 0,
+              width: "100vw", height: "100dvh",
+              backdropFilter: "blur(22px)",
+              WebkitBackdropFilter: "blur(22px)",
+            }}
+          >
+            <div className="flex flex-col items-center gap-6 sm:gap-9 px-6 w-full max-w-sm">
+              {NAV_LINKS.map((link, i) => (
                 <motion.div
+                  key={link.name}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.58 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: i * 0.06 + 0.04 }}
+                  className="w-full text-center"
                 >
-                  <button
-                    onClick={handleBookCall}
-                    data-testid="button-mobile-contact"
-                    className="inline-flex items-center gap-2 px-8 py-3 text-sm font-medium tracking-[0.18em] uppercase"
+                  <Link
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    data-testid={`link-mobile-${link.name.toLowerCase()}`}
+                    className="block w-full"
                     style={{
-                      border: "1px solid rgba(130,40,200,0.7)",
-                      borderRadius: "100px",
-                      color: "#9D4EDD",
-                      background: "transparent",
-                      cursor: "pointer",
                       fontFamily: "'Inter', sans-serif",
+                      fontSize: "clamp(1.5rem, 6vw, 2rem)",
+                      fontWeight: 300,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: isLinkActive(link.href) ? "#9D4EDD" : "var(--belvo-text-1)",
+                      opacity: isLinkActive(link.href) ? 1 : 0.8,
+                      textDecoration: "none",
+                      padding: "4px 0",
                     }}
                   >
-                    Book A Free Call <ArrowDownLeft size={15} />
-                  </button>
+                    {link.name}
+                  </Link>
                 </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.58 }}
+                className="mt-4"
+              >
+                <button
+                  onClick={handleBookCall}
+                  data-testid="button-mobile-contact"
+                  className="inline-flex items-center gap-2 px-8 py-3 text-sm font-medium tracking-[0.18em] uppercase"
+                  style={{
+                    border: "1px solid rgba(130,40,200,0.7)",
+                    borderRadius: "100px",
+                    color: "#9D4EDD",
+                    background: "transparent",
+                    cursor: "pointer",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Book A Free Call <ArrowDownLeft size={15} />
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
