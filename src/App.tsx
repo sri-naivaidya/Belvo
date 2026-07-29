@@ -38,6 +38,22 @@ const LLMs = lazy(() => import("@/pages/LLMs"));
 const Videos = lazy(() => import("@/pages/Videos"));
 const TeamStoryPage = lazy(() => import("@/pages/TeamStoryPage"));
 
+// Portal imports
+import ClientLayout from "@/app/client/layout";
+import ClientDashboardPage from "@/app/client/dashboard/page";
+import ClientProjectsPage from "@/app/client/projects/page";
+import ClientMilestonesPage from "@/app/client/milestones/page";
+import ClientVerificationPage from "@/app/client/verification/page";
+import ClientTimelinePage from "@/app/client/timeline/page";
+import ClientMeetingsPage from "@/app/client/meetings/page";
+import ClientPaymentsPage from "@/app/client/payments/page";
+import ClientDocumentsPage from "@/app/client/documents/page";
+import ClientChatPage from "@/app/client/chat/page";
+import ClientChangesPage from "@/app/client/changes/page";
+import ClientReportsPage from "@/app/client/reports/page";
+import ClientSettingsPage from "@/app/client/settings/page";
+import ClientLoginPage from "@/app/client/login/page";
+
 const queryClient = new QueryClient();
 
 const pageVariants = {
@@ -88,15 +104,31 @@ function Router() {
     );
   }
 
+  if (location === "/client/login") {
+    return <ClientLoginPage />;
+  }
+
   if (location.startsWith("/client")) {
     return (
-      <div
-        style={{ background: "#0a0a0f", minHeight: "100dvh", color: "var(--belvo-text-1)" }}
-      >
+      <ClientLayout>
         <Switch>
-          <Route path="/client" component={ClientComingSoon} />
+          <Route path="/client/dashboard" component={ClientDashboardPage} />
+          <Route path="/client/projects" component={ClientProjectsPage} />
+          <Route path="/client/milestones" component={ClientMilestonesPage} />
+          <Route path="/client/verification" component={ClientVerificationPage} />
+          <Route path="/client/timeline" component={ClientTimelinePage} />
+          <Route path="/client/meetings" component={ClientMeetingsPage} />
+          <Route path="/client/payments" component={ClientPaymentsPage} />
+          <Route path="/client/documents" component={ClientDocumentsPage} />
+          <Route path="/client/chat" component={ClientChatPage} />
+          <Route path="/client/changes" component={ClientChangesPage} />
+          <Route path="/client/reports" component={ClientReportsPage} />
+          <Route path="/client/settings" component={ClientSettingsPage} />
+          <Route path="/client">
+            <Redirect to="/client/dashboard" />
+          </Route>
         </Switch>
-      </div>
+      </ClientLayout>
     );
   }
 
