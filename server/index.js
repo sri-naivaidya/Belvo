@@ -976,9 +976,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Internal server error" });
 });
 
-// ── Start ──────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n  ✦ BELVO API server running on http://localhost:${PORT}`);
-  console.log(`  ✦ Database: ${isDbReady() ? "✅ Connected" : "⚠️  Not configured (set Supabase env vars)"}`);
-  console.log(`  ✦ Health:   http://localhost:${PORT}/api/health\n`);
-});
+// ── Export for Vercel ──────────────────────────────────
+export default app;
+
+// ── Start (local only) ─────────────────────────────────
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n  ✦ BELVO API server running on http://localhost:${PORT}`);
+    console.log(`  ✦ Database: ${isDbReady() ? "✅ Connected" : "⚠️  Not configured (set Supabase env vars)"}`);
+    console.log(`  ✦ Health:   http://localhost:${PORT}/api/health\n`);
+  });
+}
