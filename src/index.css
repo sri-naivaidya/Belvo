@@ -369,3 +369,191 @@ img {
 @keyframes portalExit{
   to{ opacity:0; visibility:hidden; }
 }
+
+/* ─── Portal Theme Tokens ─────────────────────────────── */
+:root {
+  --portal-primary: #7C3AED;
+  --portal-primary-50: #F5F3FF;
+  --portal-primary-100: #EDE9FE;
+  --portal-primary-200: #DDD6FE;
+  --portal-primary-300: #C4B5FD;
+  --portal-primary-400: #A78BFA;
+  --portal-primary-500: #7C3AED;
+  --portal-primary-600: #6D28D9;
+  --portal-primary-700: #5B21B6;
+  --portal-primary-800: #4C1D95;
+  --portal-primary-900: #2E1065;
+  --portal-success: #10B981;
+  --portal-success-50: #ECFDF5;
+  --portal-warning: #F59E0B;
+  --portal-warning-50: #FFFBEB;
+  --portal-danger: #EF4444;
+  --portal-danger-50: #FEF2F2;
+  --portal-surface: #FFFFFF;
+  --portal-surface-secondary: #F6F7FB;
+  --portal-surface-tertiary: #EEF1F5;
+  --portal-border: #E5E7EB;
+  --portal-border-light: #F3F4F6;
+  --portal-text-primary: #111827;
+  --portal-text-secondary: #6B7280;
+  --portal-text-tertiary: #9CA3AF;
+  --portal-glass: rgba(255, 255, 255, 0.7);
+  --portal-glass-border: rgba(255, 255, 255, 0.3);
+  --portal-shadow-card: 0 1px 2px rgba(15,23,42,0.04);
+  --portal-shadow-card-hover: 0 8px 18px rgba(15,23,42,0.07);
+  --portal-shadow-dropdown: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  --portal-shadow-modal: 0 20px 60px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* Portal utility classes */
+.portal-glass {
+  background: var(--portal-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--portal-glass-border);
+}
+
+.portal-card {
+  background: var(--portal-surface);
+  border-radius: 8px;
+  border: 1px solid var(--portal-border);
+  box-shadow: var(--portal-shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.portal-card:hover {
+  border-color: #D7DDE7;
+  box-shadow: var(--portal-shadow-card-hover);
+}
+
+.portal-status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.portal-status-dot.portal-green { background: var(--portal-success); }
+.portal-status-dot.portal-orange { background: var(--portal-warning); }
+.portal-status-dot.portal-red { background: var(--portal-danger); }
+.portal-status-dot.portal-purple { background: var(--portal-primary); }
+
+.portal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-transform: capitalize;
+}
+.portal-badge-green { background: #ECFDF5; color: #065F46; }
+.portal-badge-orange { background: #FFFBEB; color: #92400E; }
+.portal-badge-red { background: #FEF2F2; color: #991B1B; }
+.portal-badge-purple { background: #F5F3FF; color: #5B21B6; }
+.portal-badge-gray { background: #F3F4F6; color: #374151; }
+
+@keyframes portalFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.portal-animate-fade-in { animation: portalFadeIn 0.3s ease-out; }
+
+@keyframes portalSlideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+.portal-animate-slide-in { animation: portalSlideIn 0.3s ease-out; }
+
+@keyframes portalPageLoader {
+  0% { transform: translateX(-120%); }
+  50% { transform: translateX(130%); }
+  100% { transform: translateX(360%); }
+}
+
+.portal-progress-bar { height: 6px; background: var(--portal-surface-tertiary); border-radius: 3px; overflow: hidden; }
+.portal-progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; background: var(--portal-primary); }
+.portal-progress-bar-fill.portal-green { background: var(--portal-success); }
+.portal-progress-bar-fill.portal-orange { background: var(--portal-warning); }
+.portal-progress-bar-fill.portal-red { background: var(--portal-danger); }
+
+/* Portal color utility classes */
+.portal-bg-surface { background: var(--portal-surface); }
+.portal-bg-surface-secondary { background: var(--portal-surface-secondary); }
+.portal-bg-surface-tertiary { background: var(--portal-surface-tertiary); }
+.portal-bg-primary { background: var(--portal-primary); }
+.portal-bg-primary-50 { background: var(--portal-primary-50); }
+.portal-text-primary { color: var(--portal-text-primary); }
+.portal-text-secondary { color: var(--portal-text-secondary); }
+.portal-text-tertiary { color: var(--portal-text-tertiary); }
+.portal-text-success { color: var(--portal-success); }
+.portal-text-danger { color: var(--portal-danger); }
+.portal-border { border-color: var(--portal-border); }
+.portal-border-light { border-color: var(--portal-border-light); }
+
+/* Portal class name aliases (so portal components work without changes) */
+.text-text-primary { color: var(--portal-text-primary); }
+.text-text-secondary { color: var(--portal-text-secondary); }
+.text-text-tertiary { color: var(--portal-text-tertiary); }
+.text-success { color: var(--portal-success); }
+.text-danger { color: var(--portal-danger); }
+.text-primary { color: var(--portal-primary); }
+.bg-surface { background: var(--portal-surface); }
+.bg-surface-secondary { background: var(--portal-surface-secondary); }
+.bg-surface-tertiary { background: var(--portal-surface-tertiary); }
+.bg-primary { background: var(--portal-primary); }
+.bg-danger-50 { background: var(--portal-danger-50); }
+.bg-primary-50 { background: var(--portal-primary-50); }
+.border-border { border-color: var(--portal-border); }
+.border-border-light { border-color: var(--portal-border-light); }
+.shadow-modal { box-shadow: var(--portal-shadow-modal); }
+.shadow-dropdown { box-shadow: var(--portal-shadow-dropdown); }
+.shadow-card { box-shadow: var(--portal-shadow-card); }
+
+.card {
+  background: var(--portal-surface);
+  border-radius: 8px;
+  border: 1px solid var(--portal-border);
+  box-shadow: var(--portal-shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+  border-color: #D7DDE7;
+  box-shadow: var(--portal-shadow-card-hover);
+}
+
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-dot.green { background: var(--portal-success); }
+.status-dot.orange { background: var(--portal-warning); }
+.status-dot.red { background: var(--portal-danger); }
+.status-dot.purple { background: var(--portal-primary); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-transform: capitalize;
+}
+.badge-green { background: #ECFDF5; color: #065F46; }
+.badge-orange { background: #FFFBEB; color: #92400E; }
+.badge-red { background: #FEF2F2; color: #991B1B; }
+.badge-purple { background: #F5F3FF; color: #5B21B6; }
+.badge-gray { background: #F3F4F6; color: #374151; }
+
+.animate-fade-in { animation: portalFadeIn 0.3s ease-out; }
+.animate-slide-in { animation: portalSlideIn 0.3s ease-out; }
+
+.progress-bar { height: 6px; background: var(--portal-surface-tertiary); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; background: var(--portal-primary); }
+.progress-bar-fill.green { background: var(--portal-success); }
+.progress-bar-fill.orange { background: var(--portal-warning); }
+.progress-bar-fill.red { background: var(--portal-danger); }
+
+.glass {
+  background: var(--portal-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--portal-glass-border);
+}
+
+/* Portal hover variants */
+.hover\:bg-surface-tertiary:hover { background: var(--portal-surface-tertiary); }
+.hover\:bg-primary-600:hover { background: var(--portal-primary-600); }
+.hover\:text-text-primary:hover { color: var(--portal-text-primary); }
+.hover\:border-primary\/50:hover { border-color: color-mix(in srgb, var(--portal-primary) 50%, transparent); }
+.hover\:bg-primary-50\/30:hover { background: color-mix(in srgb, var(--portal-primary-50) 30%, transparent); }
+.hover\:bg-purple-50:hover { background: var(--portal-primary-50); }
+.hover\:bg-red-600:hover { background: #DC2626; }
+.group:hover .group-hover\:text-white\/70 { color: rgba(255,255,255,0.7); }
