@@ -7,17 +7,20 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import multer from "multer";
 import nodemailer from "nodemailer";
 import { TOOLS_CATALOG } from "./data/tools.js";
-import { authenticateToken, getJWTSecret } from "./middleware/auth.js";
+import { authenticateToken, getJWTSecret, authLimiter, otpLimiter } from "./middleware/auth.js";
 import { supabase, isDbReady } from "./db.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ── Middleware ──────────────────────────────────────────
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -48,17 +51,17 @@ const upload = multer({
 });
 
 // ── Admin credentials ─────────────────────────────────
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "belvo@2024";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // ── In-memory stores for intern OTP + checklist ───────
 const otpStore = new Map();       // email → { otp, expiresAt }
 const checklistStore = new Map(); // email → { watchedLms, offerLetter, idCard }
 
 // ── Nodemailer config (reused from api/register.js) ───
-const SMTP_USER = process.env.SMTP_USER || "spam.belvo@gmail.com";
-const SMTP_PASS = process.env.SMTP_PASS || "nyzo edfk irqp zzkz";
-const HR_EMAIL = process.env.HR_EMAIL || "belvo.hr@gmail.com";
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+const HR_EMAIL = process.env.HR_EMAIL;
 
 const emailTransporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -68,7 +71,7 @@ const emailTransporter = nodemailer.createTransport({
 });
 
 // ── Auth Routes ────────────────────────────────────────
-app.post("/admin/login", async (req, res) => {
+app.post("/admin/login", authLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -95,10 +98,10 @@ app.post("/admin/login", async (req, res) => {
 
 // ── Intern OTP Auth Routes ───────────────────────────
 
-const ALLOWED_INTERN_EMAIL = "intern.belvo@gmail.com";
+const ALLOWED_INTERN_EMAIL = process.env.ALLOWED_INTERN_EMAIL;
 
 // POST /intern/send-otp — Generate and send OTP to email
-app.post("/intern/send-otp", async (req, res) => {
+app.post("/intern/send-otp", otpLimiter, async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -147,7 +150,7 @@ app.post("/intern/send-otp", async (req, res) => {
 });
 
 // POST /intern/verify-otp — Verify OTP and return JWT
-app.post("/intern/verify-otp", async (req, res) => {
+app.post("/intern/verify-otp", otpLimiter, async (req, res) => {
   try {
     const { email, otp } = req.body;
 
@@ -528,7 +531,7 @@ app.get("/api/team", async (req, res) => {
 });
 
 // ── Tools Registration ──────────────────────────────────
-app.post("/api/tools-register", async (req, res) => {
+app.post("/api/tools-register", authLimiter, async (req, res) => {
   try {
     const { toolId, name, email, whatsapp } = req.body;
 
@@ -730,6 +733,241 @@ app.post("/api/upload", authenticateToken, (req, res) => {
     const url = `/uploads/${req.file.filename}`;
     res.json({ success: true, url });
   });
+});
+
+// ── Portal Auth Middleware ──────────────────────────────
+
+function parseCookies(req) {
+  const cookieHeader = req.headers?.cookie;
+  if (!cookieHeader) return {};
+  return Object.fromEntries(
+    cookieHeader.split(';').map(c => {
+      const idx = c.indexOf('=');
+      if (idx === -1) return [c.trim(), ''];
+      return [c.slice(0, idx).trim(), c.slice(idx + 1).trim()];
+    })
+  );
+}
+
+const PORTAL_JWT_SECRET = process.env.AUTH_SECRET || process.env.JWT_SECRET || "portal-dev-secret-change-in-prod";
+
+function authenticatePortal(req, res, next) {
+  const cookies = parseCookies(req);
+  const token = cookies.belvo_session;
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Not authenticated" });
+  }
+  try {
+    const decoded = jwt.verify(token, PORTAL_JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch {
+    return res.status(401).json({ success: false, message: "Invalid or expired session" });
+  }
+}
+
+// ── Portal Auth Routes ─────────────────────────────────
+// POST /api/auth/login — Authenticate portal user
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    if (!isDbReady()) {
+      return res.status(503).json({ success: false, message: "Database not configured" });
+    }
+
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("email", email.toLowerCase().trim())
+      .limit(1);
+
+    if (error) throw error;
+    if (!profiles || profiles.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const profile = profiles[0];
+    const valid = await bcrypt.compare(password, profile.password_hash);
+    if (!valid) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign(
+      { userId: profile.id, email: profile.email, role: profile.role || "client" },
+      PORTAL_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.cookie("belvo_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    res.json({
+      success: true,
+      user: { id: profile.id, email: profile.email, fullName: profile.full_name, role: profile.role || "client" },
+    });
+  } catch (err) {
+    console.error("POST /api/auth/login error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// POST /api/auth/signup — Create portal account
+app.post("/api/auth/signup", async (req, res) => {
+  try {
+    const { email, password, fullName } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    if (!isDbReady()) {
+      return res.status(503).json({ success: false, message: "Database not configured" });
+    }
+
+    const { data: existing } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email.toLowerCase().trim())
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return res.status(409).json({ success: false, message: "An account with this email already exists" });
+    }
+
+    const password_hash = await bcrypt.hash(password, 12);
+
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .insert([{
+        email: email.toLowerCase().trim(),
+        full_name: fullName || null,
+        password_hash,
+        role: "client",
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const token = jwt.sign(
+      { userId: profile.id, email: profile.email, role: profile.role },
+      PORTAL_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.cookie("belvo_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    res.status(201).json({
+      success: true,
+      user: { id: profile.id, email: profile.email, fullName: profile.full_name, role: profile.role },
+    });
+  } catch (err) {
+    console.error("POST /api/auth/signup error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+// POST /api/auth/logout — Clear session
+app.post("/api/auth/logout", (req, res) => {
+  res.clearCookie("belvo_session", {
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+  res.json({ success: true, message: "Signed out" });
+});
+
+// GET /api/auth/me — Current user
+app.get("/api/auth/me", authenticatePortal, (req, res) => {
+  res.json({
+    success: true,
+    user: {
+      id: req.user.userId,
+      email: req.user.email,
+      fullName: req.user.fullName || null,
+      role: req.user.role,
+    },
+  });
+});
+
+// GET /api/client/dashboard — Client dashboard data
+app.get("/api/client/dashboard", authenticatePortal, async (req, res) => {
+  try {
+    if (req.user.role !== "client") {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+
+    if (!isDbReady()) {
+      return res.status(503).json({ success: false, message: "Database not configured" });
+    }
+
+    const clientId = req.user.userId;
+
+    const { data: payments } = await supabase
+      .from("payments")
+      .select("*")
+      .eq("client_id", clientId);
+
+    const { data: timelineEvents } = await supabase
+      .from("timeline_events")
+      .select("*")
+      .eq("client_id", clientId)
+      .eq("visible_to_client", true)
+      .order("event_date", { ascending: false })
+      .limit(5);
+
+    const paid = payments?.filter(p => p.status === "paid").length || 0;
+    const pending = payments?.filter(p => p.status === "pending").length || 0;
+    const overdue = payments?.filter(p => p.status === "overdue").length || 0;
+    const cancelled = payments?.filter(p => p.status === "cancelled").length || 0;
+    const outstandingAmount = payments?.filter(p => p.status === "pending" || p.status === "overdue")
+      .reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0;
+
+    const upcoming = timelineEvents?.filter(e => e.status === "upcoming").length || 0;
+    const completed = timelineEvents?.filter(e => e.status === "completed").length || 0;
+
+    res.json({
+      success: true,
+      payments: {
+        total: payments?.length || 0,
+        paid,
+        pending,
+        overdue,
+        cancelled,
+        outstandingAmount,
+      },
+      timeline: {
+        totalVisible: timelineEvents?.length || 0,
+        upcoming,
+        completed,
+        recent: (timelineEvents || []).map(e => ({
+          id: e.id,
+          title: e.title,
+          description: e.description || null,
+          type: e.type,
+          eventDate: e.event_date,
+        })),
+      },
+    });
+  } catch (err) {
+    console.error("GET /api/client/dashboard error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // ── Error handling ─────────────────────────────────────
