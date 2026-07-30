@@ -78,12 +78,6 @@ function getImageUrl(memberName: string): string | undefined {
   return undefined;
 }
 
-const CEO = {
-  name: "Hrishikesh Mishra",
-  title: "Founder & CEO",
-  tagline: "Building BELVO to deliver world-class digital solutions — one idea, one team, one product at a time.",
-};
-
 const HARDCODED_TEAMS: TeamDisplay[] = [
   {
     id: "web",
@@ -203,102 +197,6 @@ const fadeUp = {
     transition: { duration: 0.5, delay: i * 0.05, ease: "easeOut" as const },
   }),
 };
-
-function CeoCard({ inView }: { inView: boolean }) {
-  const initials = getInitials(CEO.name);
-  const gold = "#0b3b9c";
-  const ceoImg = getImageUrl(CEO.name);
-
-  return (
-    <motion.div
-      custom={3}
-      variants={fadeUp}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      style={{ display: "flex", justifyContent: "center", marginBottom: "80px" }}
-    >
-      <motion.div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "48px",
-          maxWidth: "680px",
-          width: "100%",
-          padding: "48px 56px",
-          background: "var(--belvo-bg-card)",
-          border: `1px solid ${gold}44`,
-          borderRadius: "20px",
-          position: "relative",
-          overflow: "hidden",
-          backdropFilter: "blur(14px)",
-          boxShadow: `0 0 0 1px ${gold}22, inset 0 1px 0 rgba(255,255,255,0.06)`,
-        }}
-      >
-        <div style={{
-          position: "absolute", top: -60, right: -60,
-          width: 220, height: 220, borderRadius: "50%",
-          background: `radial-gradient(ellipse, ${gold}22, transparent 70%)`,
-          pointerEvents: "none",
-        }} />
-
-        <div style={{ position: "relative", flexShrink: 0 }}>
-          <div style={{ position: "absolute", inset: -8, borderRadius: "50%", border: `1.5px solid ${gold}44` }} />
-          <div style={{ position: "absolute", inset: -16, borderRadius: "50%", border: `0.5px dashed ${gold}44` }} />
-          <div style={{
-            width: 120, height: 120, borderRadius: "50%",
-            background: ceoImg ? "none" : "linear-gradient(135deg, #071a63, #5ba9e6)",
-            border: `2px solid ${gold}66`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            position: "relative", zIndex: 1, overflow: "hidden",
-            boxShadow: `0 0 30px ${gold}33`,
-          }}>
-            {ceoImg ? (
-              <img src={ceoImg} alt={CEO.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
-            ) : (
-              <>
-                <div style={{ position: "absolute", inset: 4, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.3)" }} />
-                <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "2rem", color: "#fff", letterSpacing: "-0.02em", position: "relative", zIndex: 1 }}>{initials}</span>
-              </>
-            )}
-          </div>
-          <div style={{
-            position: "absolute", bottom: 6, right: 6,
-            width: 18, height: 18, borderRadius: "50%",
-            background: "linear-gradient(135deg, #071a63, #5ba9e6)",
-            border: "2.5px solid var(--belvo-bg)",
-            boxShadow: `0 0 10px ${gold}66`,
-            zIndex: 2,
-          }} />
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 6,
-            background: `${gold}15`, border: `0.5px solid ${gold}55`,
-            borderRadius: "100px", padding: "4px 14px", marginBottom: 10,
-          }}>
-            <svg width={11} height={11} viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M10 2l2.3 5H17l-3.9 3 1.4 5.3L10 12.5 5.5 15.3l1.4-5.3L3 7h4.7z" fill={gold} />
-            </svg>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: gold }}>
-              Chief Executive Officer
-            </span>
-          </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "1.6rem", color: "var(--belvo-text-1)", letterSpacing: "-0.02em", marginBottom: 4, lineHeight: 1.1 }}>
-            {CEO.name}
-            <span style={{ color: "var(--belvo-text-3)", fontWeight: 400, fontSize: "1rem" }}> — Founder & CEO</span>
-          </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.8rem", color: "var(--belvo-text-3)", marginBottom: 18 }}>
-            BELVO · Visionary · Builder
-          </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "0.88rem", color: "var(--belvo-text-2)", lineHeight: 1.7, fontStyle: "italic", borderLeft: `2px solid ${gold}66`, paddingLeft: 14 }}>
-            {CEO.tagline}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 function MemberCard({
   name, team, color, lightColor, responsibilities, inView, index, imageUrl,
@@ -532,8 +430,6 @@ export default function TeamSection() {
               Meet the talented people building exceptional digital experiences together.
             </motion.p>
           </div>
-
-          <CeoCard inView={headerInView} />
 
           {displayTeams.filter(t => t.id !== "admin").map((team) => (
             <TeamGroup key={team.id} team={team} />
