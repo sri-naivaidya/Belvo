@@ -1,5 +1,4 @@
 export const COMPANY_EMAIL = "contact.belvo@gmail.com";
-import { supabase } from "./supabase";
 
 type ContactTargets = {
   founderWhatsappNumber: string;
@@ -46,34 +45,30 @@ export async function saveSubmission(
   type: SubmissionKind,
   payload: Record<string, unknown>
 ) {
-  if (!supabase) {
-    throw new Error(
-      "Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
-    );
-  }
+  const normalized = normalizePayload(payload);
 
   const record = {
     type,
-    created_at: new Date().toISOString(),
-
-    full_name: String(payload.fullName ?? ""),
-    email: String(payload.email ?? ""),
-    company: String(payload.company ?? ""),
-    budget: String(payload.budget ?? ""),
-    project_type: String(payload.projectType ?? ""),
-    message: String(payload.message ?? ""),
+    fullName: normalized.fullName,
+    email: normalized.email,
+    company: normalized.company,
+    budget: normalized.budget,
+    projectType: normalized.projectType,
+    message: normalized.message,
   };
 
-  const { data, error } = await supabase
-    .from("book_calls")
-    .insert([record]);
+  const res = await fetch("/api/book-call", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record),
+  });
 
-  if (error) {
-    console.error(error);
-    throw error;
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.message || "Failed to save submission");
   }
 
-  return data;
+  return res.json();
 }
 
 export function composeMailto(subject: string, bodyLines: string[]) {
