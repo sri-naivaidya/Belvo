@@ -14,7 +14,7 @@ import multer from "multer";
 import nodemailer from "nodemailer";
 import { TOOLS_CATALOG } from "./data/tools.js";
 import { authenticateToken, getJWTSecret, authLimiter, otpLimiter } from "./middleware/auth.js";
-import { supabase, isDbReady } from "./db.js";
+import { getDb, isDbReady } from "./db.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -498,10 +498,11 @@ app.post("/intern/submit-onboarding", async (req, res) => {
 });
 
 // ── Health Check ───────────────────────────────────────
-app.get("/api/health", (req, res) => {
+app.get("/api/health", async (req, res) => {
+  const ready = await isDbReady();
   res.json({
     success: true,
-    db: isDbReady() ? "connected" : "not configured",
+    db: ready ? "connected" : "not configured",
     timestamp: new Date().toISOString(),
   });
 });
@@ -511,22 +512,119 @@ app.get("/api/health", (req, res) => {
 // GET /api/team — List all members
 app.get("/api/team", async (req, res) => {
   try {
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(500).json({ success: false, message: "Database not configured" });
     }
 
-    const { data, error } = await supabase
-      .from("team_members")
-      .select("*")
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
+    const db = await getDb();
+    const members = await db
+      .collection("team_members")
+      .find({})
+      .sort({ sort_order: 1, name: 1 })
+      .toArray();
 
-    if (error) throw error;
-
-    res.json({ success: true, members: data });
+    res.json({ success: true, members });
   } catch (err) {
     console.error("GET /api/team error:", err);
     res.status(500).json({ success: false, message: "Failed to fetch team members" });
+  }
+});
+
+// POST /api/team — Create a new member
+app.post("/api/team", authenticateToken, async (req, res) => {
+  try {
+    if (!(await isDbReady())) {
+      return res.status(500).json({ success: false, message: "Database not configured" });
+    }
+
+    const { name, teamId, teamName, responsibilities, sortOrder, imageUrl } = req.body;
+
+    if (!name || !teamId) {
+      return res.status(400).json({ success: false, message: "Name and team are required" });
+    }
+
+    const now = new Date().toISOString();
+    const db = await getDb();
+    const member = {
+      name: name.trim(),
+      team_id: teamId,
+      team_name: teamName || "",
+      responsibilities: responsibilities || [],
+      image_url: imageUrl || null,
+      sort_order: sortOrder || 0,
+      created_at: now,
+      updated_at: now,
+    };
+
+    const result = await db.collection("team_members").insertOne(member);
+    member._id = result.insertedId;
+    member.id = result.insertedId;
+
+    res.status(201).json({ success: true, member });
+  } catch (err) {
+    console.error("POST /api/team error:", err);
+    res.status(500).json({ success: false, message: "Failed to create member" });
+  }
+});
+
+// PUT /api/team/:id — Update a member
+app.put("/api/team/:id", authenticateToken, async (req, res) => {
+  try {
+    if (!(await isDbReady())) {
+      return res.status(500).json({ success: false, message: "Database not configured" });
+    }
+
+    const { id } = req.params;
+    const { name, teamId, teamName, responsibilities, sortOrder, imageUrl } = req.body;
+
+    const updates = {};
+    if (name !== undefined) updates.name = name;
+    if (teamId !== undefined) updates.team_id = teamId;
+    if (teamName !== undefined) updates.team_name = teamName;
+    if (responsibilities !== undefined) updates.responsibilities = responsibilities;
+    if (sortOrder !== undefined) updates.sort_order = sortOrder;
+    if (imageUrl !== undefined) updates.image_url = imageUrl;
+    updates.updated_at = new Date().toISOString();
+
+    const { ObjectId } = await import("mongodb");
+    const db = await getDb();
+    const member = await db.collection("team_members").findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: updates },
+      { returnDocument: "after", includeResultMetadata: false }
+    );
+
+    if (!member) {
+      return res.status(404).json({ success: false, message: "Member not found" });
+    }
+
+    res.json({ success: true, member });
+  } catch (err) {
+    console.error("PUT /api/team/:id error:", err);
+    res.status(500).json({ success: false, message: "Failed to update member" });
+  }
+});
+
+// DELETE /api/team/:id — Delete a member
+app.delete("/api/team/:id", authenticateToken, async (req, res) => {
+  try {
+    if (!(await isDbReady())) {
+      return res.status(500).json({ success: false, message: "Database not configured" });
+    }
+
+    const { id } = req.params;
+    const { ObjectId } = await import("mongodb");
+    const db = await getDb();
+    const result = await db.collection("team_members").deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: "Member not found" });
+    }
+
+    res.json({ success: true, message: "Member deleted" });
+  } catch (err) {
+    console.error("DELETE /api/team/:id error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete member" });
   }
 });
 
@@ -542,7 +640,7 @@ app.post("/api/tools-register", authLimiter, async (req, res) => {
       });
     }
 
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(500).json({
         success: false,
         message: "Database not configured",
@@ -558,42 +656,39 @@ app.post("/api/tools-register", authLimiter, async (req, res) => {
       });
     }
 
-    const { data, error } = await supabase
-      .from("tool_orders")
-      .insert([
-        {
-          customer_name: name.trim(),
-          customer_email: email.trim().toLowerCase(),
-          whatsapp: whatsapp.trim(),
+    const db = await getDb();
+    const result = await db.collection("tool_orders").insertOne({
+      customer_name: name.trim(),
+      customer_email: email.trim().toLowerCase(),
+      whatsapp: whatsapp.trim(),
 
-          tool_name: selectedTool.name,
-          plan_name: selectedTool.plan,
+      tool_name: selectedTool.name,
+      plan_name: selectedTool.plan,
 
-          amount: selectedTool.amount,
-          currency: selectedTool.currency,
+      amount: selectedTool.amount,
+      currency: selectedTool.currency,
 
-          payment_status: "pending",
-          fulfilment_status: "pending",
-        },
-      ])
-      .select()
-      .single();
+      payment_status: "pending",
+      fulfilment_status: "pending",
 
-    if (error) throw error;
+      created_at: new Date().toISOString(),
+    });
+
+    const order = {
+      id: result.insertedId,
+      toolId: selectedTool.id,
+      toolName: selectedTool.name,
+      planName: selectedTool.plan,
+      amount: selectedTool.amount,
+      currency: selectedTool.currency,
+      paymentStatus: "pending",
+      fulfilmentStatus: "pending",
+    };
 
     return res.status(201).json({
       success: true,
       message: "Registration received",
-      order: {
-        id: data.id,
-        toolId: selectedTool.id,
-        toolName: data.tool_name,
-        planName: data.plan_name,
-        amount: data.amount,
-        currency: data.currency,
-        paymentStatus: data.payment_status,
-        fulfilmentStatus: data.fulfilment_status,
-      },
+      order,
     });
   } catch (err) {
     console.error("POST /api/tools-register error:", err);
@@ -605,10 +700,31 @@ app.post("/api/tools-register", authLimiter, async (req, res) => {
   }
 });
 
+// GET /api/departments — List all departments
+app.get("/api/departments", async (req, res) => {
+  try {
+    if (!(await isDbReady())) {
+      return res.status(500).json({ success: false, message: "Database not configured" });
+    }
+
+    const db = await getDb();
+    const departments = await db
+      .collection("departments")
+      .find({})
+      .sort({ sort_order: 1, name: 1 })
+      .toArray();
+
+    res.json({ success: true, departments });
+  } catch (err) {
+    console.error("GET /api/departments error:", err);
+    res.status(500).json({ success: false, message: "Failed to fetch departments" });
+  }
+});
+
 // POST /api/departments — Create a department
 app.post("/api/departments", authenticateToken, async (req, res) => {
   try {
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(500).json({ success: false, message: "Database not configured" });
     }
 
@@ -618,21 +734,22 @@ app.post("/api/departments", authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: "ID and name are required" });
     }
 
-    const { data, error } = await supabase
-      .from("departments")
-      .insert([{
-        id,
-        name,
-        color: color || "#7B2FBE",
-        light_color: lightColor || color || "#9D4EDD",
-        sort_order: sortOrder || 0,
-      }])
-      .select()
-      .single();
+    const now = new Date().toISOString();
+    const db = await getDb();
+    const department = {
+      _id: id,
+      id,
+      name,
+      color: color || "#7B2FBE",
+      light_color: lightColor || color || "#9D4EDD",
+      sort_order: sortOrder || 0,
+      created_at: now,
+      updated_at: now,
+    };
 
-    if (error) throw error;
+    await db.collection("departments").insertOne(department);
 
-    res.status(201).json({ success: true, department: data });
+    res.status(201).json({ success: true, department });
   } catch (err) {
     console.error("POST /api/departments error:", err);
     res.status(500).json({ success: false, message: "Failed to create department" });
@@ -642,7 +759,7 @@ app.post("/api/departments", authenticateToken, async (req, res) => {
 // PUT /api/departments/:id — Update a department
 app.put("/api/departments/:id", authenticateToken, async (req, res) => {
   try {
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(500).json({ success: false, message: "Database not configured" });
     }
 
@@ -656,20 +773,18 @@ app.put("/api/departments/:id", authenticateToken, async (req, res) => {
     if (sortOrder !== undefined) updates.sort_order = sortOrder;
     updates.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from("departments")
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+    const db = await getDb();
+    const department = await db.collection("departments").findOneAndUpdate(
+      { _id: id },
+      { $set: updates },
+      { returnDocument: "after", includeResultMetadata: false }
+    );
 
-    if (error) throw error;
-
-    if (!data) {
+    if (!department) {
       return res.status(404).json({ success: false, message: "Department not found" });
     }
 
-    res.json({ success: true, department: data });
+    res.json({ success: true, department });
   } catch (err) {
     console.error("PUT /api/departments/:id error:", err);
     res.status(500).json({ success: false, message: "Failed to update department" });
@@ -679,31 +794,29 @@ app.put("/api/departments/:id", authenticateToken, async (req, res) => {
 // DELETE /api/departments/:id — Delete a department
 app.delete("/api/departments/:id", authenticateToken, async (req, res) => {
   try {
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(500).json({ success: false, message: "Database not configured" });
     }
 
     const { id } = req.params;
 
-    // Check if department has members
-    const { count } = await supabase
-      .from("team_members")
-      .select("*", { count: "exact", head: true })
-      .eq("team_id", id);
+    const db = await getDb();
 
-    if (count && count > 0) {
+    // Check if department has members
+    const count = await db.collection("team_members").countDocuments({ team_id: id });
+
+    if (count > 0) {
       return res.status(400).json({
         success: false,
         message: `Cannot delete — ${count} member(s) still in this department`,
       });
     }
 
-    const { error } = await supabase
-      .from("departments")
-      .delete()
-      .eq("id", id);
+    const result = await db.collection("departments").deleteOne({ _id: id });
 
-    if (error) throw error;
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: "Department not found" });
+    }
 
     res.json({ success: true, message: "Department deleted" });
   } catch (err) {
@@ -775,29 +888,24 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ success: false, message: "Email and password are required" });
     }
 
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(503).json({ success: false, message: "Database not configured" });
     }
 
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("email", email.toLowerCase().trim())
-      .limit(1);
+    const db = await getDb();
+    const profile = await db.collection("profiles").findOne({ email: email.toLowerCase().trim() });
 
-    if (error) throw error;
-    if (!profiles || profiles.length === 0) {
+    if (!profile) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
-    const profile = profiles[0];
     const valid = await bcrypt.compare(password, profile.password_hash);
     if (!valid) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
     const token = jwt.sign(
-      { userId: profile.id, email: profile.email, role: profile.role || "client" },
+      { userId: profile._id.toString(), email: profile.email, role: profile.role || "client" },
       PORTAL_JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -812,7 +920,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.json({
       success: true,
-      user: { id: profile.id, email: profile.email, fullName: profile.full_name, role: profile.role || "client" },
+      user: { id: profile._id.toString(), email: profile.email, fullName: profile.full_name, role: profile.role || "client" },
     });
   } catch (err) {
     console.error("POST /api/auth/login error:", err);
@@ -828,37 +936,32 @@ app.post("/api/auth/signup", async (req, res) => {
       return res.status(400).json({ success: false, message: "Email and password are required" });
     }
 
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(503).json({ success: false, message: "Database not configured" });
     }
 
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("email", email.toLowerCase().trim())
-      .limit(1);
+    const db = await getDb();
+    const existing = await db.collection("profiles").findOne({ email: email.toLowerCase().trim() });
 
-    if (existing && existing.length > 0) {
+    if (existing) {
       return res.status(409).json({ success: false, message: "An account with this email already exists" });
     }
 
     const password_hash = await bcrypt.hash(password, 12);
 
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .insert([{
-        email: email.toLowerCase().trim(),
-        full_name: fullName || null,
-        password_hash,
-        role: "client",
-      }])
-      .select()
-      .single();
+    const profile = {
+      email: email.toLowerCase().trim(),
+      full_name: fullName || null,
+      password_hash,
+      role: "client",
+      created_at: new Date().toISOString(),
+    };
 
-    if (error) throw error;
+    const result = await db.collection("profiles").insertOne(profile);
+    profile._id = result.insertedId;
 
     const token = jwt.sign(
-      { userId: profile.id, email: profile.email, role: profile.role },
+      { userId: profile._id.toString(), email: profile.email, role: profile.role },
       PORTAL_JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -873,7 +976,7 @@ app.post("/api/auth/signup", async (req, res) => {
 
     res.status(201).json({
       success: true,
-      user: { id: profile.id, email: profile.email, fullName: profile.full_name, role: profile.role },
+      user: { id: profile._id.toString(), email: profile.email, fullName: profile.full_name, role: profile.role },
     });
   } catch (err) {
     console.error("POST /api/auth/signup error:", err);
@@ -912,24 +1015,21 @@ app.get("/api/client/dashboard", authenticatePortal, async (req, res) => {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    if (!isDbReady()) {
+    if (!(await isDbReady())) {
       return res.status(503).json({ success: false, message: "Database not configured" });
     }
 
     const clientId = req.user.userId;
 
-    const { data: payments } = await supabase
-      .from("payments")
-      .select("*")
-      .eq("client_id", clientId);
+    const db = await getDb();
+    const payments = await db.collection("payments").find({ client_id: clientId }).toArray();
 
-    const { data: timelineEvents } = await supabase
-      .from("timeline_events")
-      .select("*")
-      .eq("client_id", clientId)
-      .eq("visible_to_client", true)
-      .order("event_date", { ascending: false })
-      .limit(5);
+    const timelineEvents = await db
+      .collection("timeline_events")
+      .find({ client_id: clientId, visible_to_client: true })
+      .sort({ event_date: -1 })
+      .limit(5)
+      .toArray();
 
     const paid = payments?.filter(p => p.status === "paid").length || 0;
     const pending = payments?.filter(p => p.status === "pending").length || 0;
@@ -970,6 +1070,91 @@ app.get("/api/client/dashboard", authenticatePortal, async (req, res) => {
   }
 });
 
+// ── Contact Form Routes ────────────────────────────────
+
+const EVENT_TITLES = {
+  1: "React Free Webinar",
+  2: "Flutter Workshop",
+  3: "Founders Meet-up",
+};
+
+// POST /api/register — Save event registration
+app.post("/api/register", async (req, res) => {
+  try {
+    const { eventId, name, email, whatsapp } = req.body;
+
+    if (!eventId || !name || !email || !whatsapp) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    if (!(await isDbReady())) {
+      return res.status(503).json({ success: false, message: "Database not configured" });
+    }
+
+    const eventTitle = EVENT_TITLES[eventId] || `Event #${eventId}`;
+    const timestamp = new Date().toISOString();
+
+    const db = await getDb();
+    await db.collection("book_calls").insertOne({
+      type: "event-registration",
+      created_at: timestamp,
+      full_name: name,
+      email,
+      message: `Registered for ${eventTitle} (ID: ${eventId}) | WhatsApp: ${whatsapp}`,
+    });
+
+    if (SMTP_USER && SMTP_PASS && HR_EMAIL) {
+      await emailTransporter.sendMail({
+        from: `"Belvo Registrations" <${SMTP_USER}>`,
+        to: HR_EMAIL,
+        subject: `New Registration — ${name} for ${eventTitle}`,
+        html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>WhatsApp:</strong> ${whatsapp}</p><p><strong>Time:</strong> ${new Date(timestamp).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>`,
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Registration successful!",
+      registration: { name, eventTitle, registeredAt: timestamp },
+    });
+  } catch (err) {
+    console.error("POST /api/register error:", err);
+    res.status(500).json({ success: false, message: "Something went wrong. Please try again." });
+  }
+});
+
+// POST /api/book-call — Save contact/career submissions to MongoDB
+app.post("/api/book-call", async (req, res) => {
+  try {
+    const { type, fullName, email, company, budget, projectType, message } = req.body;
+
+    if (!type || !fullName || !email) {
+      return res.status(400).json({ success: false, message: "Type, name, and email are required" });
+    }
+
+    if (!(await isDbReady())) {
+      return res.status(503).json({ success: false, message: "Database not configured" });
+    }
+
+    const db = await getDb();
+    await db.collection("book_calls").insertOne({
+      type,
+      created_at: new Date().toISOString(),
+      full_name: String(fullName ?? ""),
+      email: String(email ?? ""),
+      company: String(company ?? ""),
+      budget: String(budget ?? ""),
+      project_type: String(projectType ?? ""),
+      message: String(message ?? ""),
+    });
+
+    res.status(201).json({ success: true, message: "Submission saved" });
+  } catch (err) {
+    console.error("POST /api/book-call error:", err);
+    res.status(500).json({ success: false, message: "Failed to save submission" });
+  }
+});
+
 // ── Error handling ─────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
@@ -981,9 +1166,10 @@ export default app;
 
 // ── Start (local only) ─────────────────────────────────
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
+    const ready = await isDbReady();
     console.log(`\n  ✦ BELVO API server running on http://localhost:${PORT}`);
-    console.log(`  ✦ Database: ${isDbReady() ? "✅ Connected" : "⚠️  Not configured (set Supabase env vars)"}`);
+    console.log(`  ✦ Database: ${ready ? "✅ Connected" : "⚠️  Not configured (set MONGODB_URI env var)"}`);
     console.log(`  ✦ Health:   http://localhost:${PORT}/api/health\n`);
   });
 }
