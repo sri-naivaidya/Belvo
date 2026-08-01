@@ -1,8 +1,8 @@
 // Vercel Serverless Function — /api/register
-// Saves event registration to Supabase + sends email notification
+// Saves event registration to MongoDB + sends email notification
 
-import { createClient } from "@supabase/supabase-js";
 import nodemailer from "nodemailer";
+import { getDb } from "../server/db.js";
 
 const EVENTS = {
   1: "React Free Webinar",
@@ -44,20 +44,15 @@ export default async function handler(req, res) {
     const eventTitle = EVENTS[eventId] || `Event #${eventId}`;
     const timestamp = new Date().toISOString();
 
-    // ── 1. Save to Supabase ──────────────────────────────
-    const supabaseUrl = process.env.VITE_SUPABASE_URL;
-    const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
-
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
-      await supabase.from("book_calls").insert([{
-        type: "event-registration",
-        created_at: timestamp,
-        full_name: name,
-        email: email,
-        message: `Registered for ${eventTitle} (ID: ${eventId}) | WhatsApp: ${whatsapp}`,
-      }]);
-    }
+    // ── 1. Save to MongoDB ──────────────────────────────
+    const db = await getDb();
+    await db.collection("book_calls").insertOne({
+      type: "event-registration",
+      created_at: timestamp,
+      full_name: name,
+      email: email,
+      message: `Registered for ${eventTitle} (ID: ${eventId}) | WhatsApp: ${whatsapp}`,
+    });
 
     // ── 2. Send email notification ───────────────────────
     // Falls back to embedded values for now. Override via Vercel env vars anytime.
