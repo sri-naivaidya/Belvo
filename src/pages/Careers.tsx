@@ -93,7 +93,7 @@ const inputBase: React.CSSProperties = {
   border: "1px solid rgba(157,78,221,0.14)",
   borderRadius: "16px",
   padding: "14px 16px",
-  color: "var(--belvo-text-1)",
+  color: "#1F1F2E",
   fontFamily: "'Inter', sans-serif",
   fontSize: "0.95rem",
   fontWeight: 600,
@@ -118,7 +118,7 @@ const fieldLabelStyle: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.12em",
   textTransform: "uppercase",
-  color: "var(--belvo-text-2)",
+  color: "#1F1F2E",
   display: "block",
   marginBottom: "6px",
 };
@@ -230,6 +230,13 @@ export default function Careers() {
   return (
     <>
       <SEO title="Careers" description="Join the Belvo team — we're hiring creative minds to build brands, products, and experiences that matter." path="/careers" />
+      <style>{`
+        #apply input::placeholder,
+        #apply textarea::placeholder {
+          color: #6B7280 !important;
+          opacity: 1 !important;
+        }
+      `}</style>
       {/* HERO */}
       <section ref={heroRef}
         style={{
@@ -961,7 +968,7 @@ export default function Careers() {
                 </div>
                 <h3
                   style={{
-                    color: "var(--belvo-text-1)",
+                    color: "#1F1F2E",
                     fontFamily: "'Inter',sans-serif",
                     fontWeight: 700,
                     fontSize: "1.28rem",
@@ -972,7 +979,7 @@ export default function Careers() {
                 </h3>
                 <p
                   style={{
-                    color: "var(--belvo-text-3)",
+                    color: "#5E5E5E",
                     fontFamily: "'Inter',sans-serif",
                     fontSize: "0.92rem",
                     lineHeight: 1.7,
@@ -1058,7 +1065,7 @@ export default function Careers() {
                     >
                       <option
                         value=""
-                        style={{ background: "var(--belvo-bg)" }}
+                        style={{ background: "#ffffff", color: "#1F1F2E" }}
                       >
                         Select a role
                       </option>
@@ -1066,7 +1073,7 @@ export default function Careers() {
                         <option
                           key={r.id}
                           value={r.title}
-                          style={{ background: "var(--belvo-bg)" }}
+                          style={{ background: "#ffffff", color: "#1F1F2E" }}
                         >
                           {r.title}
                         </option>
@@ -1287,7 +1294,7 @@ export default function Careers() {
                             margin: 0,
                             fontFamily: "'Inter',sans-serif",
                             fontSize: "0.85rem",
-                            color: "var(--belvo-text-2)",
+                            color: "#1F1F2E",
                           }}
                         >
                           Click to upload your resume
@@ -1297,7 +1304,7 @@ export default function Careers() {
                             margin: "3px 0 0",
                             fontFamily: "'Inter',sans-serif",
                             fontSize: "0.72rem",
-                            color: "var(--belvo-text-4)",
+                            color: "#6B7280",
                           }}
                         >
                           PDF, DOC, DOCX — max 5 MB
