@@ -127,7 +127,7 @@ const HARDCODED_TEAMS: TeamDisplay[] = [
     name: "Graphic Designing",
     color: "#0b3b9c",
     lightColor: "#5ba9e6",
-    members: ["Anurag khushwaha", "Rimi gosh", "Sanskruti akare", "Deepak Sharma", "Neha", "Yash", "Shaik Nihayath"].map(name => ({ name })),
+    members: ["Anurag khushwaha", "Rimi ghosh", "Sanskruti akare", "Deepak Sharma", "Neha", "Yash", "Shaik Nihayath"].map(name => ({ name })),
   },
   {
     id: "social",
