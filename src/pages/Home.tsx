@@ -235,8 +235,8 @@ gl_FragColor=vec4(color,1.0);
     const onPointerMove = (e: PointerEvent) => {
       if (!pointerDown || pointerFired) return;
       const dy = e.clientY - pointerStartY;
-      if (dy > 20) { pointerFired = true; fire(1); }
-      else if (dy < -20) { pointerFired = true; fire(-1); }
+      if (dy > 20) { pointerFired = true; fire(-1); }
+      else if (dy < -20) { pointerFired = true; fire(1); }
     };
 
     const onPointerUp = (e: PointerEvent) => {
@@ -244,8 +244,8 @@ gl_FragColor=vec4(color,1.0);
       pointerDown = false;
       if (!pointerFired) {
         const dy = e.clientY - pointerStartY;
-        if (dy > 20) fire(1);
-        else if (dy < -20) fire(-1);
+        if (dy > 20) fire(-1);
+        else if (dy < -20) fire(1);
       }
     };
 
@@ -279,7 +279,7 @@ gl_FragColor=vec4(color,1.0);
       const elapsed = (performance.now() - startTime) / 1000;
       stateRef.current += (targetRef.current - stateRef.current) * 0.035;
 
-      const snap = Math.round(stateRef.current) % 3;
+      const snap = ((Math.round(stateRef.current) % 3) + 3) % 3;
       if (snap !== lastSnapRef.current) {
         lastSnapRef.current = snap;
         setIndex(snap);
