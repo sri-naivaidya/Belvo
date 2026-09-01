@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/((?!api/|_next/|favicon.ico).*)",
       "destination": "/"
     }
   ]
