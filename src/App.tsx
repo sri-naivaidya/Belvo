@@ -53,6 +53,7 @@ import ClientChangesPage from "@/app/client/changes/page";
 import ClientReportsPage from "@/app/client/reports/page";
 import ClientSettingsPage from "@/app/client/settings/page";
 import ClientLoginPage from "@/app/client/login/page";
+import ClientSignupPage from "@/app/client/signup/page";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,10 @@ function Router() {
 
   if (location === "/client/login") {
     return <ClientLoginPage />;
+  }
+
+  if (location === "/client/signup") {
+    return <ClientSignupPage />;
   }
 
   if (location.startsWith("/client")) {

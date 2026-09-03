@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'wouter';
 
-export default function ClientLoginPage() {
+export default function ClientSignupPage() {
   const [, navigate] = useLocation();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -12,21 +13,21 @@ export default function ClientLoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    if (!email.trim() || !password.trim() || !name.trim()) return;
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify({ fullName: name.trim(), email: email.trim(), password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Login failed');
-      navigate('/client/dashboard');
-      window.location.reload();
+      if (!res.ok) throw new Error(data.message || 'Signup failed');
+      // On success, redirect to login page
+      navigate('/client/login');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : 'Signup failed');
     } finally {
       setLoading(false);
     }
@@ -46,8 +47,8 @@ export default function ClientLoginPage() {
                 <span className="block text-[10px] text-white/40 font-medium tracking-wide uppercase">Client Portal</span>
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-            <p className="text-sm text-white/50 mt-1">Sign in to continue to your portal.</p>
+            <h1 className="text-2xl font-bold text-white">Create an account</h1>
+            <p className="text-sm text-white/50 mt-1">Sign up to access your portal.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -58,6 +59,19 @@ export default function ClientLoginPage() {
             )}
 
             <div>
+              <label className="block text-sm font-medium text-white/60 mb-1.5">Full Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="John Doe"
+                className="w-full h-11 rounded-lg border border-white/10 bg-white/5 px-3.5 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500/50 transition-all"
+                required
+                autoFocus
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-white/60 mb-1.5">Email address</label>
               <input
                 type="email"
@@ -66,7 +80,6 @@ export default function ClientLoginPage() {
                 placeholder="you@company.com"
                 className="w-full h-11 rounded-lg border border-white/10 bg-white/5 px-3.5 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500/50 transition-all"
                 required
-                autoFocus
               />
             </div>
 
@@ -87,13 +100,13 @@ export default function ClientLoginPage() {
               disabled={loading}
               className="w-full h-11 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-purple-500/10"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Creating account...' : 'Create account'}
             </button>
 
             <p className="text-center text-xs text-white/30">
-              Don&apos;t have an account?{' '}
-              <Link href="/client/signup" className="text-purple-400 hover:text-purple-300 transition-colors">
-                Create one
+              Already have an account?{' '}
+              <Link href="/client/login" className="text-purple-400 hover:text-purple-300 transition-colors">
+                Sign in
               </Link>
             </p>
           </form>
